@@ -49,13 +49,14 @@
 	6.  [Structure of an AP object](#object_structure_AP)
 11.  [Notes and discussion](#notes)
 12.  [Bugs, contacts and additional features](#bugs)
-13.  [License](#license)
-14.  [References](#references)
+13.  [Citation](#cite)
+14.  [License](#license)
+15.  [References](#references)
 
 # <a name="package_overview"/> 1. Package overview
 
 Cytometry is an experimental technique used to characterize cells at a single cell level.
-The recent increase of measurable cell markers (up to 50 markers), thanks to [mass [1]](https://www.fluidigm.com/products/cytof) and hyperspectral cytometry [2], has led to the development of new computational approaches to identify groups of cells having similar expressions for selected markers.
+The recent increase of measurable cell markers (up to 50 markers), thanks to mass [1] and hyperspectral cytometry [2], has led to the development of new computational approaches to identify groups of cells having similar expressions for selected markers.
 Different automatic gating algorithms have been proposed such as SPADE [3], viSNE [4], ACCENSE [5] to identify these groups of cells, also named cell clusters.
 
 Among them, the SPADE algorithm, which stands for spanning-tree progression analysis of density-normalized events, is a popular tool to analysis and explore mass-cytometry data.
@@ -493,7 +494,7 @@ The `identifyAC()` function returns an `AC` object which stores the main computa
 This function takes a `Results` object as parameter and a character vector (`samples`) specifying the samples to use in the statistical computations. 
 The calculations can be either based on relative abundance (percentages of cells relative to parent) or based on absolute abundance (number of cells) using the `use.percentages` parameter (TRUE by default).
 
-Significant Abundant Clusters are characterized by two parameters: the theoretical mean or median value (`mu` parameter, set by default to `0`) and the p-value threshold (`th.pvalue` parameter, set by default to `0.05`).
+Significant Abundant Clusters are characterized by two parameters: the theorical mean or median value (`mu` parameter, set by default to `0`) and the p-value threshold (`th.pvalue` parameter, set by default to `0.05`).
 
 For instance, the identification of clusters having an abundance statistically greater than 1% in some selected samples can be done using the following commands:
 
@@ -1273,14 +1274,11 @@ The `cluster.small` dataframe element specifies the small clusters in the datase
 
 An illustrative QC heatmap for small clusters is available on the SPADEVizR github [(/README/SPADEVizR-qcreport-SmallClusters_heatmap.pdf file)](https://github.com/tchitchek-lab/SPADEVizR/blob/master/README/SPADEVizR-qcreport-SmallClusters_heatmap.pdf).
 
-<!--
 The following figure shows a QC heatmap for small clusters.
-![](README.figures/SmallClustersHeatmap.png) 
-Heatmap summarizing the cell clusters having a number of associated cells lower than 100 cells in the whole dataset.
+![](README/SmallClustersHeatmap.png) 
+Heatmap summarizing the cell clusters having a number of associated cells lower than 100 cells (specified by the user) in the whole dataset.
 Sample contributions are shown on the left part of the heatmap while the overall dataset contribution is shown on the right part of the heatmap.
 The percentage of clusters having a small number of cells among all clusters is indicated on the top of the heatmap.
-A low percentage indicates a good cell clustering result.
--->
 
 ## <a name="qc_uniform_phenotypes"/> 7.2. Quantification of clusters having uniform phenotypes
 
@@ -1318,28 +1316,26 @@ This function returns a list of two elements.
 The `perc` numeric element specifies the percentage of clusters having only uniform phenotype among all clusters of the dataset (This percentage is only based on the clustering markers). 
 The `accuracy.matrix` dataframe element specifies the clusters having uniform phenotypes in the dataset. 
 
-<!-- 
-The following figure shows a generate QC heatmap repot.
-![](README.figures/UniformClustersHeatmap.png) 
-Heatmap summarizing the cell clusters having accurate phenotypes. 
-Accurate clusters are defined as clusters having unimodal and low range expression density for all the clustering markers and displayed in the last column of the heatmap.
-The unimodality and spread of marker expressions of each cluster are determined using the Hartigan's Dip test and the interquartile range (IQR). Both Dip test p-value and IQR thresholds are specified by the user.
+The following figure shows a generate QC heatmap report.
+![](README/UniformClustersHeatmap.png) 
+Heatmap summarizing the cell clusters having uniform phenotypes. 
+Uniform clusters are defined as clusters having unimodal and low range expression density for all the clustering markers and displayed in the last column of the heatmap.
+The unimodality and spread of marker expressions of each cluster are determined using the Hartigan's Dip test and the interquartile range (IQR). 
+Both Dip test p-value and IQR thresholds are specified by the user.
 Clustering markers are displayed on the left part of the heatmap.
 For informative purposes, non-clustering marker are displayed on the right part of the heatmap.
-The percentage of clusters having an accurate phenotype among all clusters is indicated on the top of the heatmap.
+The percentage of clusters having an uniform phenotype among all clusters is indicated on the top of the heatmap.
 A high percentage indicates a good cell clustering result.
--->
 
 An illustrative QC heatmap report for uniform clusters is available on the SPADEVizR github [(/README/SPADEVizR-qcreport-UniformClusters_heatmap.pdf file)](https://github.com/tchitchek-lab/SPADEVizR/blob/master/README/SPADEVizR-qcreport-UniformClusters_heatmap.pdf).
 
-<!-- 
-The following figure shows the marker expression densities with for one given cluster.
-![](README.figures/UniformClustersDensities.png)
-Expression distributions for each marker of the cluster 42. Blue rectangles indicate clustering markers.
+The following figure shows the marker expression densities for one given cluster.
+![](README/UniformClustersDensities.png)
+Expression distributions for each marker of the cluster 42. 
+Blue rectangles indicate clustering markers.
 For each marker distribution, the Hartigan's Dip test p-value, which indicates if the distribution in non-unimodal, and the interquartile range (IQR), indicating if the expression range is too high, are indicated.
-Non accurate markers, represented in red, are defined as markers having a p-value lower than 0.05 (specified by the user) and an IQR higher than 2 (specified by the user).
+Non uniform markers, represented in red, are defined as markers having a p-value lower than 0.05 (specified by the user) and an IQR higher than 2 (specified by the user).
 Marker expressions with unimodal distribution or with a low spread of expression, are represented in green.
--->
 
 An illustrative QC density report for uniform clusters is available on the SPADEVizR github [(/README/SPADEVizR-qcreport-UniformClusters_density.pdf file)](https://github.com/tchitchek-lab/SPADEVizR/blob/master/README/SPADEVizR-qcreport-UniformClusters_density.pdf).
 
@@ -1498,13 +1494,13 @@ The modeling functionalities available in SPADEVizR can be discussed in the cont
 The aim of this challenge was mainly to identify cell populations, in flow cytometry data, correlating with a clinical outcome, and that can be used to predict the outcome in other subjects.
 In this contest, the progression to AIDS in HIV+ subjects was used as the clinical outcome.
 This observed clinical status consisted on progression to AIDS (or death) or no progression (or no death).
-This datasets consists of 766 cytometry samples obtained from 383 patients, each measuring the expression of 14 cell markers.
+This dataset consists of 766 cytometry samples obtained from 383 patients, each measuring the expression of 14 cell markers.
 More details about FlowCap challenges can be found at http://flowcap.flowsite.org/ and FCS files can be download in the flow repository database (https://flowrepository.org/) under accession number "FR-FCM-ZZ99". 
 
 Several automatic gating software have been benchmarked in the context of this contest [11].
 While several algorithms have been able to identify cell clusters correlating with the time parameter, only FloReMi [13] and flowDensity/flowType/RchyOptimyx [14-17] have been able to maintain a significant correlation in the test dataset [11].
 The FloReMi approach which had best results on this challenge combined the flowType algorithm for cell population identification with a random forest approach using cell population-based features to build a survival regression model.
-The flowDensity/flowType/RchyOptimyx approach combined a supervised sequential bivariate clustering algorithm (that mimics manual gating methods) with an approach that uses partitioning of cells into categories, followed by dynamic programing to efficiently construct k-shortest paths to important cell populations [11].
+The flowDensity/flowType/RchyOptimyx approach combined a supervised sequential bivariate clustering algorithm (that mimics manual gating methods) with an approach that uses partitioning of cells into categories, followed by dynamic programming to efficiently construct k-shortest paths to important cell populations [11].
 The SPADE.SNR approach which combined the SPADE algorithm followed by a generalized linear modeling had limited prediction capacity in both the training and test datasets.
 
 Inspired by the approaches presented in this contest and by the relevant prediction results, we have implemented several modeling methods in SPADEVizR (generalized linear models, Cox proportional hazards regression models and random forest models). 
@@ -1515,10 +1511,14 @@ If you detect any bugs or miss functional features in SPADEVizR, please, do not 
 We will do our best to correct these issues in the best delays.
 Moreover, do not hesitate to give us any feedback or to propose additional statistical and visualization features to add in SPADEVizR.
 
-# <a name="license"/> 13. License
+# <a name="cite"/> 13. Citation
+If you use SPADEVizR in your publication, please cite the following article:
+"Gautreau G, Pejoski D, Cosma A, Le Grand R, Beignon AS, and Tchitchek N. SPADEVizR: an R package for Visualization, Analysis and Integration of SPADE results. Bioinformatics (2016)".
+
+# <a name="license"/> 14. License
 SPADEVizR is freely distributed under the GLP-3 license.
 
-# <a name="references"/> 14. References 
+# <a name="references"/> 15. References 
 [1] - Bendall, S. C. et al. Single-cell mass cytometry of differential immune and drug responses across a human hematopoietic continuum. Science (New York, N.Y.), 332(6030), 687-96. (2011).
 
 [2] - Gregori, G. et al. Hyperspectral cytometry. Curr Top Microbiol Immunol., 377, 191-210 (2014).
