@@ -351,7 +351,7 @@ generateCPHM <- function(Results,
 #' 
 #' @return a list of 4 elements corresponding to: random forest model object as provided by the R randomForest function ('model' element), and a named vector of predicted values ('variable.predictions' element), the representation of clusters coeficients ('plot.vimp' element), and the representation of samples predictions values ('plot.samples' element)
 #'
-#' @import ggRandomForests survival
+#' @import randomForestSRC survival
 #'
 #' @export
 generateRFM <- function(Results,

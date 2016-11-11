@@ -64,6 +64,7 @@ computePhenoTable <- function(cluster.phenotypes, bounds, num = 5){
 # @param dendrograms a character specifying if "row", "col", "both" or "none" dendrograms must be build
 # @param method a character specifying the agglomeration method used to compute the hierarchical dendrograms
 # @param distance a character specifying the measure of distances to be used
+# @param tile.color a character specifying the border color of the tiles (NA to remove tile borders)
 # @param ... further parameters passed to the R dist method
 #
 # @return a list of 3 plots (top dendrogram, right dendrogram, heatmap) and the structures of row and column dendrograms (row.hc and col.hc)
@@ -79,7 +80,8 @@ ggheatmap <- function(matrix,
                       dendrograms        = "both",
                       method             = "ward.D",
                       distance           = "euclidean",
-                      ...) {
+                      tile.color         = "black",
+					  ...) {
 
     if (dendrograms == "both" || dendrograms == "row") {
         row.hc     <- stats::hclust(stats::dist(matrix, method = distance, ...), method = method)
@@ -119,7 +121,7 @@ ggheatmap <- function(matrix,
     melted.data.frame$value <- as.factor(melted.data.frame$value)
     
     centre.plot <- ggplot2::ggplot(melted.data.frame, ggplot2::aes_string(x = "variable", y = "markers")) + 
-                   ggplot2::geom_tile(ggplot2::aes_string(fill = "value"), colour = "black") +
+                   ggplot2::geom_tile(ggplot2::aes_string(fill = "value"), colour = tile.color) +
                    ggplot2::scale_fill_manual(values = colfunc(num), na.value = "grey50", guide = ggplot2::guide_legend(title          = legend.title,
                                                                                                                         direction      = "horizontal",
                                                                                                                         ncol           = 5,
@@ -440,7 +442,7 @@ ggcolors <- function(n = 6){
 #
 # @return a list with 2 numeric values specifying the mode "x" and it associated density "y"
 #
-mode <- function(x) {
+computemode <- function(x) {
     den <- stats::density(x, kernel = c("gaussian"))
     return(list(x = den$x[den$y == max(den$y)], y = max(den$y)))
 }  

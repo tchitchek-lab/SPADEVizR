@@ -297,6 +297,7 @@ volcanoViewer <- function(DAC                = NULL,
 #' @param show.all_labels a logical specifying if all cluster labels must be shown. Only labels of significant clusters are displayed otherwise
 #' @param show.on_device a logical specifying if the ggplot representation must be displayed on the device 
 #' @param max.dots_size a numeric specifying the number of associated cells in the largest dot
+#' @param varname a character indicating the name of the variable to display in the title
 #'
 #' @return a 'ggplot' object
 #' 
@@ -307,7 +308,8 @@ correlatedClustersViewer <- function(CC,
                                      show.cluster_sizes = TRUE,
                                      show.all_labels    = FALSE,
                                      show.on_device     = TRUE,
-                                     max.dots_size      = max(CC@cluster.size)) {
+                                     max.dots_size      = max(CC@cluster.size),
+									 varname            = NULL) {
 
     if (!is.logical(show.cluster_sizes)) {
         stop("Error in correlatedClustersViewer: The 'show.cluster_sizes' parameter must be a logical")
@@ -339,9 +341,8 @@ correlatedClustersViewer <- function(CC,
     if (CC@method.adjust != "none") {
         subtitle   <- paste0(subtitle, "(corrected using a ", CC@method.adjust, " method)")
     }
-    
+		
     plot <- ggplot2::ggplot(data = CC@results) +
-            ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
             ggplot2::geom_hline(yintercept = -log10(CC@th.pvalue),
                                 linetype   = "dashed",
                                 alpha      = 0.3,
@@ -352,6 +353,14 @@ correlatedClustersViewer <- function(CC,
                                 alpha      = 0.3,
                                 color      = "red",
                                 size       = 1)
+	
+	if(!is.null(varname)){
+		subtitle_var <- paste0("with variable: ",varname)
+		plot <- plot+ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)),italic(.(subtitle_var)), ""))))
+	}else{
+		plot <- plot+ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), ""))))
+	}
+
     if (show.cluster_sizes) {
 
         plot <- plot + ggplot2::geom_point(ggplot2::aes_string(x = "correlation", y = "-log10(pvalue)", fill = "significant", size = "cluster.size"),
@@ -406,6 +415,7 @@ correlatedClustersViewer <- function(CC,
 #' Circle packing classes are sorted by the number of clusters in each class. 
 #'
 #' @param AP an object of class 'AP' (object returned by the 'classifyAbundanceProfiles()' function)
+#' @param show.cluster_sizes a logical specifying if dot sizes are proportional to number of associated cells
 #' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
 #' @return a 'ggplot' object
@@ -414,7 +424,8 @@ correlatedClustersViewer <- function(CC,
 #'
 #' @import ggplot2 grDevices gridExtra
 circlesPackingViewer <- function(AP,
-                                 show.on_device = TRUE) {
+                                 show.cluster_sizes = TRUE,
+                                 show.on_device     = TRUE) {
 
     if (!is.logical(show.on_device)) {
         stop("Error in circlesPackingViewer: The 'show.on_device' parameter must be a logical")
@@ -427,11 +438,18 @@ circlesPackingViewer <- function(AP,
     colours <- grDevices::rainbow(n = length(sorted.classes))
 
     plots <- list()
-
+    
     for (i in sorted.classes) {
 
         same.class <- classes[classes$class == i,]
-        same.class <- data.frame(cluster = same.class$cluster, size = AP@cluster.size[as.character(same.class$cluster)], stringsAsFactors = FALSE)
+        
+        if(show.cluster_sizes){
+            cluster.sizes <- AP@cluster.size[as.character(same.class$cluster)]
+        } else {
+            cluster.sizes <- rep(1000, nrow(same.class))
+        }
+        
+        same.class <- data.frame(cluster = same.class$cluster, size = cluster.sizes, stringsAsFactors = FALSE)
         plots[[i]] <- buildCircles(circles = same.class, colours[as.numeric(i)], class = i)
 
     }
@@ -445,19 +463,22 @@ circlesPackingViewer <- function(AP,
         grobs <- gridExtra::arrangeGrob(grobs = list(grid::textGrob("Empty AP object")),
                                         top   = grob.title)
     } else {
-        extra_space <- (length(plots) %% 3)
-
-        if (extra_space) {
-            empty_space <- 3 - extra_space
-            for (i in 1:empty_space) {
-                plots[[length(plots) + 1]] <- grid::rectGrob(gp = grid::gpar(col = 0))
+        if(show.cluster_sizes) {
+            extra_space <- (length(plots) %% 3)
+    
+            if (extra_space) {
+                empty_space <- 3 - extra_space
+                for (i in 1:empty_space) {
+                    plots[[length(plots) + 1]] <- grid::rectGrob(gp = grid::gpar(col = 0))
+                }
             }
+    
+            plots[[length(plots) + 1]] <- grid::rectGrob(gp = grid::gpar(col = 0))
+            plots[[length(plots) + 1]] <- buildCirclesLegend()
+            plots[[length(plots) + 1]] <- grid::rectGrob(gp = grid::gpar(col = 0))
+            
         }
-
-        plots[[length(plots) + 1]] <- grid::rectGrob(gp = grid::gpar(col = 0))
-        plots[[length(plots) + 1]] <- buildCirclesLegend()
-        plots[[length(plots) + 1]] <- grid::rectGrob(gp = grid::gpar(col = 0))
-
+        
         grobs <- gridExtra::arrangeGrob(grobs = plots, ncol = 3,
                                         top   = grob.title)
 
@@ -791,9 +812,10 @@ treeViewer <- function(Results,
 #' @param markers a character vector providing the markers to be used (all markers by default)
 #' @param num a numeric value specifying the number of markers expression categories to be used
 #' @param dendrograms a character specifying which dendrograms must be build ("markers", "clusters", "both" or "none")
+#' @param tile.color a character specifying the border color of the tiles (NA to remove tile borders)
 #' @param show.on_device a logical specifying if the representation will be displayed on device
 #'
-#' @return a 'ggplot' object. This object also contains the marker and cluster hierarchical clustering dendrograms (markers.hc and clusters.hc attributes)
+#' @return a 'ggplot' object. This object also contains the categorical phenotipical heatmap (pheno.table attribute) and the marker and cluster hierarchical clustering dendrograms (markers.hc and clusters.hc attributes)
 #'
 #' @export
 #'
@@ -804,6 +826,7 @@ heatmapViewer <- function(Results,
                           markers        = NULL,
                           num            = 5,
                           dendrograms    = "both",
+						  tile.color     = "black",
                           show.on_device = TRUE) {
     
     if (is.null(Results)) {
@@ -817,7 +840,7 @@ heatmapViewer <- function(Results,
     }
     
     data <- Results@cluster.phenotypes
-    
+	
     if (is.null(clusters)) {
         clusters <- gtools::mixedsort(Results@cluster.names)
     } else if (all(clusters %in% Results@cluster.names)) {
@@ -830,7 +853,7 @@ heatmapViewer <- function(Results,
         stop("Error in heatmapViewer:\nUnknown clusters : ", paste(setdiff(unique(clusters), Results@cluster.names), collapse = " "))
     }
     
-    if (is.null(markers)) {
+	if (is.null(markers)) {
         markers <- gtools::mixedsort(Results@marker.names)
     } else if (all(markers %in% Results@marker.names)) {
         data <- data[, c("sample", "cluster", markers)]
@@ -850,8 +873,12 @@ heatmapViewer <- function(Results,
         stop("Error in heatmapViewer: 'show.on_device' parameter must be a logical")
     }
     
-    pheno.table <- computePhenoTable(data, bounds = Results@bounds, num = num)
+	pheno.table <- computePhenoTable(data, bounds = Results@bounds, num = num)
     
+	if(all(is.na((pheno.table)))){
+		stop("Error in heatmapViewer: filtered phenotypical heatmap is full of small clusters")
+	}
+	
     unrepresented <- setdiff(clusters, unique(pheno.table$cluster))
     
     for (i in seq_len(length(unrepresented))) {
@@ -872,7 +899,7 @@ heatmapViewer <- function(Results,
 
     pheno.table <- pheno.table[, clusters]
     pheno.table <- pheno.table[markers, ]
-
+	
     dendrograms <- ifelse(dendrograms == "markers", "row", dendrograms)
     dendrograms <- ifelse(dendrograms == "clusters", "col", dendrograms)
     
@@ -896,6 +923,7 @@ heatmapViewer <- function(Results,
 
 	plot$markers.hc  <- row.hc
 	plot$clusters.hc <- col.hc
+	plot$pheno.table <- pheno.table
 	
     invisible(plot)
 

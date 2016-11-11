@@ -7,6 +7,7 @@
 #' This function can also generate a PDF file summarizing the results.
 #'
 #' @param Results a Results object
+#' @param clusters a character vector containing the clusters names to be computed (by default all clusters will be computed)
 #' @param th.size a numeric value specifying the minimum number of cells needed for a cluster to be considered a a small cluster
 #' @param PDFfile a character specifying the location of the output PDF path
 #' @param width a numeric specifying the plot width in the output PDF file
@@ -16,22 +17,36 @@
 #'
 #' @export
 qcSmallClusters <- function(Results,
-                             th.size = 50,
-                             PDFfile = "qcSmallClusters.pdf",
-                             width   = ncol(Results@cluster.abundances),
-                             height  = nrow(Results@cluster.abundances)/4){
+                            clusters = NULL,
+                            th.size = 50,
+                            PDFfile = "qcSmallClusters.pdf",
+                            width   = ncol(Results@cluster.abundances),
+                            height  = nrow(Results@cluster.abundances)/4){
     message("[BEGIN] - generating qc small clusters")
     
     data <- Results@cluster.abundances
+    
+    if (is.null(clusters)) {
+        clusters <- Results@cluster.names
+    } else if (all(clusters %in% Results@cluster.names)) {
+        if (typeof(clusters) != "character") {
+            stop("Error in qcSmallClusters: 'clusters' parameter must be a character vector")
+        }
+        clusters <- unique(clusters)
+        data <- data[clusters, , drop = FALSE]
+    } else {
+        stop("Error in qcSmallClusters:\nUnknown clusters : ", paste(setdiff(unique(clusters), Results@cluster.names), collapse = " "))
+    }
     
     total_cells <- apply(data, 1, FUN = function(x){ifelse((sum(x) < th.size), TRUE, FALSE)})
     
     data[data < th.size]  <- TRUE
     data[data >= th.size] <- FALSE
     
-    data  <- cbind(data, total_cells = total_cells)
-    data  <- apply(data, 2, as.logical)
-    perc  <- sum(data[, "total_cells"] == TRUE)/nrow(data) * 100
+    data           <- cbind(data, total_cells = total_cells)
+    data           <- apply(data, 2, as.logical)
+    rownames(data) <- clusters
+    perc           <- sum(data[, "total_cells"] == TRUE)/nrow(data) * 100
     
     data.melted           <- reshape2::melt(data)
     colnames(data.melted) <- c("cluster", "sample", "small")
@@ -45,29 +60,29 @@ qcSmallClusters <- function(Results,
                        format(round(perc, 2), nsmall = 2), "%")
     
     plot <- ggplot2::ggplot(data = data.melted) +
-            ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
-            ggplot2::geom_tile(ggplot2::aes_string(x = "sample", y = "cluster", fill = "small"), colour = "grey30") +            
-            ggplot2::scale_x_discrete(expand = c(0, 0)) + 
-            ggplot2::scale_y_discrete(expand = c(0, 0)) +
-            ggplot2::scale_fill_manual(values = c("green", "red")) +
-            ggplot2::geom_vline(xintercept = (ncol(data) + 0.5), colour = "black", size = 2) +
-            ggplot2::geom_vline(xintercept = (ncol(data) - 0.5), colour = "black", size = 1) +
-            ggplot2::geom_vline(xintercept = 0.5, colour = "black", size = 1) +
-            ggplot2::geom_hline(yintercept = 0.5, colour = "black", size = 1) +
-            ggplot2::geom_hline(yintercept = length(Results@cluster.names) + 0.5, colour = "black", size = 1) +
-            ggplot2::xlab("samples") +
-            ggplot2::ylab("clusters") +
-            ggplot2::theme_bw() +
-            ggplot2::theme(axis.text.x      = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5),
-                           legend.key       = ggplot2::element_blank(),
-                           panel.border     = ggplot2::element_blank(),
-                           plot.background  = ggplot2::element_blank(),
-                           axis.line        = ggplot2::element_blank(),
-                           panel.background = ggplot2::element_blank(),
-                           panel.border     = ggplot2::element_blank(),
-                           panel.grid.major = ggplot2::element_blank(),
-                           panel.grid.minor = ggplot2::element_blank(),
-                           plot.background  = ggplot2::element_blank())
+        ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
+        ggplot2::geom_tile(ggplot2::aes_string(x = "sample", y = "cluster", fill = "small"), colour = "grey30") +            
+        ggplot2::scale_x_discrete(expand = c(0, 0)) + 
+        ggplot2::scale_y_discrete(expand = c(0, 0)) +
+        ggplot2::scale_fill_manual(values = c("green", "red")) +
+        ggplot2::geom_vline(xintercept = (ncol(data) + 0.5), colour = "black", size = 2) +
+        ggplot2::geom_vline(xintercept = (ncol(data) - 0.5), colour = "black", size = 1) +
+        ggplot2::geom_vline(xintercept = 0.5, colour = "black", size = 1) +
+        ggplot2::geom_hline(yintercept = 0.5, colour = "black", size = 1) +
+        ggplot2::geom_hline(yintercept = length(Results@cluster.names) + 0.5, colour = "black", size = 1) +
+        ggplot2::xlab("samples") +
+        ggplot2::ylab("clusters") +
+        ggplot2::theme_bw() +
+        ggplot2::theme(axis.text.x      = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5),
+                       legend.key       = ggplot2::element_blank(),
+                       panel.border     = ggplot2::element_blank(),
+                       plot.background  = ggplot2::element_blank(),
+                       axis.line        = ggplot2::element_blank(),
+                       panel.background = ggplot2::element_blank(),
+                       panel.border     = ggplot2::element_blank(),
+                       panel.grid.major = ggplot2::element_blank(),
+                       panel.grid.minor = ggplot2::element_blank(),
+                       plot.background  = ggplot2::element_blank())
     plot(plot)
     
     message("[END] - generating qc small clusters")
@@ -98,6 +113,8 @@ qcSmallClusters <- function(Results,
 #' "both": check "unimodality" and "spread"
 #'
 #' @param Results a Results object (with 'flowset' slot not null)
+#' @param clusters a character vector containing the clusters names to be computed (by default all clusters will be computed)
+#' @param only.clustering_markers a logical specifying if only clustering marker densities must be displayed.
 #' @param uniform.test a character specifying the qc assessment to perform
 #' @param th.pvalue a numeric value specifying the pvalue threshold of the Hartigan's dip test (multimodal if p.value < th.pvalue)
 #' @param th.IQR a numeric value specifying the IQR (interquartile range) threshold to assume a distribution as uniform
@@ -116,15 +133,17 @@ qcSmallClusters <- function(Results,
 #' @importFrom gtools mixedsort
 #' @importFrom flowCore fsApply
 qcUniformClusters <- function(Results,
-                                  uniform.test       = "both",
-                                  th.pvalue           = 0.05,
-                                  th.IQR              = 2,
-                                  density.PDFfile     = "qcUniformClusters_density.pdf",
-                                  density.PDFfile.dim = c(17, 10),
-                                  heatmap.PDFfile     = "qcUniformClusters_heatmap.pdf",
-                                  heatmap.PDFfile.dim = c(length(Results@marker.names), length(Results@cluster.names)/4),
-                                  verbose             = TRUE,
-                                  ...){
+                              clusters                = NULL,
+                              only.clustering_markers = FALSE,
+                              uniform.test            = "both",
+                              th.pvalue               = 0.05,
+                              th.IQR                  = 2,
+                              density.PDFfile         = "qcUniformClusters_density.pdf",
+                              density.PDFfile.dim     = c(17, 10),
+                              heatmap.PDFfile         = "qcUniformClusters_heatmap.pdf",
+                              heatmap.PDFfile.dim     = c(length(Results@marker.names), length(Results@cluster.names)/4),
+                              verbose                 = TRUE,
+                              ...){
     
     if (is.null(Results)) {
         stop("Error in qcUniformClusters: The 'Results' parameter can not be NULL")
@@ -162,46 +181,68 @@ qcUniformClusters <- function(Results,
         on.exit(dev.off())
         pdf(density.PDFfile, width = density.PDFfile.dim[1], height = density.PDFfile.dim[2])
     }
-    
+
+    if (is.null(clusters)) {
+        clusters <- gtools::mixedsort(Results@cluster.names)
+    } else if (all(clusters %in% Results@cluster.names)) {
+        if (typeof(clusters) != "character") {
+            stop("Error in qcUniformClusters: 'clusters' parameter must be a character vector")
+        }
+    } else {
+        stop("Error in qcUniformClusters:\nUnknown clusters : ", paste(setdiff(unique(clusters), Results@cluster.names), collapse = " "))
+    }
+        
     message("[BEGIN] - generating Uniform Phenotypes QC")
-    flowset <- Results@flowset
+
+    clustering.markers <- Results@clustering.markers
     
-    accuracy.matrix <- matrix(nrow = length(Results@cluster.names), ncol = length(Results@marker.names), dimnames = list(Results@cluster.names, Results@marker.names))
+    if (only.clustering_markers) {
+        markers <- clustering.markers
+    } else {
+        markers <- Results@marker.names
+    }
+
+    flowset <- Results@flowset
+        
+    accuracy.matrix <- matrix(nrow = length(clusters), ncol = length(markers), dimnames = list(clusters, markers))
     
     min <- floor(min(flowCore::fsApply(flowset[, flowset@colnames != "cluster"], flowCore::each_col, base::min, na.rm = TRUE), na.rm = TRUE))
     max <- ceiling(max(flowCore::fsApply(flowset[, flowset@colnames != "cluster"], flowCore::each_col, base::max, na.rm = TRUE), na.rm = TRUE))
-    
-    clustering.markers <- Results@clustering.markers
-    ordered.markers    <- c(gtools::mixedsort(clustering.markers),gtools::mixedsort(setdiff(Results@marker.names, clustering.markers)))
+
+    ordered.markers    <- c(gtools::mixedsort(clustering.markers),gtools::mixedsort(setdiff(markers, clustering.markers)))
     
     bold.markers       <- ifelse(is.element(ordered.markers, clustering.markers), "bold", "plain")
     colored.markers    <- ifelse(is.element(ordered.markers, clustering.markers), "blue", "black")
 
-    for (cluster in Results@cluster.names) {
+	count <- 0 
+    for (cluster in clusters) {
         
         data.facet <- data.frame(ind = c(), subtitle = c(), upper = c(), lower = c(), median = c(), pinnacle = c())
 
         if (verbose) {
-            message(paste0("Cluster: ", cluster, " on ", length(Results@cluster.names)))
+			count <- count + 1
+            message(paste0("Cluster: ", count, " on ", length(clusters)))
         }
         expressions.list <- vector("list", length(flowset))
         for (sample in 1:length(flowset)) {
             frame <- flowset[[sample]]@exprs
-            expressions.list[[sample]] <- frame[frame[, "cluster"] == cluster, colnames(frame) != "cluster"]
+            expressions.list[[sample]] <- frame[frame[, "cluster"] == cluster, colnames(frame) %in% ordered.markers]
         }
         expressions <- do.call(rbind, expressions.list)
         for (marker in ordered.markers) {
             if (nrow(expressions) > 1) {
+
                 marker.expression <- expressions[, marker]
                 subtitle <- ""
                 if (uniform.test == "unimodality" || uniform.test == "both") {
-                    utils::capture.output(p.value <- diptest::dip.test(marker.expression, ...)$p.value, type = "message")
+                    #utils::capture.output(p.value <- diptest::dip.test(marker.expression, ...)$p.value, type = "message")
+					p.value <- diptest::dip.test(marker.expression, ...)$p.value
                     if (p.value < th.pvalue) {
                         uniform <- FALSE
-                        subtitle <- paste0(subtitle," Non-unimodale distribution detected (p.value = ", round(p.value, 2), ").")
+                        subtitle <- paste0(subtitle," Non-unimodale distribution detected (p.value = ", round(p.value, 2), ")")
                     } else {
                         uniform <- TRUE
-                        subtitle <- paste0(subtitle," Unimodale distribution detected (p.value = ", round(p.value, 2), ").")
+                        subtitle <- paste0(subtitle," Unimodale distribution detected (p.value = ", round(p.value, 2), ")")
                     }
                     facet <- data.frame(ind      = marker,
                                         subtitle = subtitle,
@@ -215,14 +256,14 @@ qcUniformClusters <- function(Results,
 
                     quantile  <- quantile(marker.expression)
                     IQR       <- quantile[4] - quantile[2]
-                    pinnacle  <- mode(marker.expression)$y
+                    pinnacle  <- computemode(marker.expression)$y
                     
                     if (IQR < th.IQR) {
                         uniform <- ifelse(uniform, TRUE, FALSE)
-                        subtitle <- paste0(subtitle," Low spread detected (IQR < ", th.IQR, ").")
+                        subtitle <- paste0(subtitle,"\n"," Low spread detected (IQR < ", th.IQR, ")")
                     } else {
                         uniform <- FALSE
-                        subtitle <- paste0(subtitle," High spread detected (IQR > ", th.IQR, ").")
+                        subtitle <- paste0(subtitle,"\n"," High spread detected (IQR > ", th.IQR, ")")
                     }
 
                     facet <- data.frame(ind      = marker,
@@ -242,6 +283,7 @@ qcUniformClusters <- function(Results,
         }
         
         if (!is.null(density.PDFfile)) {
+
             data.expressions     <- as.data.frame(expressions)
             data.expressions     <- utils::stack(data.expressions)
             data.expressions$ind <- factor(data.expressions$ind, levels = ordered.markers)
@@ -304,7 +346,7 @@ qcUniformClusters <- function(Results,
         bold.markers       <- ifelse(is.element(ordered.markers, clustering.markers), "bold", "plain")
         colored.markers    <- ifelse(is.element(ordered.markers, clustering.markers), "blue", "black")
         
-        accuracy.matrix.melted$cluster <- factor(accuracy.matrix.melted$cluster, levels = rev(Results@cluster.names))
+        accuracy.matrix.melted$cluster <- factor(accuracy.matrix.melted$cluster, levels = rev(clusters))
         accuracy.matrix.melted$marker  <- factor(accuracy.matrix.melted$marker, levels = ordered.markers, ordered = TRUE)
         
         details <- ""
@@ -326,7 +368,7 @@ qcUniformClusters <- function(Results,
         plot <- ggplot2::ggplot(data = accuracy.matrix.melted) +
                 ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
                 ggplot2::geom_tile(ggplot2::aes_string(x = "marker", y = "cluster", fill = "uniform"), colour = "grey30") +
-                ggplot2::scale_fill_manual(values = c("red", "green"), na.value = "grey50") +
+                ggplot2::scale_fill_manual(values = c("FALSE" = "red", "TRUE" = "green"), na.value = "grey50") +
                 ggplot2::scale_x_discrete(expand = c(0, 0)) + 
                 ggplot2::scale_y_discrete(expand = c(0, 0)) +
                 ggplot2::xlab("markers") +
@@ -336,7 +378,7 @@ qcUniformClusters <- function(Results,
                 ggplot2::geom_vline(xintercept = (ncol(accuracy.matrix) - 0.5), colour = "black", size = 1) +
                 ggplot2::geom_vline(xintercept = 0.5, colour = "black", size = 1) +
                 ggplot2::geom_hline(yintercept = 0.5, colour = "black", size = 1) +
-                ggplot2::geom_hline(yintercept = length(Results@cluster.names) + 0.5, colour = "black", size = 1) +
+                ggplot2::geom_hline(yintercept = length(clusters) + 0.5, colour = "black", size = 1) +
                 ggplot2::theme_bw() +
                 ggplot2::theme(axis.text.x      = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5, face = bold.markers, color = colored.markers),
                                legend.key       = ggplot2::element_blank(),
