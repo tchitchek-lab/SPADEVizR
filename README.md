@@ -19,7 +19,7 @@
 	1.  [Identification of clusters having an abundance greater than a specific value (Abundant Clusters)](#stat_function_identifyAC)
 	2.  [Identification of clusters having an abundance different between two biological conditions (Differentially Abundant Clusters)](#stat_function_identifyDAC)
 	3.  [Identification of clusters having an abundance correlated to a biological variable (Correlated Clusters)](#stat_function_identifyCC)
-	4.  [Classification of clusters based on theirs abundance profiles (Abundance Profiles)](#stat_function_classify_abundance_profiles)
+	4.  [Classification of clusters based on theirs abundance profiles](#stat_function_classify_abundance_profiles)
 5.  [Visualization methods](#viewer_functions)
 	1.  [Visualization of the number of cells associated to each cluster (Count Viewer)](#count_viewer_function)
 	2.  [Visualization of combined SPADE trees (Tree Viewer)](#tree_viewer_function)
@@ -494,7 +494,7 @@ The `identifyAC()` function returns an `AC` object which stores the main computa
 This function takes a `Results` object as parameter and a character vector (`samples`) specifying the samples to use in the statistical computations. 
 The calculations can be either based on relative abundance (percentages of cells relative to parent) or based on absolute abundance (number of cells) using the `use.percentages` parameter (TRUE by default).
 
-Significant Abundant Clusters are characterized by two parameters: the theorical mean or median value (`mu` parameter, set by default to `0`) and the p-value threshold (`th.pvalue` parameter, set by default to `0.05`).
+Significant Abundant Clusters are characterized by two parameters: the theoretical mean or median value (`mu` parameter, set by default to `0`) and the p-value threshold (`th.pvalue` parameter, set by default to `0.05`).
 
 For instance, the identification of clusters having an abundance statistically greater than 1% in some selected samples can be done using the following commands:
 
@@ -611,7 +611,7 @@ plot(resultsDAC)
 
 <img src="README/VolcanoViewer-1.png" style="display: block; margin: auto;" />
 
-*This representation revealed that 9 clusters have been identified as Differentially Abundant Clusters, that is to say, cluster having an abundance statistically different between two biological conditions with a fold-change greater than 2 (p-value < 0.05).*
+*This representation revealed that 9 clusters have been identified as Differentially Abundant Clusters, that is to say, clusters having an abundance statistically different between two biological conditions with a fold-change greater than 2 (p-value < 0.05).*
 
 ## <a name="stat_function_identifyCC"/> 4.3. Identification of cell clusters having an abundance correlated with a biological variable (Correlated Clusters)
 *Correlated Clusters* are clusters having a number of associated cells statistically correlated with a biological variable. 
@@ -677,8 +677,8 @@ plot(resultsCC)
 
 *This representation revealed that the cluster 33 has been identified as a Correlated Cluster, that is to say, a cluster having an abundance statistically correlated to a biological variable with a coefficient of correlation above 0.8 and p-value < 0.05.*
 
-## <a name="stat_function_classify_abundance_profiles"/> 4.4. Classification of cell clusters based on theirs abundance profiles (Abundance Profiles)
-Cell clusters can be classified based on theirs *Abundance Profiles* that is to say based on the number of cells associated to each cluster for each sample.
+## <a name="stat_function_classify_abundance_profiles"/> 4.4. Classification of cell clusters based on theirs abundance profiles
+Cell clusters can be classified based on theirs *Abundance Profiles*, that is to say, based on the number of cells associated to each cluster for each sample.
 The classification of those abundance profiles allows identifying groups of clusters having a similar behavior in term of abundance within the dataset.
 These similar groups of cell clusters, called classes, can be identified using several classification methods via the `classifyAbundanceProfiles()` function.
 This function returns an `AP` object which stores main computation results about the classes of these Abundance Profile (classification method, parameters, and classes).
@@ -914,7 +914,7 @@ streamgraphViewer(results, samples = samples, clusters = clusters)
 
 <img src="README/StreamgraphViewer_absolute-1.png" style="display: block; margin: auto;" />
 
-*Streamgraph showing absolute abundances for a set of specific clusters across all the samples. Samples are ordered in a way that each triplet of samples corresponds to an individuals at baseline, 8 days after the post boost vaccination and 28 days after the post boost vaccination.*
+*Streamgraph showing absolute abundances for a set of specific clusters across all the samples. Samples are ordered in a way that each triplet of samples corresponds to individuals at baseline, 8 days after the post boost vaccination and 28 days after the post boost vaccination.*
 
 
 ```r
@@ -969,7 +969,7 @@ In such representation, each cell is represented by a dot which is positioned in
 This representation can be displayed using the `biplotViewer()` function which takes a `Results` object as parameter.
 
 Cells coming from specific clusters or samples can be selected using the `clusters` and `samples` parameters. 
-Moreover, samples can be displayed independently (default behaviour) or merged.
+Moreover, samples can be displayed independently (default behavior) or merged.
 In order to seed-up the computations, the number of cells to display can be down-sampled using the `resample.ratio` parameter.  
 
 For instance, such representation can be generated using the following command:
@@ -1018,7 +1018,7 @@ It is to note that samples having small number of cells (specified by the `th.mi
 # <a name="model_functions"/> 6. Modeling methods
 ## <a name="stat_function_prediction_glm"/> 6.1. Prediction of biological outcomes using generalized linear models
 SPADEVizR is able to generate generalized linear models (GLM) to predict biological outcomes associated to each sample based on cluster abundances.
-This method aims to identify of linear combinations of clusters abundances that correlates with a biological outcomes from on a training dataset.
+This method aims to identify of linear combinations of clusters abundances that correlates with a biological outcome from on a training dataset.
 Based on these linear combinations, this function can predict biological outcomes for a test dataset.
 
 The construction of the generalized linear model can be done using via the `generateGLM()` function.
@@ -1252,9 +1252,9 @@ plot(resultsRFM$plot.samples)
 
 # <a name="qc"/> 7. Quality Control methods
 ## <a name="qc_small"/> 7.1. Quantification of clusters having a small number of associated cells
-The quantification of the number of clusters having small amount of associated cells in the whole dataset is important to correctly interpret the clustering results.
+The quantification of the number of clusters having small number of associated cells in the whole dataset is important to correctly interpret the clustering results.
 A low percentage indicates a good cell clustering result.
-If the number of cell clusters is too high then some clusters can be very small.
+If the number of cell clusters is too high, then some clusters can be very small.
 Thereby, the phenotypical characterization of such clusters can be meaningless.
 
 The `smallClustersQC()` function allows identifying clusters having a number of cells smaller than a specific threshold (set to 50 by default).
@@ -1284,7 +1284,7 @@ The percentage of clusters having a small number of cells among all clusters is 
 
 Furthermore, the quantification of the number of clusters having uniform phenotypes is important to correctly interpret the clustering results.
 A high percentage indicates a good cell clustering result.
-If the expression distributions for some markers of a given cluster are non-unimodal (representing some sub-populations) or with high range then the characterization of this cluster can be biased. 
+If the expression distributions for some markers of a given cluster are non-unimodal (representing some sub-populations) or with high ranges, then the characterization of this cluster can be biased. 
 
 The `qcUniformClusters()` function allows reporting these two kinds of information. 
 Firstly, the identification of clusters having non-unimodal marker expression densities is performed using a Hartigan's dip test (with a p-value lower than the `th.pvalue` parameter). 
@@ -1334,7 +1334,7 @@ The following figure shows the marker expression densities for one given cluster
 Expression distributions for each marker of the cluster 42. 
 Blue rectangles indicate clustering markers.
 For each marker distribution, the Hartigan's Dip test p-value, which indicates if the distribution in non-unimodal, and the interquartile range (IQR), indicating if the expression range is too high, are indicated.
-Non uniform markers, represented in red, are defined as markers having a p-value lower than 0.05 (specified by the user) and an IQR higher than 2 (specified by the user).
+Non-uniform markers, represented in red, are defined as markers having a p-value lower than 0.05 (specified by the user) and an IQR higher than 2 (specified by the user).
 Marker expressions with unimodal distribution or with a low spread of expression, are represented in green.
 
 An illustrative QC density report for uniform clusters is available on the SPADEVizR github [(/README/SPADEVizR-qcreport-UniformClusters_density.pdf file)](https://github.com/tchitchek-lab/SPADEVizR/blob/master/README/SPADEVizR-qcreport-UniformClusters_density.pdf).
@@ -1386,7 +1386,7 @@ generateReport(results, PDFfile = "SPADEVizR-report.pdf", select.plots = c("tree
 ```
 
 
-An illustrative report is available on the PADEVizR github [(/README/SPADEVizR-report.pdf file)](https://github.com/tchitchek-lab/SPADEVizR/blob/master/README/SPADEVizR-report.pdf).
+An illustrative report is available on the SPADEVizR github [(/README/SPADEVizR-report.pdf file)](https://github.com/tchitchek-lab/SPADEVizR/blob/master/README/SPADEVizR-report.pdf).
 
 # <a name="object_structures"/> 10. SPADEVizR object structures
 
@@ -1432,7 +1432,7 @@ cluster.size       | a numeric vector containing the total number of associated 
 use.percentages    | a logical specifying if the computation was performed on the percentage of cell abundance
 method             | a character containing the name of the statistical test used ("t.test" or "wilcox.test")
 method.adjust      | a character containing the name of the multiple correction method used ("none", holm", "hochberg", "hommel", "bonferroni", "BH", "BY" or "fdr")
-mu                 | a numeric specifying the theorical value (mu) of the one sample statistical test
+mu                 | a numeric specifying the theoretical value (mu) of the one sample statistical test
 th.pvalue          | a numeric value specifying the p-value threshold
 results            | a dataframe containing for each cluster (first column): the abundance mean (second column), the abundance standard deviation (third column) of the biological condition, the associated p-value (fourth column) and a logical (fifth column) specifying if the cluster is significantly abundant
 
