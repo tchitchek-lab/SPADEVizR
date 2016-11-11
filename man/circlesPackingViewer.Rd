@@ -4,10 +4,12 @@
 \alias{circlesPackingViewer}
 \title{Visualization of abundance profiles classification}
 \usage{
-circlesPackingViewer(AP, show.on_device = TRUE)
+circlesPackingViewer(AP, show.cluster_sizes = TRUE, show.on_device = TRUE)
 }
 \arguments{
 \item{AP}{an object of class 'AP' (object returned by the 'classifyAbundanceProfiles()' function)}
+
+\item{show.cluster_sizes}{a logical specifying if dot sizes are proportional to number of associated cells}
 
 \item{show.on_device}{a logical specifying if the representation will be displayed on device}
 }

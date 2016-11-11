@@ -4,8 +4,9 @@
 \alias{qcUniformClusters}
 \title{Computing of the fraction of cluster with uniform phenotypes}
 \usage{
-qcUniformClusters(Results, uniform.test = "both", th.pvalue = 0.05,
-  th.IQR = 2, density.PDFfile = "qcUniformClusters_density.pdf",
+qcUniformClusters(Results, clusters = NULL, only.clustering_markers = FALSE,
+  uniform.test = "both", th.pvalue = 0.05, th.IQR = 2,
+  density.PDFfile = "qcUniformClusters_density.pdf",
   density.PDFfile.dim = c(17, 10),
   heatmap.PDFfile = "qcUniformClusters_heatmap.pdf",
   heatmap.PDFfile.dim = c(length(Results@marker.names),
@@ -13,6 +14,10 @@ qcUniformClusters(Results, uniform.test = "both", th.pvalue = 0.05,
 }
 \arguments{
 \item{Results}{a Results object (with 'flowset' slot not null)}
+
+\item{clusters}{a character vector containing the clusters names to be computed (by default all clusters will be computed)}
+
+\item{only.clustering_markers}{a logical specifying if only clustering marker densities must be displayed.}
 
 \item{uniform.test}{a character specifying the qc assessment to perform}
 

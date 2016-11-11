@@ -6,7 +6,7 @@
 \usage{
 correlatedClustersViewer(CC, show.cluster_sizes = TRUE,
   show.all_labels = FALSE, show.on_device = TRUE,
-  max.dots_size = max(CC@cluster.size))
+  max.dots_size = max(CC@cluster.size), varname = NULL)
 }
 \arguments{
 \item{CC}{an object of class 'CC' (object returned by the 'computeCC()' function)}
@@ -18,6 +18,8 @@ correlatedClustersViewer(CC, show.cluster_sizes = TRUE,
 \item{show.on_device}{a logical specifying if the ggplot representation must be displayed on the device}
 
 \item{max.dots_size}{a numeric specifying the number of associated cells in the largest dot}
+
+\item{varname}{a character indicating the name of the variable to display in the title}
 }
 \value{
 a 'ggplot' object

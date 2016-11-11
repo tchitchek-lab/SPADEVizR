@@ -4,12 +4,14 @@
 \alias{qcSmallClusters}
 \title{Computing of the fraction of clusters with low number of associated cells}
 \usage{
-qcSmallClusters(Results, th.size = 50, PDFfile = "qcSmallClusters.pdf",
-  width = ncol(Results@cluster.abundances),
+qcSmallClusters(Results, clusters = NULL, th.size = 50,
+  PDFfile = "qcSmallClusters.pdf", width = ncol(Results@cluster.abundances),
   height = nrow(Results@cluster.abundances)/4)
 }
 \arguments{
 \item{Results}{a Results object}
+
+\item{clusters}{a character vector containing the clusters names to be computed (by default all clusters will be computed)}
 
 \item{th.size}{a numeric value specifying the minimum number of cells needed for a cluster to be considered a a small cluster}
 

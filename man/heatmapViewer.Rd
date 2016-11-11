@@ -5,7 +5,7 @@
 \title{Visualization of all clusters phenotypes using categorical heatmap}
 \usage{
 heatmapViewer(Results, clusters = NULL, markers = NULL, num = 5,
-  dendrograms = "both", show.on_device = TRUE)
+  dendrograms = "both", tile.color = "black", show.on_device = TRUE)
 }
 \arguments{
 \item{Results}{a 'Results' object}
@@ -18,10 +18,12 @@ heatmapViewer(Results, clusters = NULL, markers = NULL, num = 5,
 
 \item{dendrograms}{a character specifying which dendrograms must be build ("markers", "clusters", "both" or "none")}
 
+\item{tile.color}{a character specifying the border color of the tiles (NA to remove tile borders)}
+
 \item{show.on_device}{a logical specifying if the representation will be displayed on device}
 }
 \value{
-a 'ggplot' object. This object also contains the marker and cluster hierarchical clustering dendrograms (markers.hc and clusters.hc attributes)
+a 'ggplot' object. This object also contains the categorical phenotipical heatmap (pheno.table attribute) and the marker and cluster hierarchical clustering dendrograms (markers.hc and clusters.hc attributes)
 }
 \description{
 The Heatmap Viewer aims to visualize the phenotypes of all cell clusters.
