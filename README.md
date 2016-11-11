@@ -1331,7 +1331,7 @@ An illustrative QC heatmap report for uniform clusters is available on the SPADE
 
 The following figure shows the marker expression densities for one given cluster.
 ![](README/UniformClustersDensities.png)
-Expression distributions for each marker of the cluster 42. 
+Expression distributions for each marker of the cluster 6 
 Blue rectangles indicate clustering markers.
 For each marker distribution, the Hartigan's Dip test p-value, which indicates if the distribution in non-unimodal, and the interquartile range (IQR), indicating if the expression range is too high, are indicated.
 Non-uniform markers, represented in red, are defined as markers having a p-value lower than 0.05 (specified by the user) and an IQR higher than 2 (specified by the user).
