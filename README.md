@@ -1518,7 +1518,7 @@ If you use SPADEVizR in your publication, please cite the following article:
 "Gautreau G, Pejoski D, Cosma A, Le Grand R, Beignon AS, and Tchitchek N. SPADEVizR: an R package for Visualization, Analysis and Integration of SPADE results. Bioinformatics, in press, 10.1093/bioinformatics/btw708 (2016)".
 
 # <a name="license"/> 14. License
-SPADEVizR is freely distributed under the GLP-3 license.
+SPADEVizR is freely distributed under the GPL-3 license.
 
 # <a name="references"/> 15. References 
 [1] - Bendall, S. C. et al. Single-cell mass cytometry of differential immune and drug responses across a human hematopoietic continuum. Science (New York, N.Y.), 332(6030), 687-96. (2011).
