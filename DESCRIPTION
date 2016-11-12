@@ -9,6 +9,7 @@ License: GPL-3 | file LICENSE
 Imports:
     data.table,
     diptest,
+	evtree,
     flowCore,
     ggdendro,
 	ggfortify,
