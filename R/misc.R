@@ -7,6 +7,8 @@
 #' @param clusters a character vector containing the names of the clusters to remove
 #'  
 #' @return a Results object
+#'
+#' @export
 removeClusters <- function(Results, clusters){
 	
 	newResults <- Results
@@ -46,6 +48,8 @@ removeClusters <- function(Results, clusters){
 #' @param name a character specifiyng the name of the new cluster to create
 #'  
 #' @return a Results object
+#'
+#' @export
 #'
 #' @import plyr
 mergeClusters <- function(Results, clusters, name){
