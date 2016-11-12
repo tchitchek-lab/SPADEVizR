@@ -7,7 +7,7 @@
 #' @param clusters a character vector containing the names of the clusters to remove
 #'  
 #' @return a Results object
-removeCluster <- function(Results, clusters){
+removeClusters <- function(Results, clusters){
 	
 	newResults <- Results
 	
