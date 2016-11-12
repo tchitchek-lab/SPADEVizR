@@ -1276,6 +1276,7 @@ An illustrative QC heatmap for small clusters is available on the SPADEVizR gith
 
 The following figure shows a QC heatmap for small clusters.
 ![](README/SmallClustersHeatmap.png) 
+
 Heatmap summarizing the cell clusters having a number of associated cells lower than 100 cells (specified by the user) in the whole dataset.
 Sample contributions are shown on the left part of the heatmap while the overall dataset contribution is shown on the right part of the heatmap.
 The percentage of clusters having a small number of cells among all clusters is indicated on the top of the heatmap.
@@ -1317,7 +1318,8 @@ The `perc` numeric element specifies the percentage of clusters having only unif
 The `accuracy.matrix` dataframe element specifies the clusters having uniform phenotypes in the dataset. 
 
 The following figure shows a generate QC heatmap report.
-![](README/UniformClustersHeatmap.png) 
+![](README/UniformClustersHeatmap.png)
+
 Heatmap summarizing the cell clusters having uniform phenotypes. 
 Uniform clusters are defined as clusters having unimodal and low range expression density for all the clustering markers and displayed in the last column of the heatmap.
 The unimodality and spread of marker expressions of each cluster are determined using the Hartigan's Dip test and the interquartile range (IQR). 
@@ -1331,7 +1333,6 @@ An illustrative QC heatmap report for uniform clusters is available on the SPADE
 
 The following figure shows the marker expression densities for one given cluster.
 ![](README/UniformClustersDensities.png)
-
 
 Expression distributions for each marker of the cluster 6. 
 Blue rectangles indicate clustering markers.
