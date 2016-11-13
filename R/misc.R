@@ -1,7 +1,7 @@
 #' @title Removing of cell clusters from a Results object
 #' 
 #' @description 
-#' This function is used to remove one or more clusters from a Results object.
+#' This function is used to remove one or more cell clusters from a Results object.
 #' 
 #' @param Results a Results object
 #' @param clusters a character vector containing the names of the clusters to remove
@@ -14,12 +14,12 @@ removeClusters <- function(Results, clusters){
 	newResults <- Results
 	
 	if(!is.character(clusters)){
-		stop(paste("error in removeCluster: clusters is not character"))
+		stop(paste("error in removeClusters: clusters is not character"))
 	}
 	
 	if(any(!clusters %in% newResults@cluster.names)){
 		unknown <- clusters[!clusters %in% newResults@cluster.names]
-		stop(paste("error in removeCluster: clusters ",unknown," are unknown"))
+		stop(paste("error in removeClusters: clusters ",unknown," are unknown"))
 	}
 	
 	tokeep <- newResults@cluster.names[!(newResults@cluster.names %in% clusters)]
@@ -30,7 +30,7 @@ removeClusters <- function(Results, clusters){
 	newResults@cluster.phenotypes <- newResults@cluster.phenotypes[newResults@cluster.phenotypes$cluster %in% tokeep,]
 	newResults@cluster.number     <- apply(newResults@cluster.abundances,1,sum)
 	
-	return(newResults)
+	invisible(newResults)
 }
 
 
@@ -71,15 +71,17 @@ mergeClusters <- function(Results, clusters, name){
 	tomerge <- newResults@cluster.names[newResults@cluster.names %in% clusters]
 	
 	newResults@cluster.names      <- c(newResults@cluster.names,name)
+	
 	abundances_merged             <- apply(newResults@cluster.abundances[tomerge,],2,sum)
 	newResults@cluster.abundances <- rbind(newResults@cluster.abundances,abundances_merged)
 	rownames(newResults@cluster.abundances) <- newResults@cluster.names
 	phenotypes_merged             <- newResults@cluster.phenotypes[newResults@cluster.phenotypes$cluster %in% tomerge,]
 	phenotypes_merged             <- plyr::ddply(phenotypes_merged,"cluster") 
 	newResults@cluster.phenotypes <- rbind(newResults@cluster.phenotypes,phenotypes_merged)
+	
 	newResults@cluster.number     <- c(newResults@cluster.number,sum(abundances_merged))
 	
-	newResults <- removeCluster(newResults,clusters)
+	newResults <- removeClusters(newResults,clusters)
 	
-	return(newResults)
+	invisible(newResults)
 }

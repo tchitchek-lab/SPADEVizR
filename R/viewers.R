@@ -919,7 +919,9 @@ heatmapViewer <- function(Results,
     if (show.on_device) {
         grid::grid.newpage()
         grid::grid.draw(plot)
-    }
+    }else{
+		grDevices::dev.off()
+	}
 
 	plot$markers.hc  <- row.hc
 	plot$clusters.hc <- col.hc

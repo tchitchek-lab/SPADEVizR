@@ -15,6 +15,6 @@ removeClusters(Results, clusters)
 a Results object
 }
 \description{
-This function is used to remove one or more clusters from a Results object.
+This function is used to remove one or more cell clusters from a Results object.
 }
 
