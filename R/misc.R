@@ -41,7 +41,7 @@ removeClusters <- function(Results, clusters){
 #' 
 #' @details
 #' The function merges the abundances and the phenotypes of clusters into a new one.
-#' Clusters to merge are removed from the Results object.
+#' Clusters to merge are not removed from the Results object after the merging.
 #' 
 #' @param Results a Results object
 #' @param clusters a character vector containing the names of the clusters to remove
@@ -80,8 +80,6 @@ mergeClusters <- function(Results, clusters, name){
 	newResults@cluster.phenotypes <- rbind(newResults@cluster.phenotypes,phenotypes_merged)
 	
 	newResults@cluster.number     <- c(newResults@cluster.number,sum(abundances_merged))
-	
-	newResults <- removeClusters(newResults,clusters)
 	
 	invisible(newResults)
 }
