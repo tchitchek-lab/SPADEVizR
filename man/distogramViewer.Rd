@@ -19,7 +19,7 @@ distogramViewer(Results, samples = NULL, clusters = NULL, markers = NULL,
 \item{show.on_device}{a logical specifying if the representation will be displayed on device}
 }
 \value{
-a 'ggplot' object
+a 'ggplot' object.  This object also contains the correlations for each pair of marker (cor attribute).
 }
 \description{
 The Distogram Viewer aims to visualize the pairwise co-expressions between all markers using a distogram representation. 

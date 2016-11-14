@@ -1901,7 +1901,7 @@ biplotViewer <- function(Results,
 #' @param markers a character vector specifying the markers to be displayed
 #' @param show.on_device a logical specifying if the representation will be displayed on device 
 #'
-#' @return a 'ggplot' object
+#' @return a 'ggplot' object.  This object also contains the correlations for each pair of marker (cor attribute).
 #' 
 #' @export
 #' 
@@ -2018,6 +2018,11 @@ distogramViewer <- function(Results,
         plot(plot)
     }
 
+	rownames(cormat) <- markers
+	colnames(cormat) <- markers
+	
+	plot$cor = cormat
+	
     invisible(plot)
 
 }
