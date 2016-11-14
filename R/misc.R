@@ -44,7 +44,7 @@ removeClusters <- function(Results, clusters){
 #' Clusters to merge are not removed from the Results object after the merging.
 #' 
 #' @param Results a Results object
-#' @param clusters a character vector containing the names of the clusters to remove
+#' @param clusters a character vector containing the names of the clusters to merge
 #' @param name a character specifiyng the name of the new cluster to create
 #'  
 #' @return a Results object

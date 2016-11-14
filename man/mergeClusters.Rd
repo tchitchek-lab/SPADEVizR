@@ -9,7 +9,7 @@ mergeClusters(Results, clusters, name)
 \arguments{
 \item{Results}{a Results object}
 
-\item{clusters}{a character vector containing the names of the clusters to remove}
+\item{clusters}{a character vector containing the names of the clusters to merge}
 
 \item{name}{a character specifiyng the name of the new cluster to create}
 }
