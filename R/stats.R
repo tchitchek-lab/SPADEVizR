@@ -322,7 +322,7 @@ identifyCC <- function(Results,
         data   <- prop.table(as.matrix(data), 2)
         data   <- data * 100
     }else{
-        data   <- data
+        data   <- as.matrix(data)
     }
     
     n            <- nrow(data)
