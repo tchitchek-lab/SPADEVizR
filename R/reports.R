@@ -37,7 +37,7 @@
 #' @export
 #' 
 #' @import gridExtra
-generateReport <- function(Results,
+createReport <- function(Results,
                            PDFfile      = "report.pdf",
                            select.plots = c("count", "heatmap", "MDSclusters", "pheno"),
                            clusters     = NULL,

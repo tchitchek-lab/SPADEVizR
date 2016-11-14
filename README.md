@@ -1363,7 +1363,7 @@ export(AC, filename = "export.txt")
 SPADEVizR is able to generate a PDF document gathering all visual representation of the SPADEVizR package. 
 This report is especially useful when interpreting a whole cell clustering analyses.
 
-This document can be generated using the `generateReport()` function which takes a `Results` object. 
+This document can be generated using the `createReport()` function which takes a `Results` object. 
 This function required a vector specifying the desired representation (provided to the `select.plots` parameter) and the location of the output PDF file (`PDFfile` parameter).
 The `select.plots` vector can contain either the nicknames of the viewer or `AC`, `DAC`, `CC` or `AP` objects. 
 
@@ -1388,7 +1388,7 @@ For instance, such kind of report can be generated using the following commands:
 
 ```r
 # generates a SPADEVizR report with various viewers and statistical objects
-generateReport(results, PDFfile = "SPADEVizR-report.pdf", select.plots = c("tree","count", "heatmap", "kinetics_pheno", resultsAC, resultsDAC, resultsCC, results_AP, "distogram"), verbose = FALSE)
+createReport(results, PDFfile = "SPADEVizR-report.pdf", select.plots = c("tree","count", "heatmap", "kinetics_pheno", resultsAC, resultsDAC, resultsCC, results_AP, "distogram"), verbose = FALSE)
 ```
 
 
@@ -1584,6 +1584,7 @@ We believe and hope that these modeling approaches can be reused in the context 
 # <a name="bugs"/> 13. Bugs, contacts and additional features
 If you detect any bugs or miss functional features in SPADEVizR, please, do not hesitate to contact Dr. Nicolas Tchitchek (nicolas[dot]tchitchek[at]gmail[dot]com) and Guillaume Gautreau (guillaume[dot]gautreau[at]free[dot]fr).
 We will do our best to correct these issues in the best delays.
+
 Moreover, do not hesitate to give us any feedback or to propose additional statistical and visualization features to add in SPADEVizR.
 
 # <a name="cite"/> 14. Citation
