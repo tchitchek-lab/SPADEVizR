@@ -115,7 +115,10 @@ annotateClusters <- function(Results, annotations, num=5){
 		stop(paste("error in annotateClusters: markers in annotations dataframe (",unknown,") are not in markers of the Results object"))
 	}
 	
-	hm <- heatmapViewer(newResults,num=num,dendrograms="none",show.on_device=FALSE)$pheno.table
+	hm <- computePhenoTable(newResults@cluster.phenotypes,newResults@bounds,num=num)
+	hm <- reshape2::dcast(hm,marker~cluster)
+	rownames(hm) <- hm$marker
+	hm$marker    <- NULL
 	
 	for(cluster in colnames(hm)){
 		pheno_hm <- hm[,cluster]

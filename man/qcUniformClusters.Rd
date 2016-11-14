@@ -10,7 +10,8 @@ qcUniformClusters(Results, clusters = NULL, only.clustering_markers = FALSE,
   density.PDFfile.dim = c(17, 10),
   heatmap.PDFfile = "qcUniformClusters_heatmap.pdf",
   heatmap.PDFfile.dim = c(length(Results@marker.names),
-  length(Results@cluster.names)/4), verbose = TRUE, ...)
+  length(Results@cluster.names)/4), tile.color = "black", verbose = TRUE,
+  ...)
 }
 \arguments{
 \item{Results}{a Results object (with 'flowset' slot not null)}
@@ -32,6 +33,8 @@ qcUniformClusters(Results, clusters = NULL, only.clustering_markers = FALSE,
 \item{heatmap.PDFfile}{a character specifying the output path of the marker expression accuracy heatmap (or NULL to avoid this step)}
 
 \item{heatmap.PDFfile.dim}{a numeric vector specifying the width and the height of the heatmap PDF file}
+
+\item{tile.color}{a character specifying the border color of the tiles (NA to remove tile borders)}
 
 \item{verbose}{a boolean specifying if some messages must be displayed during the generation of the qc report}
 

@@ -12,16 +12,18 @@
 #' @param PDFfile a character specifying the location of the output PDF path
 #' @param width a numeric specifying the plot width in the output PDF file
 #' @param height a numeric specifying the plot height in the output PDF file
+#' @param tile.color a character specifying the border color of the tiles (NA to remove tile borders)
 #'  
 #' @return a list containing a numeric (perc numeric element) containing the fraction of clusters having a number of associated cells less than the threshold and a dataframe (small.clusters element) specifying the clusters having a number of associated cells less than the threshold
 #'
 #' @export
 qcSmallClusters <- function(Results,
-                            clusters = NULL,
-                            th.size = 50,
-                            PDFfile = "qcSmallClusters.pdf",
-                            width   = ncol(Results@cluster.abundances),
-                            height  = nrow(Results@cluster.abundances)/4){
+                            clusters   = NULL,
+                            th.size    = 50,
+                            PDFfile    = "qcSmallClusters.pdf",
+                            width      = ncol(Results@cluster.abundances),
+                            height     = nrow(Results@cluster.abundances)/4,
+							tile.color = "black"){
     message("[BEGIN] - generating qc small clusters")
     
     data <- Results@cluster.abundances
@@ -61,7 +63,7 @@ qcSmallClusters <- function(Results,
     
     plot <- ggplot2::ggplot(data = data.melted) +
         ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
-        ggplot2::geom_tile(ggplot2::aes_string(x = "sample", y = "cluster", fill = "small"), colour = "grey30") +            
+        ggplot2::geom_tile(ggplot2::aes_string(x = "sample", y = "cluster", fill = "small"), colour = tile.color) +            
         ggplot2::scale_x_discrete(expand = c(0, 0)) + 
         ggplot2::scale_y_discrete(expand = c(0, 0)) +
         ggplot2::scale_fill_manual(values = c("green", "red")) +
@@ -122,6 +124,7 @@ qcSmallClusters <- function(Results,
 #' @param density.PDFfile.dim a numeric vector specifying the width and the height of the density PDF file
 #' @param heatmap.PDFfile a character specifying the output path of the marker expression accuracy heatmap (or NULL to avoid this step)
 #' @param heatmap.PDFfile.dim a numeric vector specifying the width and the height of the heatmap PDF file
+#' @param tile.color a character specifying the border color of the tiles (NA to remove tile borders)
 #' @param verbose a boolean specifying if some messages must be displayed during the generation of the qc report
 #' @param ... supplemental parameters passed to the dip.test function
 #' 
@@ -142,6 +145,7 @@ qcUniformClusters <- function(Results,
                               density.PDFfile.dim     = c(17, 10),
                               heatmap.PDFfile         = "qcUniformClusters_heatmap.pdf",
                               heatmap.PDFfile.dim     = c(length(Results@marker.names), length(Results@cluster.names)/4),
+							  tile.color              = "black",
                               verbose                 = TRUE,
                               ...){
     
@@ -235,7 +239,7 @@ qcUniformClusters <- function(Results,
                 marker.expression <- expressions[, marker]
                 subtitle <- ""
                 if (uniform.test == "unimodality" || uniform.test == "both") {
-                    #utils::capture.output(p.value <- diptest::dip.test(marker.expression, ...)$p.value, type = "message")
+                    # bug on some platforms: diptest message cannot be captured by utils::capture.output ...
 					p.value <- diptest::dip.test(marker.expression, ...)$p.value
                     if (p.value < th.pvalue) {
                         uniform <- FALSE
@@ -367,7 +371,7 @@ qcUniformClusters <- function(Results,
         
         plot <- ggplot2::ggplot(data = accuracy.matrix.melted) +
                 ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), "")))) +
-                ggplot2::geom_tile(ggplot2::aes_string(x = "marker", y = "cluster", fill = "uniform"), colour = "grey30") +
+                ggplot2::geom_tile(ggplot2::aes_string(x = "marker", y = "cluster", fill = "uniform"), colour = tile.color) +
                 ggplot2::scale_fill_manual(values = c("FALSE" = "red", "TRUE" = "green"), na.value = "grey50") +
                 ggplot2::scale_x_discrete(expand = c(0, 0)) + 
                 ggplot2::scale_y_discrete(expand = c(0, 0)) +

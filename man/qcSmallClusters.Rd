@@ -6,7 +6,7 @@
 \usage{
 qcSmallClusters(Results, clusters = NULL, th.size = 50,
   PDFfile = "qcSmallClusters.pdf", width = ncol(Results@cluster.abundances),
-  height = nrow(Results@cluster.abundances)/4)
+  height = nrow(Results@cluster.abundances)/4, tile.color = "black")
 }
 \arguments{
 \item{Results}{a Results object}
@@ -20,6 +20,8 @@ qcSmallClusters(Results, clusters = NULL, th.size = 50,
 \item{width}{a numeric specifying the plot width in the output PDF file}
 
 \item{height}{a numeric specifying the plot height in the output PDF file}
+
+\item{tile.color}{a character specifying the border color of the tiles (NA to remove tile borders)}
 }
 \value{
 a list containing a numeric (perc numeric element) containing the fraction of clusters having a number of associated cells less than the threshold and a dataframe (small.clusters element) specifying the clusters having a number of associated cells less than the threshold
