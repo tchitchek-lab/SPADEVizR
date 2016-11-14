@@ -40,18 +40,21 @@
 	2.  [Quantification of clusters having uniform phenotypes](#qc_uniform_phenotypes) 
 8.  [Exportation methods](#export)
 9.  [Reporting methods](#report)
-10.  [SPADEVizR object structures](#object_structures)
+10.  [Miscellaneous functions](#misc)
+	1.  [Merging of cell clusters](#misc_merge)
+	2.  [Deletion of cell clusters](#misc_delete)
+11.  [SPADEVizR object structures](#object_structures)
 	1.  [Overview of SPADEVizR objects](#object_structure_uml)
 	2.  [Structure of a Results object](#object_structure_results)
 	3.  [Structure of an AC object](#object_structure_AC)
 	4.  [Structure of a DAC object](#object_structure_DAC)
 	5.  [Structure of a CC object](#object_structure_CC)
 	6.  [Structure of an AP object](#object_structure_AP)
-11.  [Notes and discussion](#notes)
-12.  [Bugs, contacts and additional features](#bugs)
-13.  [Citation](#cite)
-14.  [License](#license)
-15.  [References](#references)
+12.  [Notes and discussion](#notes)
+13.  [Bugs, contacts and additional features](#bugs)
+14.  [Citation](#cite)
+15.  [License](#license)
+16.  [References](#references)
 
 # <a name="package_overview"/> 1. Package overview
 
@@ -110,7 +113,7 @@ SPADEVizR has been designed in a way that both biologists and bioinformaticians 
 Moreover, SPADEVizR can be used with cell clustering results obtained from any automatic gating algorithm, as long as 'cluster abundances' and 'cluster phenotypes' matrices or FCS files can be provided.
 
 SPADEVizR has five objects to handle the clustering results inputs and analysis results (`Results`, `AC`, `DAC`, `CC`, `AP` objects).
-These objects are detailed in section [9](#object_structures). 
+These objects are detailed in section 'SPADEVizR object structures' of this tutorial (#object_structures). 
 
 # <a name="package_installation"/> 2. Package installation
 The `data.table`, `diptest`, `ggdendro`, `ggfortify`, `ggplot2`, `ggRandomForests`, `ggrepel`, `gridExtra`, `gtable`, `gtools`, `igraph`, `MASS`, `packcircles`, `plyr`, `randomForestSRC`,`reshape2`, R packages as well as the `flowCore` [8] Bioconductor packages are required for running SPADEVizR. These packages can be installed using the following commands:
@@ -1351,7 +1354,7 @@ These resulting text files will contain explicit information about the objects (
 For instance, such export can be done using the following command:
 
 ```r
-# exports of an AC object previously created (section 4.1)
+# exports of an AC object previously created 
 export(AC, filename = "export.txt")
 ```
 
@@ -1391,9 +1394,78 @@ generateReport(results, PDFfile = "SPADEVizR-report.pdf", select.plots = c("tree
 
 An illustrative report is available on the SPADEVizR github [(/README/SPADEVizR-report.pdf file)](https://github.com/tchitchek-lab/SPADEVizR/blob/master/README/SPADEVizR-report.pdf).
 
-# <a name="object_structures"/> 10. SPADEVizR object structures
 
-## <a name="object_structure_uml"/> 10.1. Overview of SPADEVizR objects
+# <a name="misc"/> 10. Miscellaneous functions
+
+## <a name="misc_merge"/> 10.1. Merging of cell clusters
+In some analysis situations, it could be usefull to merge the abundances and the phenotypes of two or more cell clusters (belonging for example to the same cell populations).
+
+For instance, a merging of some cell clusters can be done using the following command: 
+
+```r
+# merges the abundances and the phenotypes of clusters 1 and 2 into a new cluster in a Results object
+results <- mergeClusters(results, clusters=c("1","2"),name="combined")
+
+print(results@cluster.names)
+##  [1] "1"        "2"        "3"        "4"        "5"        "6"       
+##  [7] "7"        "8"        "9"        "10"       "11"       "12"      
+## [13] "13"       "14"       "15"       "16"       "17"       "18"      
+## [19] "19"       "20"       "21"       "22"       "23"       "24"      
+## [25] "25"       "26"       "27"       "28"       "29"       "30"      
+## [31] "31"       "32"       "33"       "34"       "35"       "36"      
+## [37] "37"       "38"       "39"       "40"       "41"       "42"      
+## [43] "43"       "44"       "45"       "46"       "47"       "48"      
+## [49] "49"       "50"       "51"       "52"       "53"       "54"      
+## [55] "55"       "56"       "57"       "58"       "59"       "60"      
+## [61] "61"       "62"       "63"       "64"       "65"       "66"      
+## [67] "67"       "68"       "69"       "70"       "71"       "72"      
+## [73] "73"       "74"       "75"       "76"       "77"       "78"      
+## [79] "79"       "80"       "combined"
+```
+
+## <a name="misc_delete"/> 10.2. Deletion of cell clusters
+In some analysis situations, it could be usefull to delete one or more cell clusters (having for example marginal phenotypes or very small number of associated cells).
+
+For instance, a deletion of some cell clusters can be done using the following command: 
+
+```r
+# deletes the clusters 1 and 2 from a Results object
+results <- removeClusters(results, clusters=c("1","2"))
+
+print(results@cluster.names)
+##  [1] "3"        "4"        "5"        "6"        "7"        "8"       
+##  [7] "9"        "10"       "11"       "12"       "13"       "14"      
+## [13] "15"       "16"       "17"       "18"       "19"       "20"      
+## [19] "21"       "22"       "23"       "24"       "25"       "26"      
+## [25] "27"       "28"       "29"       "30"       "31"       "32"      
+## [31] "33"       "34"       "35"       "36"       "37"       "38"      
+## [37] "39"       "40"       "41"       "42"       "43"       "44"      
+## [43] "45"       "46"       "47"       "48"       "49"       "50"      
+## [49] "51"       "52"       "53"       "54"       "55"       "56"      
+## [55] "57"       "58"       "59"       "60"       "61"       "62"      
+## [61] "63"       "64"       "65"       "66"       "67"       "68"      
+## [67] "69"       "70"       "71"       "72"       "73"       "74"      
+## [73] "75"       "76"       "77"       "78"       "79"       "80"      
+## [79] "combined"
+```
+
+<!--
+
+## <a name="misc_annotate"/> 10.3. Annotation of cell clusters
+For instance, an annotation of the cell clusters can be done using the following commands: 
+
+```r
+# defines an annotation dataframe
+#annotations <- ""
+# annotates the cell clusters
+#results <- annotateClusters(results, annotations=annotations)
+```
+
+-->
+
+# <a name="object_structures"/> 11. SPADEVizR object structures
+
+## <a name="object_structure_uml"/> 11.1. Overview of SPADEVizR objects
 In SPADEVizR, five objects are used to store computational results: `Results` (containing imported the cell clustering results), `AC` (corresponding to Abundant Cluster), `DAC` (corresponding to Differentially Abundant Clusters), `CC` (corresponding to Correlated Clusters) and `AP` (corresponding to Abundance Profiles) objects.
 
 The following UML diagram summarizes the structure of those objects:
@@ -1402,7 +1474,7 @@ The following UML diagram summarizes the structure of those objects:
 
 *The `Results` objects is used to store clustering results from SPADE and from other automatic gating algorithm. `AC` (Abundant Cluster), `DAC` (Differentially Abundant Clusters), and `CC` (Correlated Clusters) objects are used to store statistical properties of clusters having specific behaviors. Finally, the `AP` (Abundance Profiles) object is used to store statistical properties of cluster classification. All SPADEVizR objects can be printed, plotted and exported.*
 
-## <a name="object_structure_results"/> 10.2. Structure of a Results object 
+## <a name="object_structure_results"/> 11.2. Structure of a Results object 
 The `Results` object is a S4 object containing mainly the cluster abundances and phenotypes. 
 
 Different slots are available for a given `Results` object:
@@ -1423,7 +1495,7 @@ fcs.files          | a character vector containing the absolute path of the FCS 
 graph              | an igraph object containing the SPADE tree structure (can be NULL)
 graph.layout       | a numeric matrix containing the SPADE tree layout (can be NULL)
 
-## <a name="object_structure_AC"/> 10.3. Structure of an AC object
+## <a name="object_structure_AC"/> 11.3. Structure of an AC object
 The `AC` object is a S4 object containing the main information related to the Abundant Clusters identified by the [`identifyAC()`](#stat_function_identifyAC) function.  
 
 Different slots are available for a given `AC` object:
@@ -1439,7 +1511,7 @@ mu                 | a numeric specifying the theoretical value (mu) of the one 
 th.pvalue          | a numeric value specifying the p-value threshold
 results            | a dataframe containing for each cluster (first column): the abundance mean (second column), the abundance standard deviation (third column) of the biological condition, the associated p-value (fourth column) and a logical (fifth column) specifying if the cluster is significantly abundant
 
-## <a name="object_structure_DAC"/> 10.4. Structure of a DAC object
+## <a name="object_structure_DAC"/> 11.4. Structure of a DAC object
 The `DAC` object is a S4 object containing the main information related to the Differentially Abundant Clusters identified by the [`identifyDAC()`](#stat_function_identifyDAC)  
 
 Different slots are available for a given `DAC` object:
@@ -1457,7 +1529,7 @@ th.fc              | a numeric value specifying the fold-change threshold
 th.pvalue          | a numeric value specifying the p-value threshold
 results            | a dataframe containing for each cluster (first column): the abundance mean (second column) and the abundance standard deviation (third column) for the first biological condition, the abundance mean (fourth column) and the abundance standard deviation (fifth column) for the second biological condition, the abundance fold-change (sixth column), the associated p-value (seventh column) and a logical (eighth column) specifying if the cluster is significantly differentially abundant
 
-## <a name="object_structure_CC"/> 10.5. Structure of a CC object
+## <a name="object_structure_CC"/> 11.5. Structure of a CC object
 The `CC` object is a S4 object containing object containing the main information related to the Correlated Clusters identify by the [`identifyCC()`](#stat_function_identifyCC) function.
 
 Different slots are available for a given `CC` object:
@@ -1474,7 +1546,7 @@ th.correlation     | a numeric value specifying the correlation threshold (R)
 th.pvalue          | a numeric value specifying the p-value threshold
 results            | a dataframe containing for each cluster (first column): the coefficient of correlation R (second column), the associated p-value (third column) and a logical (fourth column) specifying if the cluster is significantly correlated
 
-## <a name="object_structure_AP"/> 10.6. Structure of an AP object
+## <a name="object_structure_AP"/> 11.6. Structure of an AP object
 The `AP` object is a S4 object containing the information related to the Abundance Profiles returned by the [`classifyAbundanceProfiles()`](#stat_function_classify_abundance_profiles) function.
 
 Different slots are available for a given `AP` object:
@@ -1487,7 +1559,7 @@ method             | a character specifying the method used to classify cluster 
 method.parameter   | a numeric parameter used by the classification method
 classes            | a two column dataframe containing cluster the associations between clusters (first column) and classes (second column)
 
-# <a name="notes"/> 11. Notes and discussion
+# <a name="notes"/> 12. Notes and discussion
 SPADEVizR significantly enhances the functionalities of the SPADE algorithm by providing statistical methods allowing the identification of relevant cell clusters and by allowing the classification of the cell clusters based on the abundance profiles.
 The visual representations available in SPADEVizR allows efficient characterizations of the cell cluster phenotypes.
 SPADEVizR can generate generalized linear models, Cox proportional hazards regression models and random forest models to predict biological outcomes, based on the cluster abundances.
@@ -1509,19 +1581,19 @@ The SPADE.SNR approach which combined the SPADE algorithm followed by a generali
 Inspired by the approaches presented in this contest and by the relevant prediction results, we have implemented several modeling methods in SPADEVizR (generalized linear models, Cox proportional hazards regression models and random forest models). 
 We believe and hope that these modeling approaches can be reused in the context of other biological studies or computational challenges.
 
-# <a name="bugs"/> 12. Bugs, contacts and additional features
+# <a name="bugs"/> 13. Bugs, contacts and additional features
 If you detect any bugs or miss functional features in SPADEVizR, please, do not hesitate to contact Dr. Nicolas Tchitchek (nicolas[dot]tchitchek[at]gmail[dot]com) and Guillaume Gautreau (guillaume[dot]gautreau[at]free[dot]fr).
 We will do our best to correct these issues in the best delays.
 Moreover, do not hesitate to give us any feedback or to propose additional statistical and visualization features to add in SPADEVizR.
 
-# <a name="cite"/> 13. Citation
+# <a name="cite"/> 14. Citation
 If you use SPADEVizR in your publication, please cite the following article:
 "Gautreau G, Pejoski D, Cosma A, Le Grand R, Beignon AS, and Tchitchek N. SPADEVizR: an R package for Visualization, Analysis and Integration of SPADE results. Bioinformatics, in press, 10.1093/bioinformatics/btw708 (2016)".
 
-# <a name="license"/> 14. License
+# <a name="license"/> 15. License
 SPADEVizR is freely distributed under the GPL-3 license.
 
-# <a name="references"/> 15. References 
+# <a name="references"/> 16. References 
 [1] - Bendall, S. C. et al. Single-cell mass cytometry of differential immune and drug responses across a human hematopoietic continuum. Science (New York, N.Y.), 332(6030), 687-96. (2011).
 
 [2] - Gregori, G. et al. Hyperspectral cytometry. Curr Top Microbiol Immunol., 377, 191-210 (2014).
