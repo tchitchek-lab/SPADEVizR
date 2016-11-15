@@ -122,6 +122,7 @@ annotateClusters <- function(Results, annotations, num=5){
 	
 	for(cluster in colnames(hm)){
 		pheno_hm <- hm[,cluster]
+		names(pheno_hm) <- rownames(hm)
 		
 		for(annotation in rownames(annotations)){
 			pheno_annot <- annotations[annotation,]
