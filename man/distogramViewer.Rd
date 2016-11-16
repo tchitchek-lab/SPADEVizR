@@ -23,11 +23,11 @@ a 'ggplot' object.  This object also contains the correlations for each pair of 
 }
 \description{
 The Distogram Viewer aims to visualize the pairwise co-expressions between all markers using a distogram representation. 
-In such representation, each tile corresponds to the co-expression between 2 markers and is gradient-colored based on the Pearson correlation between those 2 markers.
+In such representation, each tile corresponds to the co-expression between 2 markers and is gradient-colored based on the Pearson correlation between the expressions of those 2 markers (as stored in the phenotype matrix).
 Markers used as clustering markers are shown in blue.
 }
 \details{
-The Pearson correlation is computed based on the marker expression categories, as computed and displayed in the heatmap viewer.
+The Pearson correlation is computed based on the marker expressions.
 The visualization can be restricted to specific clusters, samples and markers by using respectively the `clusters`, `samples` and `markers` parameters.
 }
 

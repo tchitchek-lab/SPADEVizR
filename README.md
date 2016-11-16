@@ -29,8 +29,8 @@
 	6.  [Visualization of cell cluster abundance kinetics in different biological conditions (Kinetics Viewer)](#kinetics_viewer_function)
 	7.  [Visualization of cell cluster abundance dynamics in different samples (Streamgraph Viewer)](#streamgraph_viewer_function)
 	8.  [Visualization of cell cluster or sample abundance similarities (MDS Viewer)](#MDS_viewer_function)
-	9.  [Visualization of co-expressions between two markers (Biplot Viewer)](#biplot_viewer_function)
-	10. [Visualization of pairwise marker co-expressions (Distogram Viewer)](#distogram_viewer_function) 
+	9.  [Visualization of pairwise marker co-expressions (Distogram Viewer)](#distogram_viewer_function) 
+	10.  [Visualization of co-expressions between two markers (Biplot Viewer)](#biplot_viewer_function)
 6.  [Modeling methods](#model_functions)
 	1.  [Prediction of biological outcomes using generalized linear models](#stat_function_prediction_glm)
 	2.  [Prediction of biological outcomes using Cox proportional hazards regression models](#stat_function_prediction_cox)
@@ -966,7 +966,34 @@ MDSViewer(results, space = "clusters", clusters = clusters)
 
 *MDS representation showing the similarities between a set of selected clusters. In such representation, each dot represents a cluster and the distance between the dots are proportional to the Euclidean distances between these objects. It can be inferred from this MDS representation, that two distinct groups contain clusters having a similar abundance evolution in the dataset.*
 
-## <a name="biplot_viewer_function"/> 5.9. Visualization of co-expressions between two markers (Biplot Viewer)
+
+## <a name="distogram_viewer_function"/> 5.9. Visualization of pairwise marker co-expressions (Distogram Viewer)
+The *Distogram Viewer* aims to visualize the pairwise co-expressions between all markers using a distogram representation. 
+In such representation, each tile corresponds to the co-expression between 2 markers and is gradient-colored based on the Pearson correlation between those 2 markers.
+Markers used as clustering markers are shown in blue.
+
+This representation can be displayed using the `distogramViewer()` function which takes a `Results` object as parameter. 
+The visualization can be restricted to specific clusters, samples and markers by using respectively the `clusters`, `samples` and `markers` parameters.
+
+For instance, such distogram representation can be generated using the following commands:
+
+```r
+# specifies a set of samples to use
+samples  <- c("PBD08_BB078", "PBD08_BB231", "PBD08_BC641", "PBD08_BD619", "PBD08_BD620")
+# specifies a set of clusters to use
+clusters <- c("20","32","33","51")
+# displays a distogram representation showing all marker co-expressions filtered by the selected samples and clusters
+distogramViewer(results, samples = samples, clusters = clusters)
+```
+
+<img src="README/DistogramViewer-1.png" style="display: block; margin: auto;" />
+
+*Distogram representation showing pairwise co-expressions between all cell markers. Each tile corresponds to the co-expression between 2 markers and is gradient-colored based on the Pearson correlation between those 2 markers. Markers used by as clustering markers are shown in blue.*
+
+It is to note that samples having small number of cells (specified by the `th.min_cells` parameter in the import procedure) can be omitted in the computation and the representation. 
+
+
+## <a name="biplot_viewer_function"/> 5.10. Visualization of co-expressions between two markers (Biplot Viewer)
 The *Biplot Viewer* aims to visualize co-expressions between 2 markers using a biplot representation. 
 In such representation, each cell is represented by a dot which is positioned in a two-dimensional space corresponding to the marker expressions.
 
@@ -992,32 +1019,6 @@ biplotViewer(results, x.marker = "CD20", y.marker = "HLADR", samples = samples, 
 *Biplot representations showing the co-expression between "HLDA-DR" and "CD20" markers for selected samples and clusters. Each cell is represented by a dot which is positioned in a two-dimensional space corresponding to the marker expressions.*
 
 It is to note that this function can only handle `Results` objects imported from SPADE results or FCS files.
-
-## <a name="distogram_viewer_function"/> 5.10. Visualization of pairwise marker co-expressions (Distogram Viewer)
-The *Distogram Viewer* aims to visualize the pairwise co-expressions between all markers using a distogram representation. 
-In such representation, each tile corresponds to the co-expression between 2 markers and is gradient-colored based on the Spearman correlation between those 2 markers.
-Markers used as clustering markers are shown in blue.
-
-This representation can be displayed using the `distogramViewer()` function which takes a `Results` object as parameter. 
-The visualization can be restricted to specific clusters, samples and markers by using respectively the `clusters`, `samples` and `markers` parameters.
-
-For instance, such distogram representation can be generated using the following commands:
-
-```r
-# specifies a set of samples to use
-samples  <- c("PBD08_BB078", "PBD08_BB231", "PBD08_BC641", "PBD08_BD619", "PBD08_BD620")
-# specifies a set of clusters to use
-clusters <- c("20","32","33","51")
-# displays a distogram representation showing all marker co-expressions filtered by the selected samples and clusters
-distogramViewer(results, samples = samples, clusters = clusters)
-```
-
-<img src="README/DistogramViewer-1.png" style="display: block; margin: auto;" />
-
-*Distogram representation showing pairwise co-expressions between all cell markers. Each tile corresponds to the co-expression between 2 markers and is gradient-colored based on the Spearman correlation between those 2 markers. Markers used by as clustering markers are shown in blue.*
-
-It is to note that samples having small number of cells (specified by the `th.min_cells` parameter in the import procedure) can be omitted in the computation and the representation. 
-
 
 # <a name="model_functions"/> 6. Modeling methods
 ## <a name="stat_function_prediction_glm"/> 6.1. Prediction of biological outcomes using generalized linear models

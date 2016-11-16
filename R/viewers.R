@@ -1888,11 +1888,11 @@ biplotViewer <- function(Results,
 #'
 #' @description 
 #' The Distogram Viewer aims to visualize the pairwise co-expressions between all markers using a distogram representation. 
-#' In such representation, each tile corresponds to the co-expression between 2 markers and is gradient-colored based on the Pearson correlation between those 2 markers.
+#' In such representation, each tile corresponds to the co-expression between 2 markers and is gradient-colored based on the Pearson correlation between the expressions of those 2 markers (as stored in the phenotype matrix).
 #' Markers used as clustering markers are shown in blue.
 #' 
 #' @details 
-#' The Pearson correlation is computed based on the marker expression categories, as computed and displayed in the heatmap viewer.
+#' The Pearson correlation is computed based on the marker expressions.
 #' The visualization can be restricted to specific clusters, samples and markers by using respectively the `clusters`, `samples` and `markers` parameters.
 #'
 #' @param Results a 'Results' object
@@ -1924,13 +1924,11 @@ distogramViewer <- function(Results,
     
     if (is.null(samples)) {
         data        <- Results@cluster.phenotypes
-        cluster.abundances <- Results@cluster.abundances
     } else if (!all(samples %in% Results@sample.names)) {
         stop("Error in distogramViewer: 'samples' parameter must contains only samples names\n Unknown sample names: ",
              paste(setdiff(unique(samples), Results@sample.names), collapse = " "))
     } else {
         data        <- subset(Results@cluster.phenotypes, sample %in% samples, drop = FALSE)
-        cluster.abundances <- Results@cluster.abundances[, samples, drop = FALSE]
     }
     
     if (is.null(clusters)) {
