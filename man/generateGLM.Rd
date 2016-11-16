@@ -4,13 +4,15 @@
 \alias{generateGLM}
 \title{Generation a generalized linear models of cluster abundances}
 \usage{
-generateGLM(Results, variable, clusters = NULL, th.pvalue = 1,
-  show.error = FALSE, ...)
+generateGLM(Results, variable, use.percentages = FALSE, clusters = NULL,
+  th.pvalue = 1, show.error = FALSE, ...)
 }
 \arguments{
 \item{Results}{a 'Results' object}
 
 \item{variable}{a numerical named vector providing the correspondence between sample names and specific phenotypes (or NA values to infer the phenotypes)}
+
+\item{use.percentages}{a logical specifying if the computations should be performed on percentage}
 
 \item{clusters}{a character vector specifying the names of the clusters used to compute the linear model (all clusters are selected by default)}
 

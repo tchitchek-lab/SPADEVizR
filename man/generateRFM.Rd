@@ -4,7 +4,8 @@
 \alias{generateRFM}
 \title{Generation of a random forest of cluster abundances}
 \usage{
-generateRFM(Results, variable, status, clusters = NULL, ntree = 1000, ...)
+generateRFM(Results, variable, status, use.percentages = FALSE,
+  clusters = NULL, ntree = 1000, ...)
 }
 \arguments{
 \item{Results}{a 'Results' object}
@@ -12,6 +13,8 @@ generateRFM(Results, variable, status, clusters = NULL, ntree = 1000, ...)
 \item{variable}{a numerical named vector providing the correspondence between sample names and specific phenotypes (or NA values to infer the phenotypes)}
 
 \item{status}{a numerical named vector providing the correspondence between sample names and specific status (or NA values to infer the status)}
+
+\item{use.percentages}{a logical specifying if the computations should be performed on percentage}
 
 \item{clusters}{a character vector specifying the names of the clusters used to compute the model (all clusters are selected by default)}
 

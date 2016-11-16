@@ -12,6 +12,7 @@
 #' 
 #' @param Results a 'Results' object
 #' @param variable a numerical named vector providing the correspondence between sample names and specific phenotypes (or NA values to infer the phenotypes)
+#' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param clusters a character vector specifying the names of the clusters used to compute the linear model (all clusters are selected by default)
 #' @param th.pvalue a numeric between 0 and 1 specifying the maximal p-value of each term in the returned model
 #' @param show.error a logical indicating if error bars should be used to display the coefficients standard deviations
@@ -22,9 +23,10 @@
 #' @export
 generateGLM <- function(Results,
                         variable,
-                        clusters = NULL,
-                        th.pvalue = 1,
-						show.error = FALSE,
+						use.percentages = FALSE,
+                        clusters        = NULL,
+                        th.pvalue       = 1,
+						show.error      = FALSE,
                         ...){
 
 	y = variable
@@ -40,7 +42,14 @@ generateGLM <- function(Results,
     }
     
     data <- Results@cluster.abundances
-    
+	
+	if (use.percentages) {
+        data <- prop.table(as.matrix(data), 2)
+        data <- data * 100
+    } else {
+        data <- data
+    }
+	
     if (is.null(names(y))) {
         data <- data
     } else if (!all(names(y) %in% Results@sample.names)) {
@@ -67,6 +76,7 @@ generateGLM <- function(Results,
     }
     
     data   <- as.data.frame(t(data))
+	
     data$y <- y
 
     res.glm     <- NULL
@@ -106,7 +116,7 @@ generateGLM <- function(Results,
 		
         plot.clusters <- ggplot2::ggplot(data = data) +
                          ggplot2::geom_bar(ggplot2::aes_string(x = "clusters", y = "estimate", fill = "pvalue"),stat = "identity", position = "identity") +   ggplot2::scale_fill_gradient(low = "red", high = "white", limit = c(0,th.pvalue), name = "p-value") +
-						 ggplot2::ylab("variable") +
+						 ggplot2::ylab("coefficient") +
                          ggplot2::theme(legend.text = ggplot2::element_text(size = 6),
                                         axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))
 										
@@ -162,6 +172,7 @@ generateGLM <- function(Results,
 #' @param Results a 'Results' object
 #' @param variable a numerical named vector providing the correspondence between sample names and specific phenotypes (or NA values to infer the phenotypes)
 #' @param status a numeric vector providing the correspondence between sample names and specific status (or NA values to infer the status)
+#' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param clusters a character vector specifying the names of the clusters used to compute the Cox model (all clusters are selected by default)
 #' @param th.pvalue a numeric between 0 and 1 specifying the maximal p-value of each term in the returned model
 #' @param show.error a logical indicating if error bars should be used to display the coefficients standard deviations
@@ -175,9 +186,10 @@ generateGLM <- function(Results,
 generateCPHM <- function(Results,
                         variable,
 						status,
-                        clusters      = NULL,
-						th.pvalue     = 1,
-						show.error    = FALSE,
+						use.percentages = FALSE,
+                        clusters        = NULL,
+						th.pvalue       = 1,
+						show.error      = FALSE,
                         ...){
 	
 	if (is.null(Results)) {
@@ -191,6 +203,13 @@ generateCPHM <- function(Results,
     }
 
     data <- Results@cluster.abundances
+	
+	if (use.percentages) {
+        data <- prop.table(as.matrix(data), 2)
+        data <- data * 100
+    } else {
+        data <- data
+    }
 	
 	if (is.null(names(variable))) {
         data <- data
@@ -345,6 +364,7 @@ generateCPHM <- function(Results,
 #' @param Results a 'Results' object
 #' @param variable a numerical named vector providing the correspondence between sample names and specific phenotypes (or NA values to infer the phenotypes)
 #' @param status a numerical named vector providing the correspondence between sample names and specific status (or NA values to infer the status)
+#' @param use.percentages a logical specifying if the computations should be performed on percentage
 #' @param clusters a character vector specifying the names of the clusters used to compute the model (all clusters are selected by default)
 #' @param ntree a numerical value specifying the number of tree to generate
 #' @param ... further parameters passed to the R randomForest method
@@ -357,8 +377,9 @@ generateCPHM <- function(Results,
 generateRFM <- function(Results,
                         variable,
 						status,
-                        clusters = NULL,
-						ntree    = 1000,
+						use.percentages = FALSE,
+                        clusters        = NULL,
+						ntree           = 1000,
                         ...){
 	
 	set.seed(4242)
@@ -378,6 +399,13 @@ generateRFM <- function(Results,
     }
     
     data <- Results@cluster.abundances
+	
+	if (use.percentages) {
+        data <- prop.table(as.matrix(data), 2)
+        data <- data * 100
+    } else {
+        data <- data
+    }
 	
 	if (is.null(names(variable))) {
         data <- data
@@ -453,6 +481,36 @@ generateRFM <- function(Results,
 	}
 	
 	return(list(model = forest, variable.predictions = predict, plot.samples = plot.samples, plot.vimp = gg_vimp, plot.minimal_depth = gg_minimal_depth))
+	
+}
+
+
+generateEVTREE <- function(results,
+                        variable,
+						use.percentages = FALSE,
+						control         = NULL){
+						
+	variable <- variable
+	
+	data <- results@cluster.abundances
+	if (use.percentages) {
+        data <- prop.table(as.matrix(data), 2)
+        data <- data * 100
+    } else {
+        data <- data
+    }
+	
+	data <- t(data)
+	data <- data.frame(data,check.names=FALSE)
+	data <- cbind(variable,data)
+	
+	if(is.null(control)){
+		control <- evtree::evtree.control(minsplit=min(nrow(data)-1,20L))
+	}
+	
+	model   <- evtree::evtree(variable ~ . , data = data, control=control)
+	
+	return(list(model = model, plot.model = model))
 	
 }
 

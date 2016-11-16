@@ -4,8 +4,8 @@
 \alias{generateCPHM}
 \title{Generation of a Cox proportional hazards regression model of cluster abundances}
 \usage{
-generateCPHM(Results, variable, status, clusters = NULL, th.pvalue = 1,
-  show.error = FALSE, ...)
+generateCPHM(Results, variable, status, use.percentages = FALSE,
+  clusters = NULL, th.pvalue = 1, show.error = FALSE, ...)
 }
 \arguments{
 \item{Results}{a 'Results' object}
@@ -13,6 +13,8 @@ generateCPHM(Results, variable, status, clusters = NULL, th.pvalue = 1,
 \item{variable}{a numerical named vector providing the correspondence between sample names and specific phenotypes (or NA values to infer the phenotypes)}
 
 \item{status}{a numeric vector providing the correspondence between sample names and specific status (or NA values to infer the status)}
+
+\item{use.percentages}{a logical specifying if the computations should be performed on percentage}
 
 \item{clusters}{a character vector specifying the names of the clusters used to compute the Cox model (all clusters are selected by default)}
 
