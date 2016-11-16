@@ -43,6 +43,7 @@
 10.  [Miscellaneous functions](#misc)
 	1.  [Merging of cell clusters](#misc_merge)
 	2.  [Deletion of cell clusters](#misc_delete)
+	3.  [Automatic annotation of cell clusters](#misc_annot)
 11.  [SPADEVizR object structures](#object_structures)
 	1.  [Overview of SPADEVizR objects](#object_structure_uml)
 	2.  [Structure of a Results object](#object_structure_results)
@@ -1404,9 +1405,9 @@ For instance, a merging of some cell clusters can be done using the following co
 
 ```r
 # merges the abundances and the phenotypes of clusters 1 and 2 into a new cluster in a Results object
-results <- mergeClusters(results, clusters=c("1","2"),name="combined")
+newresults <- mergeClusters(results, clusters=c("1","2"),name="combined")
 
-print(results@cluster.names)
+print(newresults@cluster.names)
 ##  [1] "1"        "2"        "3"        "4"        "5"        "6"       
 ##  [7] "7"        "8"        "9"        "10"       "11"       "12"      
 ## [13] "13"       "14"       "15"       "16"       "17"       "18"      
@@ -1430,38 +1431,80 @@ For instance, a deletion of some cell clusters can be done using the following c
 
 ```r
 # deletes the clusters 1 and 2 from a Results object
-results <- removeClusters(results, clusters=c("1","2"))
+newresults <- removeClusters(results, clusters=c("1","2"))
 
-print(results@cluster.names)
-##  [1] "3"        "4"        "5"        "6"        "7"        "8"       
-##  [7] "9"        "10"       "11"       "12"       "13"       "14"      
-## [13] "15"       "16"       "17"       "18"       "19"       "20"      
-## [19] "21"       "22"       "23"       "24"       "25"       "26"      
-## [25] "27"       "28"       "29"       "30"       "31"       "32"      
-## [31] "33"       "34"       "35"       "36"       "37"       "38"      
-## [37] "39"       "40"       "41"       "42"       "43"       "44"      
-## [43] "45"       "46"       "47"       "48"       "49"       "50"      
-## [49] "51"       "52"       "53"       "54"       "55"       "56"      
-## [55] "57"       "58"       "59"       "60"       "61"       "62"      
-## [61] "63"       "64"       "65"       "66"       "67"       "68"      
-## [67] "69"       "70"       "71"       "72"       "73"       "74"      
-## [73] "75"       "76"       "77"       "78"       "79"       "80"      
-## [79] "combined"
+print(newresults@cluster.names)
+##  [1] "3"  "4"  "5"  "6"  "7"  "8"  "9"  "10" "11" "12" "13" "14" "15" "16"
+## [15] "17" "18" "19" "20" "21" "22" "23" "24" "25" "26" "27" "28" "29" "30"
+## [29] "31" "32" "33" "34" "35" "36" "37" "38" "39" "40" "41" "42" "43" "44"
+## [43] "45" "46" "47" "48" "49" "50" "51" "52" "53" "54" "55" "56" "57" "58"
+## [57] "59" "60" "61" "62" "63" "64" "65" "66" "67" "68" "69" "70" "71" "72"
+## [71] "73" "74" "75" "76" "77" "78" "79" "80"
 ```
 
-<!--
 
-## <a name="misc_annotate"/> 10.3. Annotation of cell clusters
-For instance, an annotation of the cell clusters can be done using the following commands: 
+## <a name="misc_annot"/> 10.3. Automatic annotation of cell clusters
+SPADEVizR is able to automaticaly annotate cell clusters based on their phenotypes.
+Such annotation is performed based on the marker catergorial expressions and a dataframe specifying for each cell populations the acceptable marker categories.
+Marker expression categories are computed as presented in the heatmap viewer.
+Such dataframe must provide for each marker of each cell population a character value specifying the set of categrotial in a vector form (i.e. 'c(1,2)' for categories 1 and 2).
+NA values can be used to indicate that a marker is not needed for the annotation to a cell population.
+
+For instance, an automatic annotation of the cell clusters can be done using the following commands: 
 
 ```r
 # defines an annotation dataframe
-#annotations <- ""
-# annotates the cell clusters
-#results <- annotateClusters(results, annotations=annotations)
-```
+annotations <- matrix(rep(NA,8),nrow=4,ncol=2)
+annotations <- data.frame(annotations)
+rownames(annotations) <- c("resting_memory","activated_memory","naive_B","tissuelike_memory")
+colnames(annotations) <- c("CD21","CD27")
+annotations["resting_memory","CD21"] <- "c(2,3,4,5)"
+annotations["resting_memory","CD27"] <- "c(2,3,4,5)"
+annotations["activated_memory","CD21"] <- "1"
+annotations["activated_memory","CD27"] <- "c(2,3,4,5)"
+annotations["naive_B","CD21"] <- "c(2,3,4,5)"
+annotations["naive_B","CD27"] <- "1"
+annotations["tissuelike_memory","CD21"] <- "1"
+annotations["tissuelike_memory","CD27"] <- "1"
+print(annotations)
+##                         CD21       CD27
+## resting_memory    c(2,3,4,5) c(2,3,4,5)
+## activated_memory           1 c(2,3,4,5)
+## naive_B           c(2,3,4,5)          1
+## tissuelike_memory          1          1
 
--->
+# annotates the cell clusters in a Results object#
+# cell clusters are renamed according to the population names
+results <- annotateClusters(results, annotations=annotations)
+results@cluster.names
+##  [1] "1:naive_B"            "2:activated_memory"   "3:naive_B"           
+##  [4] "4:activated_memory"   "5:tissuelike_memory"  "6:activated_memory"  
+##  [7] "7:activated_memory"   "8:naive_B"            "9:activated_memory"  
+## [10] "10:resting_memory"    "11:tissuelike_memory" "12:resting_memory"   
+## [13] "13:naive_B"           "14:naive_B"           "15:activated_memory" 
+## [16] "16:naive_B"           "17:naive_B"           "18:activated_memory" 
+## [19] "19:activated_memory"  "20:resting_memory"    "21:activated_memory" 
+## [22] "22:naive_B"           "23:activated_memory"  "24:resting_memory"   
+## [25] "25:naive_B"           "26:activated_memory"  "27:activated_memory" 
+## [28] "28:naive_B"           "29:naive_B"           "30:activated_memory" 
+## [31] "31:activated_memory"  "32:resting_memory"    "33:resting_memory"   
+## [34] "34:activated_memory"  "35:tissuelike_memory" "36:naive_B"          
+## [37] "37:naive_B"           "38:tissuelike_memory" "39:naive_B"          
+## [40] "40:naive_B"           "41:activated_memory"  "42:naive_B"          
+## [43] "43:naive_B"           "44:naive_B"           "45:naive_B"          
+## [46] "46:tissuelike_memory" "47:naive_B"           "48:tissuelike_memory"
+## [49] "49:naive_B"           "50:activated_memory"  "51:resting_memory"   
+## [52] "52:activated_memory"  "53:naive_B"           "54:naive_B"          
+## [55] "55:naive_B"           "56:naive_B"           "57:naive_B"          
+## [58] "58:naive_B"           "59:activated_memory"  "60:naive_B"          
+## [61] "61:tissuelike_memory" "62:resting_memory"    "63:resting_memory"   
+## [64] "64:activated_memory"  "65:naive_B"           "66:resting_memory"   
+## [67] "67:naive_B"           "68:activated_memory"  "69:naive_B"          
+## [70] "70:naive_B"           "71:naive_B"           "72:naive_B"          
+## [73] "73:activated_memory"  "74:tissuelike_memory" "75:resting_memory"   
+## [76] "76:naive_B"           "77:tissuelike_memory" "78:resting_memory"   
+## [79] "79:tissuelike_memory" "80:naive_B"
+```
 
 # <a name="object_structures"/> 11. SPADEVizR object structures
 
@@ -1479,7 +1522,7 @@ The `Results` object is a S4 object containing mainly the cluster abundances and
 
 Different slots are available for a given `Results` object:
 
-slot               | description  | note 
+slot               | description 
 -------------------|-----------------------------------------------------------|------
 cluster.abundances | a numeric dataframe containing the number of cells of each cluster for each sample
 cluster.phenotypes | a numerical dataframe containing marker median expressions of each cluster for each sample
