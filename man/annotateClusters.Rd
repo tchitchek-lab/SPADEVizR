@@ -4,7 +4,7 @@
 \alias{annotateClusters}
 \title{Annotating cell clusters}
 \usage{
-annotateClusters(Results, annotations, num = 5)
+annotateClusters(Results, annotations, num = 5, display.annotations = TRUE)
 }
 \arguments{
 \item{Results}{a Results object}
@@ -12,6 +12,8 @@ annotateClusters(Results, annotations, num = 5)
 \item{annotations}{a character dataframe specifying the annotations}
 
 \item{num}{a numeric value specifying the number of markers expression categories to be used}
+
+\item{display.annotations}{a logical value indicating if a graphic must be generated to display the annotations of the cell clusters}
 }
 \value{
 a Results object

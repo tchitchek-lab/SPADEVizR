@@ -1532,6 +1532,11 @@ print(annotations)
 # annotates the cell clusters in a Results object#
 # cell clusters are renamed according to the population names
 results <- annotateClusters(results, annotations=annotations)
+```
+
+<img src="README/AnnotateClusters-1.png" style="display: block; margin: auto;" />
+
+```r
 results@cluster.names
 ##  [1] "1:naive_B"            "2:activated_memory"   "3:naive_B"           
 ##  [4] "4:activated_memory"   "5:tissuelike_memory"  "6:activated_memory"  

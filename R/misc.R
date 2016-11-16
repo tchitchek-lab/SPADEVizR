@@ -98,11 +98,12 @@ mergeClusters <- function(Results, clusters, name){
 #' @param Results a Results object
 #' @param annotations a character dataframe specifying the annotations 
 #' @param num a numeric value specifying the number of markers expression categories to be used
+#' @param display.annotations a logical value indicating if a graphic must be generated to display the annotations of the cell clusters
 #'
 #' @return a Results object
 #'
 #' @export
-annotateClusters <- function(Results, annotations, num=5){
+annotateClusters <- function(Results, annotations, num=5, display.annotations=TRUE){
 	
 	newResults <- Results
 	
@@ -120,6 +121,7 @@ annotateClusters <- function(Results, annotations, num=5){
 	rownames(hm) <- hm$marker
 	hm$marker    <- NULL
 	
+	res <- c()
 	for(cluster in colnames(hm)){
 		pheno_hm <- hm[,cluster]
 		names(pheno_hm) <- rownames(hm)
@@ -137,7 +139,7 @@ annotateClusters <- function(Results, annotations, num=5){
 			
 			if(chk==TRUE){
 				newname <- paste0(cluster,":",annotation) 
-				
+				res     <- rbind(res,cbind(cluster,annotation))
 				if(!is.null(newname)){
 					newResults@cluster.names[newResults@cluster.names==cluster] <- newname
 					newResults@cluster.phenotypes$cluster[newResults@cluster.phenotypes$cluster==cluster] <- newname
@@ -145,6 +147,26 @@ annotateClusters <- function(Results, annotations, num=5){
 			}
 		}
 		
+	}
+	
+	if(display.annotations==TRUE){
+		res <- data.frame(res)
+		colnames(res) <- c("clusters","annotations")
+		
+		res <- res[gtools::mixedorder(res$clusters),]
+		res <- res[order(res$annotations),]
+		
+		res$clusters <- factor(res$clusters,levels=rev(res$clusters))
+		
+		subtitle <- paste0("based on categorial marker expressions at ",num," levels")
+		
+		plot <- ggplot2::ggplot(res) +
+				ggplot2::ggtitle(bquote(atop(.("Cell cluster annotations"), atop(italic(.(subtitle)), "")))) +
+				ggplot2::geom_point(ggplot2::aes(x=annotations,y=clusters,colour=annotations),size=3) + 
+				ggplot2::theme(
+					panel.grid.major = ggplot2::element_line(colour = "grey40", linetype="dashed")
+					)
+		plot(plot)
 	}
 	
 	invisible(newResults)
