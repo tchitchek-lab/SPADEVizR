@@ -117,11 +117,12 @@ SPADEVizR has five objects to handle the clustering results inputs and analysis 
 These objects are detailed in section 'SPADEVizR object structures' of this tutorial (#object_structures). 
 
 # <a name="package_installation"/> 2. Package installation
-The `data.table`, `diptest`, `ggdendro`, `ggfortify`, `ggplot2`, `ggRandomForests`, `ggrepel`, `gridExtra`, `gtable`, `gtools`, `igraph`, `MASS`, `packcircles`, `plyr`, `randomForestSRC`,`reshape2`, R packages as well as the `flowCore` [8] Bioconductor packages are required for running SPADEVizR. These packages can be installed using the following commands:
+The `data.table`, `diptest`, `evtree`, `ggdendro`, `ggfortify`, `ggplot2`, `ggRandomForests`, `ggrepel`, `gridExtra`, `gtable`, `gtools`, `igraph`, `MASS`, `packcircles`, `plyr`, `randomForestSRC`,`reshape2`, R packages as well as the `flowCore` [8] Bioconductor packages are required for running SPADEVizR. These packages can be installed using the following commands:
 
 ```r
 install.packages('data.table')
 install.packages('diptest')
+install.packages('evtree')
 install.packages('ggdendro')
 install.packages("ggfortify")
 install.packages('ggplot2')
