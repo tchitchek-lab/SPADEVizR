@@ -13,7 +13,7 @@
 	1.  [Importing results from SPADE](#loading_SPADE_data)
 	2.  [Importing results from other algorithms using FCS files](#loading_fcs)
 	3.  [Importing results from other algorithms using CLR files](#loading_clr)
-	4.  [Importing results from other algorithms using cluster tables](#loading_other_data)
+	4.  [Importing results from other algorithms using dataframes](#loading_other_data)
 	5.  [Annotation of biological samples](#assignments)
 4.  [Statistical methods](#stat_functions)
 	1.  [Identification of clusters having an abundance greater than a specific value (Abundant Clusters)](#stat_function_identifyAC)
@@ -373,7 +373,7 @@ results_clr.acs <- importResultsFromCLR.ACS("./clustering_results.CLR-ACS/")
 ```
 
 
-## <a name="loading_other_data"/> 3.4. Importing results from other algorithms using cluster tables
+## <a name="loading_other_data"/> 3.4. Importing results from other algorithms using dataframes
 
 The `importResultsFromTables()` function imports cell clustering results from dataframes into a `Results` object. 
 This function takes 2 dataframes in parameters:
@@ -542,6 +542,12 @@ plot(resultsAC)
 
 *This representation revealed that 16 clusters have been identified as Abundant Clusters, that is to say, clusters having an abundance statistically greater than 1% (p-value < 0.01).*
 
+<!--
+```
+No language indicated, so no syntax highlighting. 
+```
+-->
+
 ## <a name="stat_function_identifyDAC"/> 4.2. Identification of cell clusters having an abundance different between two biological conditions (Differentially Abundant Clusters)
 *Differentially Abundant Clusters* are clusters having a number of associated cells statistically different between two biological conditions.
 By this way, it is possible to identify clusters having an abundance which evolves, in term of enrichment, between two biological conditions.
@@ -617,6 +623,10 @@ plot(resultsDAC)
 
 *This representation revealed that 9 clusters have been identified as Differentially Abundant Clusters, that is to say, clusters having an abundance statistically different between two biological conditions with a fold-change greater than 2 (p-value < 0.05).*
 
+<!--
+xxx
+-->
+
 ## <a name="stat_function_identifyCC"/> 4.3. Identification of cell clusters having an abundance correlated with a biological variable (Correlated Clusters)
 *Correlated Clusters* are clusters having a number of associated cells statistically correlated with a biological variable. 
 By this way, it is possible to identify, clusters having an abundance evolving in the same manner (or in the opposite manner) as a biological variable across different samples.
@@ -680,6 +690,10 @@ plot(resultsCC)
 <img src="README/CorrelatedClusters-1.png" style="display: block; margin: auto;" />
 
 *This representation revealed that the cluster 33 has been identified as a Correlated Cluster, that is to say, a cluster having an abundance statistically correlated to a biological variable with a coefficient of correlation above 0.8 and p-value < 0.05.*
+
+<!--
+xxx
+-->
 
 ## <a name="stat_function_classify_abundance_profiles"/> 4.4. Classification of cell clusters based on theirs abundance profiles
 Cell clusters can be classified based on theirs *Abundance Profiles*, that is to say, based on the number of cells associated to each cluster for each sample.
@@ -745,6 +759,10 @@ plot(results_AP)
 
 *Circle packaging representation showing groups of cell clusters having similar abundance profiles. The classification has been performed using a k-means partition method. This circle packing representation revealed that two main classes of abundance profiles can be identified. Four smaller classes can also be identified.*
 
+<!--
+xxx
+-->
+
 # <a name="viewer_functions"/> 5. Visualization methods
 
 ## <a name="count_viewer_function"/> 5.1. Visualization of the number of cells associated to each cluster (Count Viewer)
@@ -767,6 +785,10 @@ countViewer(results, samples = samples)
 <img src="README/CountViewer-1.png" style="display: block; margin: auto;" />
 
 *Jitter representation showing the number of cells associated to each cluster of the dataset for a set of selected samples. Clusters are ordered based on their total number of associated cells*
+
+<!--
+xxx
+-->
 
 ## <a name="tree_viewer_function"/> 5.2. Visualization of combined SPADE trees (Tree Viewer)
 The *Tree Viewer* aims to visualize the SPADE tree representations. 
@@ -791,6 +813,11 @@ treeViewer(results, samples = samples, highlight = resultsDAC, marker = "HLADR")
 *Tree showing a combined SPADE tree using all samples of a given biological condition. Nodes are gradient-colored according to the expression of the "HLADR" marker. Nodes corresponding to Differentially Abundant Clusters have theirs borders colored in blue.*
 
 It is to note that this function can only handle `Results` objects imported from SPADE results. 
+
+<!--
+xxx
+-->
+
 
 ## <a name="heatmap_viewer_function"/> 5.3. Visualization of cell cluster phenotypes using a categorical heatmap (Heatmap Viewer)
 The *Heatmap Viewer* aims to visualize the phenotypes of all cell clusters.
@@ -826,6 +853,11 @@ If the `Results` object provided to this function is imported from table results
 
 It is to note that samples having small number of cells (specified by the `th.min_cells` parameter in the import procedure) can be omitted in the computation and the representation. 
 
+<!--
+xxx
+-->
+
+
 ## <a name="pheno_viewer_function"/> 5.4. Visualization of cell cluster phenotypes using parallels coordinates (Pheno Viewer)
 The *Pheno Viewer* aims to visualize the phenotype of single cluster or a set of combined clusters.
 This representation displays median marker expressions of each sample using parallel coordinates. 
@@ -857,6 +889,11 @@ If the `Results` object provided to this function is imported from table results
 
 It is to note that samples having small number of cells (specified by the `th.min_cells` parameter in the import procedure) can be ted in the computation and the representation. 
 
+<!--
+xxx
+-->
+
+
 ## <a name="boxplot_viewer_function"/> 5.5. Visualization of cell cluster abundances in different biological conditions (Boxplot Viewer)
 The *Boxplot Viewer* aims to visualize and compare the abundances between several biological conditions for one single cluster or for a set of combined clusters.
 
@@ -879,6 +916,10 @@ boxplotViewer(results, clusters = c("33"))
 <img src="README/BoxplotViewer-1.png" style="display: block; margin: auto;" />
 
 *Boxplot showing the abundance of the cluster 33 at baseline, 8 days after the post boost vaccination and 28 days after the post boost vaccination. For each condition the median (bold black line) and, the first and third quartiles (the 25th and 75th percentiles) of abundances are indicated.*
+
+<!--
+xxx
+-->
 
 ## <a name="kinetics_viewer_function"/> 5.6. Visualization of cell cluster abundance kinetics in different biological conditions (Kinetics Viewer)
 The *Kinetics Viewer* aims to visualize the cell cluster abundances in a kinetics manner. 
@@ -931,6 +972,10 @@ streamgraphViewer(results, samples = samples, clusters = clusters, use.relative 
 
 *The same representation using relative abundances*
 
+<!--
+xxx
+-->
+
 ## <a name="MDS_viewer_function"/> 5.8. Visualization of cell cluster or sample abundance similarities (MDS Viewer)
 Multidimensional Scaling (MDS) methods aim to represent the similarities and differences among high-dimensional objects into a space of a lower number of dimensions, generally in two or three dimensions for visualization purposes [10].
 In MDS representations, the Kruskal Stress (KS) indicates the percentage of information lost during the dimensionality reduction process.
@@ -966,6 +1011,9 @@ MDSViewer(results, space = "clusters", clusters = clusters)
 
 *MDS representation showing the similarities between a set of selected clusters. In such representation, each dot represents a cluster and the distance between the dots are proportional to the Euclidean distances between these objects. It can be inferred from this MDS representation, that two distinct groups contain clusters having a similar abundance evolution in the dataset.*
 
+<!--
+xxx
+-->
 
 ## <a name="distogram_viewer_function"/> 5.9. Visualization of pairwise marker co-expressions (Distogram Viewer)
 The *Distogram Viewer* aims to visualize the pairwise co-expressions between all markers using a distogram representation. 
@@ -992,6 +1040,9 @@ distogramViewer(results, samples = samples, clusters = clusters)
 
 It is to note that samples having small number of cells (specified by the `th.min_cells` parameter in the import procedure) can be omitted in the computation and the representation. 
 
+<!--
+xxx
+-->
 
 ## <a name="biplot_viewer_function"/> 5.10. Visualization of co-expressions between two markers (Biplot Viewer)
 The *Biplot Viewer* aims to visualize co-expressions between 2 markers using a biplot representation. 
@@ -1019,6 +1070,10 @@ biplotViewer(results, x.marker = "CD20", y.marker = "HLADR", samples = samples, 
 *Biplot representations showing the co-expression between "HLDA-DR" and "CD20" markers for selected samples and clusters. Each cell is represented by a dot which is positioned in a two-dimensional space corresponding to the marker expressions.*
 
 It is to note that this function can only handle `Results` objects imported from SPADE results or FCS files.
+
+<!--
+xxx
+-->
 
 # <a name="model_functions"/> 6. Modeling methods
 ## <a name="stat_function_prediction_glm"/> 6.1. Prediction of biological outcomes using generalized linear models
