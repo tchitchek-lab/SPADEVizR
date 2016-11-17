@@ -87,7 +87,9 @@ generateGLM <- function(Results,
 	repeat{
         res.glm      <- stats::glm(y~.,data = data, ...)
         if(verbose){
-				cat(paste("step ",count))
+				cat(paste("********************\n"))
+				cat(paste("step ",count,"\n"))
+				cat(paste("model summary: \n"))
 				print(summary(res.glm))
 			}
 		res.predict  <- stats::predict.glm(res.glm, newdata=data)
@@ -108,10 +110,10 @@ generateGLM <- function(Results,
         } else {
             break
         }
-		
 		count <- count+1
 		if(verbose){
-			cat("")
+			cat(paste("********************\n"))
+			cat("\n")
 		}
     }
     
