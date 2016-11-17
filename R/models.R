@@ -83,15 +83,19 @@ generateGLM <- function(Results,
 
     res.glm     <- NULL
     res.predict <- NULL
-    repeat{
+    count <- 1
+	repeat{
         res.glm      <- stats::glm(y~.,data = data, ...)
-        res.predict  <- stats::predict.glm(res.glm, newdata=data)
+        if(verbose){
+				print(paste("step ",count))
+				print(res.glm)
+			}
+		res.predict  <- stats::predict.glm(res.glm, newdata=data)
         pvalues      <- summary(res.glm)$coefficients[-1,4]
         to.remove    <- which.max(pvalues)
 
         if (pvalues[to.remove] > th.pvalue) {
 			if(verbose){
-				print(paste0("removing clusters: ",to.remove))
 				print(paste0("removing clusters: ",colnames(data)[to.remove]))
 			}
             data <- data[,-to.remove]
@@ -104,6 +108,11 @@ generateGLM <- function(Results,
         } else {
             break
         }
+		
+		count <- count+1
+		if(verbose){
+			print("")
+		}
     }
     
     if (!is.null(res.glm)) {
