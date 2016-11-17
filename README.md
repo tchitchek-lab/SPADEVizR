@@ -543,11 +543,9 @@ plot(resultsAC)
 
 *This representation revealed that 16 clusters have been identified as Abundant Clusters, that is to say, clusters having an abundance statistically greater than 1% (p-value < 0.01).*
 
-<!--
 ```
-No language indicated, so no syntax highlighting. 
+Abundant clusters (AC) are especially interesting when you want to identify clusters having homogeneous cell abundances within a given biological condition.
 ```
--->
 
 ## <a name="stat_function_identifyDAC"/> 4.2. Identification of cell clusters having an abundance different between two biological conditions (Differentially Abundant Clusters)
 *Differentially Abundant Clusters* are clusters having a number of associated cells statistically different between two biological conditions.
@@ -624,9 +622,9 @@ plot(resultsDAC)
 
 *This representation revealed that 9 clusters have been identified as Differentially Abundant Clusters, that is to say, clusters having an abundance statistically different between two biological conditions with a fold-change greater than 2 (p-value < 0.05).*
 
-<!--
-xxx
--->
+```
+Differentially Abundant Clusters (DAC) are especially interesting when you want to identify clusters having different cell abundances between two biological conditions.
+```
 
 ## <a name="stat_function_identifyCC"/> 4.3. Identification of cell clusters having an abundance correlated with a biological variable (Correlated Clusters)
 *Correlated Clusters* are clusters having a number of associated cells statistically correlated with a biological variable. 
@@ -692,9 +690,9 @@ plot(resultsCC)
 
 *This representation revealed that the cluster 33 has been identified as a Correlated Cluster, that is to say, a cluster having an abundance statistically correlated to a biological variable with a coefficient of correlation above 0.8 and p-value < 0.05.*
 
-<!--
-xxx
--->
+```
+Correlated Clusters (CC) are especially interesting when you want to identify clusters having a cell abundance associated with a biological variable.
+```
 
 ## <a name="stat_function_classify_abundance_profiles"/> 4.4. Classification of cell clusters based on theirs abundance profiles
 Cell clusters can be classified based on theirs *Abundance Profiles*, that is to say, based on the number of cells associated to each cluster for each sample.
