@@ -16,6 +16,7 @@
 #' @param clusters a character vector specifying the names of the clusters used to compute the linear model (all clusters are selected by default)
 #' @param th.pvalue a numeric between 0 and 1 specifying the maximal p-value of each term in the returned model
 #' @param show.error a logical indicating if error bars should be used to display the coefficients standard deviations
+#' @param verbose a logical indicating if debug messages must be displayed
 #' @param ... further parameters passed to the R glm method
 #' 
 #' @return a list of 5 elements corresponding to: a generalized linear model object as provided by the R glm function ('model' element), a named vector of predicted values ('variable.predictions' element), a named vector of predicted cluster abundance coefficiants ('cluster.coefficients' element), the representation of clusters coeficients ('plot.cluster' element), and the representation of samples predictions values ('plot.samples' element). 
@@ -27,7 +28,8 @@ generateGLM <- function(Results,
                         clusters        = NULL,
                         th.pvalue       = 1,
 						show.error      = FALSE,
-                        ...){
+                        verbose         = FALSE,
+						...){
 
 	y = variable
 	
@@ -88,6 +90,10 @@ generateGLM <- function(Results,
         to.remove    <- which.max(pvalues)
 
         if (pvalues[to.remove] > th.pvalue) {
+			if(verbose){
+				print(paste0("removing clusters: ",to.remove))
+				print(paste0("removing clusters: ",colnames(data)[to.remove]))
+			}
             data <- data[,-to.remove]
             if (!is.data.frame(data)) {
                 res.glm     <- NULL

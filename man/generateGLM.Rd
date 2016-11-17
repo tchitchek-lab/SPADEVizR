@@ -5,7 +5,7 @@
 \title{Generation a generalized linear models of cluster abundances}
 \usage{
 generateGLM(Results, variable, use.percentages = FALSE, clusters = NULL,
-  th.pvalue = 1, show.error = FALSE, ...)
+  th.pvalue = 1, show.error = FALSE, verbose = FALSE, ...)
 }
 \arguments{
 \item{Results}{a 'Results' object}
@@ -19,6 +19,8 @@ generateGLM(Results, variable, use.percentages = FALSE, clusters = NULL,
 \item{th.pvalue}{a numeric between 0 and 1 specifying the maximal p-value of each term in the returned model}
 
 \item{show.error}{a logical indicating if error bars should be used to display the coefficients standard deviations}
+
+\item{verbose}{a logical indicating if debug messages must be displayed}
 
 \item{...}{further parameters passed to the R glm method}
 }
