@@ -1697,6 +1697,8 @@ If you use SPADEVizR in your publication, please cite the following article:
 # <a name="license"/> 15. License
 SPADEVizR is freely distributed under the GPL-3 license.
 
+<img src="http://www.athenastatistics.org/piwik.php?idsite=7&amp;rec=1" style="border:0" alt="" />
+
 # <a name="references"/> 16. References 
 [1] - Bendall, S. C. et al. Single-cell mass cytometry of differential immune and drug responses across a human hematopoietic continuum. Science (New York, N.Y.), 332(6030), 687-96. (2011).
 
