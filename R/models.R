@@ -169,6 +169,8 @@ generateGLM <- function(Results,
 		
     }
 
+	names(estimate) <- clusters
+	
     return(list(model = res.glm, variable.predictions = res.predict, cluster.coefficients=estimate, plot.samples = plot.samples, plot.clusters = plot.clusters))
 
 }
