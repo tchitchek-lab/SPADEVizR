@@ -930,13 +930,13 @@ The cell cluster abundances could be displayed as percentages or absolute number
 For instance, such representation can be generated using the following command:
 
 ```r
-# displays the abundance of the combined clusters 13 and 35 in a kinetic manner
+# displays the abundance of the combined clusters 51 and 57 in a kinetic manner
 kineticsViewer(results, clusters = c("51", "57"))
 ```
 
 <img src="README/KineticViewer-1.png" style="display: block; margin: auto;" />
 
-*Kinetics representation showing the abundance evolution of the combined clusters 13 and 35 for each individual across the 3 timepoints.*
+*Kinetics representation showing the abundance evolution of the combined clusters 51 and 57 for each individual across the 3 timepoints.*
 
 ## <a name="streamgraph_viewer_function"/> 5.7. Visualization of cell cluster abundance dynamics in different samples (Streamgraph Viewer)
 The *Streamgraph Viewer* aims to visualize both absolute and relative abundance of clusters across the samples.
