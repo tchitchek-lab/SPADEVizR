@@ -903,7 +903,7 @@ heatmapViewer <- function(Results,
     dendrograms <- ifelse(dendrograms == "markers", "row", dendrograms)
     dendrograms <- ifelse(dendrograms == "clusters", "col", dendrograms)
     
-    plot.elements <- ggheatmap(pheno.table, num = num, clustering.markers = Results@clustering.markers, dendrograms = dendrograms, tile.color)
+    plot.elements <- ggheatmap(pheno.table, num = num, clustering.markers = Results@clustering.markers, dendrograms = dendrograms, tile.color=tile.color)
     row.hc        <- plot.elements$row.hc
 	col.hc        <- plot.elements$col.hc
 	plot.elements$row.hc <- NULL
