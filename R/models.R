@@ -504,19 +504,47 @@ generateRFM <- function(Results,
 }
 
 
-generateEVTREE <- function(results,
+generateEVTREE <- function(Results,
                         variable,
 						use.percentages = FALSE,
+						clusters        = NULL,
 						control         = NULL){
 						
-	variable <- variable
-	
-	data <- results@cluster.abundances
+	if (is.null(Results)) {
+        stop("Error in generateEVTREE: 'Results' parameter can not be NULL")
+    } else if (class(Results)[1] != "Results") {
+        stop("Error in generateEVTREE: 'Results' parameter must be a 'Results' object")
+    }
+    if (is.null(variable)) {
+        stop("Error in generateEVTREE: 'variable' parameter can not be NULL")
+    }
+	data <- Results@cluster.abundances
 	if (use.percentages) {
         data <- prop.table(as.matrix(data), 2)
         data <- data * 100
     } else {
         data <- data
+    }
+	
+	if (is.null(names(variable))) {
+        data <- data
+    } else if (!all(names(variable) %in% Results@sample.names)) {
+        stop("Error in generateEVTREE: names of the variable parameter must contain only samples names\n Unknown sample names: ",
+             paste(setdiff(unique(names(variable)), Results@sample.names), collapse = " "))
+    } else {
+        data <- data[, names(variable), drop = FALSE]
+    }
+	
+	if (is.null(clusters)) {
+        clusters <- Results@cluster.names
+    } else if (all(clusters %in% Results@cluster.names)) {
+        if (typeof(clusters) != "character") {
+            stop("Error in generateEVTREE: 'clusters' parameter must be a character vector")
+        }
+        clusters <- unique(clusters)
+        data <- data[clusters, , drop = FALSE]
+    }else {
+        stop("Error in generateEVTREE:\nUnknown clusters : ", paste(setdiff(unique(clusters), Results@cluster.names), collapse = " "))
     }
 	
 	data <- t(data)
@@ -527,6 +555,7 @@ generateEVTREE <- function(results,
 		control <- evtree::evtree.control(minsplit=min(nrow(data)-1,20L))
 	}
 	
+	print(head(data))
 	model   <- evtree::evtree(variable ~ . , data = data, control=control)
 	
 	return(list(model = model, plot.model = model))
