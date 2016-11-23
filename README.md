@@ -1212,7 +1212,7 @@ The provided survival curve can be displayed using the following command:
 plot(resultsCPHM$plot.provided_survival_curve)
 ```
 
-<img src="README/cox-provided_survival_curve-1.png" style="display: block; margin: auto;" />
+<img src="README/coxprovidedsurvivalcurve-1.png" style="display: block; margin: auto;" />
 *Kaplan-Meier representation showing the provided survival function. Censored subjects (illustrated here by sample with low anti-MVA antibody expression levels) are indicated on the Kaplan-Meier curve as tick marks.*
 
 The abundance coefficients of the Cox model can be displayed using the following command:
@@ -1222,7 +1222,7 @@ The abundance coefficients of the Cox model can be displayed using the following
 plot(resultsCPHM$plot.clusters)
 ```
 
-<img src="README/cox-plot.clusters-1.png" style="display: block; margin: auto;" />
+<img src="README/coxplot.clusters-1.png" style="display: block; margin: auto;" />
 *Box plot representation showing the abundance coefficient associated to each cluster. The size of the boxes is proportional to the coefficient values. Boxes are gradient-colored according to the significance of the p-values.*
 
 The variable predictions of the Cox model can be displayed using the following command:
@@ -1233,7 +1233,7 @@ resultsCPHM <- generateCPHM(results, variable = variable, status = status, clust
 plot(resultsCPHM$plot.samples)
 ```
 
-<img src="README/cox-samples-1.png" style="display: block; margin: auto;" />
+<img src="README/coxsamples-1.png" style="display: block; margin: auto;" />
 *Biplot representation showing the provided and predicted variables values for each sample. Provided values are displayed in the X-axis and predicted values are displayed in the Y-axis. Samples with no provided variable values are represented along the Y-axis.*
 
 
@@ -1509,10 +1509,7 @@ For instance, an automatic annotation of the cell clusters can be done using the
 
 ```r
 # defines an annotation dataframe
-annotations <- matrix(rep(NA,8),nrow=4,ncol=2)
-annotations <- data.frame(annotations)
-rownames(annotations) <- c("resting_memory","activated_memory","naive_B","tissuelike_memory")
-colnames(annotations) <- c("CD21","CD27")
+annotations <- data.frame()
 annotations["resting_memory","CD21"] <- "c(2,3,4,5)"
 annotations["resting_memory","CD27"] <- "c(2,3,4,5)"
 annotations["activated_memory","CD21"] <- "1"
