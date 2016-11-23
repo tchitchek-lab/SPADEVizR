@@ -143,6 +143,7 @@ annotateClusters <- function(Results, annotations, num=5, display.annotations=TR
 				if(!is.null(newname)){
 					newResults@cluster.names[newResults@cluster.names==cluster] <- newname
 					newResults@cluster.phenotypes$cluster[newResults@cluster.phenotypes$cluster==cluster] <- newname
+					rownames(newResults@cluster.abundances)[rownames(newResults@cluster.abundances)==cluster] <- newname
 				}
 			}
 		}
