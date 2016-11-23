@@ -1,5 +1,6 @@
 # SPADEVizR: an R package for Visualization, Analysis and Integration of SPADE results.
-<img src="http://www.athenastatistics.org/piwik.php?idsite=7&amp;rec=1"/>
+
+
 
 <!--
 ![](README/logoSPADEVizR.png)
