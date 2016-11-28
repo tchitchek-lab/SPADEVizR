@@ -1451,6 +1451,12 @@ phenoViewer <- function(Results,
 		bold.markers        <- ifelse(is.element(ordered.markers, clustering.markers), "bold", "plain")
 		colored.markers     <- ifelse(is.element(ordered.markers, clustering.markers), "blue", "black")
 		data$marker         <- factor(data$marker, levels = ordered.markers, ordered = TRUE)
+	}else{
+		clustering.markers  <- Results@clustering.markers
+		ordered.markers     <- markers
+		bold.markers        <- ifelse(is.element(ordered.markers, clustering.markers), "bold", "plain")
+		colored.markers     <- ifelse(is.element(ordered.markers, clustering.markers), "blue", "black")
+		data$marker         <- factor(data$marker, levels = ordered.markers, ordered = TRUE)
 	}
 	
     for (i in seq_len(nrow(data))) {
