@@ -1345,6 +1345,7 @@ streamgraphViewer <- function(Results,
 #' @param markers a character vector specifying the markers to be displayed assignments
 #' @param show.mean a character specifying if marker means expression should be displayed, possible value are among: "none", "only" or "both"
 #' @param show.on_device a logical specifying if the representation will be displayed on device 
+#' @param sort.markers a logical specifying if the markers must be sorted by names in the representation
 #'
 #' @return a 'ggplot' object
 #'
@@ -1357,7 +1358,8 @@ phenoViewer <- function(Results,
                         clusters       = NULL,
                         markers        = NULL,
                         show.mean      = "both",
-                        show.on_device = TRUE) {
+                        show.on_device = TRUE,
+						sort.markers   = TRUE) {
 
     if (is.null(Results)) {
         stop("Error in phenoViewer: 'Results' parameter can not be NULL")
@@ -1377,7 +1379,7 @@ phenoViewer <- function(Results,
         stop("Error in phenoViewer: 'samples' parameter must contains only samples names\n Unknown sample names: ",
              paste(setdiff(unique(samples), Results@sample.names), collapse = " "))
     } else {
-        data        <- subset(Results@cluster.phenotypes, sample %in% samples, drop = FALSE)
+        data               <- subset(Results@cluster.phenotypes, sample %in% samples, drop = FALSE)
         cluster.abundances <- Results@cluster.abundances[, samples, drop = FALSE]
     }
     
@@ -1443,12 +1445,14 @@ phenoViewer <- function(Results,
         warning("Warning in phenoViewer: 'assignments' slot in the provided 'Results' object is absent. Consequently, the samples names will be used in remplacement")
     }
     
-    clustering.markers  <- Results@clustering.markers
-    ordered.markers    <- c(gtools::mixedsort(clustering.markers),gtools::mixedsort(setdiff(Results@marker.names, clustering.markers)))
-    bold.markers       <- ifelse(is.element(ordered.markers, clustering.markers), "bold", "plain")
-    colored.markers    <- ifelse(is.element(ordered.markers, clustering.markers), "blue", "black")
-    data$marker        <- factor(data$marker, levels = ordered.markers, ordered = TRUE)
-
+    if(sort.markers==TRUE){
+		clustering.markers  <- Results@clustering.markers
+		ordered.markers     <- c(gtools::mixedsort(clustering.markers),gtools::mixedsort(setdiff(Results@marker.names, clustering.markers)))
+		bold.markers        <- ifelse(is.element(ordered.markers, clustering.markers), "bold", "plain")
+		colored.markers     <- ifelse(is.element(ordered.markers, clustering.markers), "blue", "black")
+		data$marker         <- factor(data$marker, levels = ordered.markers, ordered = TRUE)
+	}
+	
     for (i in seq_len(nrow(data))) {
         data[i, "lower.bound"] <- Results@bounds[1, as.character(data[i, "marker"])]
         data[i, "upper.bound"] <- Results@bounds[2, as.character(data[i, "marker"])]

@@ -5,7 +5,7 @@
 \title{Visualization of cluster phenotypes}
 \usage{
 phenoViewer(Results, samples = NULL, clusters = NULL, markers = NULL,
-  show.mean = "both", show.on_device = TRUE)
+  show.mean = "both", show.on_device = TRUE, sort.markers = TRUE)
 }
 \arguments{
 \item{Results}{a Results object}
@@ -19,6 +19,8 @@ phenoViewer(Results, samples = NULL, clusters = NULL, markers = NULL,
 \item{show.mean}{a character specifying if marker means expression should be displayed, possible value are among: "none", "only" or "both"}
 
 \item{show.on_device}{a logical specifying if the representation will be displayed on device}
+
+\item{sort.markers}{a logical specifying if the markers must be sorted by names in the representation}
 }
 \value{
 a 'ggplot' object
