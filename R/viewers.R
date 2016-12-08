@@ -1874,8 +1874,8 @@ biplotViewer <- function(Results,
     }
     
 	if(length(x.data)>1 && length(y.data)>1){
-		x.max              <- max(data["x"]) * 1.1
-		y.max              <- max(data["y"]) * 1.1
+		x.max              <- max(data["x"]) * 1.2
+		y.max              <- max(data["y"]) * 1.2
     }else{
 		x.max              <- 0
 		y.max              <- 0
@@ -1892,16 +1892,19 @@ biplotViewer <- function(Results,
             ggplot2::ggtitle(paste0(" Biplot Viewer (", format(cells.number, big.mark = " "), " cells)", sep = ""))
 			
 	if(length(x.data)>1 && length(y.data)>1){
-		plot <-   plot+ggplot2::geom_point(ggplot2::aes_string(x = "x", y = "y", colour = "cols"), size = 0.25)
-		plot <-   plot+ggplot2::stat_density2d(ggplot2::aes_string(x = "x", y = "y"), size = 0.2, colour = "blue", linetype = "dashed")
+		plot <- plot+ggplot2::geom_point(ggplot2::aes_string(x = "x", y = "y", colour = "cols"), size = 0.25)
+		plot <- plot+ggplot2::xlim(-1, x.max)
+		plot <- plot+ggplot2::ylim(-1, y.max) 
+		plot <- plot+ggplot2::stat_density2d(ggplot2::aes_string(x = "x", y = "y"), size = 0.2, colour = "blue", linetype = "dashed")
+		plot <- plot+ggplot2::coord_cartesian(xlim = c(-1, x.max), ylim = c(-1, y.max))
+		
 	}else{
-		plot <-   plot+ggplot2::geom_hline(yintercept = 0, colour=NA)
-		plot <-   plot+ggplot2::geom_vline(xintercept = 0, colour=NA)
+		plot <- plot+ggplot2::geom_hline(yintercept = 0, colour=NA)
+		plot <- plot+ggplot2::geom_vline(xintercept = 0, colour=NA)
 	}
 	plot <- plot+ggplot2::scale_color_identity() +
 		ggplot2::xlab(x.marker) +
 		ggplot2::ylab(y.marker) +
-		ggplot2::coord_cartesian(xlim = c(-1, x.max), ylim = c(-1, y.max)) +
 		ggplot2::theme_bw() +
 		ggplot2::theme(panel.grid.major = ggplot2::element_line(color = "black", linetype = "dotted"), legend.key = ggplot2::element_blank())
    
