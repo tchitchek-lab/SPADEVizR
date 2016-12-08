@@ -1897,7 +1897,6 @@ biplotViewer <- function(Results,
 		plot <- plot+ggplot2::ylim(-1, y.max) 
 		plot <- plot+ggplot2::stat_density2d(ggplot2::aes_string(x = "x", y = "y"), size = 0.2, colour = "blue", linetype = "dashed")
 		plot <- plot+ggplot2::coord_cartesian(xlim = c(-1, x.max), ylim = c(-1, y.max))
-		
 	}else{
 		plot <- plot+ggplot2::geom_hline(yintercept = 0, colour=NA)
 		plot <- plot+ggplot2::geom_vline(xintercept = 0, colour=NA)
