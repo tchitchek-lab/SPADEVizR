@@ -83,7 +83,7 @@ ggheatmap <- function(matrix,
                       tile.color         = "black",
 					  ...) {
 
-    if (dendrograms == "both" || dendrograms == "row") {
+	if (dendrograms == "both" || dendrograms == "row") {
         row.hc     <- stats::hclust(stats::dist(matrix, method = distance, ...), method = method)
         row.dendro <- ggdendro::dendro_data(stats::as.dendrogram(row.hc), type = dendrogram.type)
         row.plot   <- ggdendrogram(row.dendro, row = TRUE)
@@ -118,11 +118,14 @@ ggheatmap <- function(matrix,
         
     colfunc <- grDevices::colorRampPalette(c("#FFFFFF", "#ECE822", "#F9A22B", "#EE302D", "#A32D33"))
 
-    melted.data.frame$value <- as.factor(melted.data.frame$value)
-    
+	melted.data.frame$value <- as.factor(melted.data.frame$value)
+    melted.data.frame$value <- factor(melted.data.frame$value,levels=1:num)
+	range                   <- range(as.numeric(melted.data.frame$value))
+	values                  <- colfunc(num)[c(range[1]:range[length(range)])]
+	 
     centre.plot <- ggplot2::ggplot(melted.data.frame, ggplot2::aes_string(x = "variable", y = "markers")) + 
                    ggplot2::geom_tile(ggplot2::aes_string(fill = "value"), colour = tile.color) +
-                   ggplot2::scale_fill_manual(values = colfunc(num), na.value = "grey50", guide = ggplot2::guide_legend(title          = legend.title,
+                   ggplot2::scale_fill_manual(values = values, na.value = "grey50", guide = ggplot2::guide_legend(title                = legend.title,
                                                                                                                         direction      = "horizontal",
                                                                                                                         ncol           = 5,
                                                                                                                         byrow          = TRUE,
