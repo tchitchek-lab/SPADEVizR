@@ -716,8 +716,10 @@ treeViewer <- function(Results,
         rownames(expr) <- expr$cluster
         expr           <- expr[, -1]
         mean.expr      <- apply(expr, 1, mean, na.rm = TRUE)
-
-        pos.vertex     <- cbind(pos.vertex, marker = mean.expr)
+		
+		mean.expr      <- mean.expr[pos.vertex$id]
+		pos.vertex     <- cbind(pos.vertex, marker = mean.expr)
+		
         colnames(pos.vertex)[ncol(pos.vertex)] <- marker
 
         max.mean.expr <- ceiling(max(mean.expr, na.rm = TRUE))
