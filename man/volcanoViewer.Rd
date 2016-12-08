@@ -6,7 +6,7 @@
 \usage{
 volcanoViewer(DAC = NULL, fc.log2 = TRUE, show.cluster_sizes = TRUE,
   show.all_labels = FALSE, show.on_device = TRUE,
-  max.dots_size = max(DAC@cluster.size))
+  max.dots_size = max(DAC@cluster.size), y.max = NULL)
 }
 \arguments{
 \item{DAC}{an object of class 'DAC' (object returned by the 'computeDAC()' function)}
@@ -20,6 +20,8 @@ volcanoViewer(DAC = NULL, fc.log2 = TRUE, show.cluster_sizes = TRUE,
 \item{show.on_device}{a logical specifying if the ggplot representation must be displayed on the device}
 
 \item{max.dots_size}{a numeric specifying the number of associated cells in the largest dot}
+
+\item{y.max}{a numeric specifying the maximal value of the y axis}
 }
 \value{
 a 'ggplot' object

@@ -141,6 +141,7 @@ abundantClustersViewer <- function(AC,
 #' @param show.all_labels a logical specifying if all cluster labels must be shown. Only labels of significant clusters are displayed otherwise
 #' @param show.on_device a logical specifying if the ggplot representation must be displayed on the device 
 #' @param max.dots_size a numeric specifying the number of associated cells in the largest dot
+#' @param y.max a numeric specifying the maximal value of the y axis
 #'
 #' @return a 'ggplot' object
 #' 
@@ -152,7 +153,8 @@ volcanoViewer <- function(DAC                = NULL,
                           show.cluster_sizes = TRUE,
                           show.all_labels    = FALSE,
                           show.on_device     = TRUE,
-                          max.dots_size      = max(DAC@cluster.size)) {
+                          max.dots_size      = max(DAC@cluster.size),
+						  y.max              = NULL) {
 
     if (!is.logical(fc.log2)) {
         stop("Error in volcanoViewer: The 'fc.log2' parameter must be a logical")
@@ -203,8 +205,11 @@ volcanoViewer <- function(DAC                = NULL,
 	x.max    <- max(x.max, abs(x.min), na.rm = TRUE)
     x.breaks <- c(round(c( -th.fc, th.fc), 2), seq( -x.max, x.max, by = 1))
 
-    pvalues  <- c( -log10(DAC@th.pvalue), -log10(DAC@results$pvalue))
-    y.max    <- ceiling(max(pvalues[!is.infinite(pvalues)]))
+    pvalues  <- c(-log10(DAC@th.pvalue), -log10(DAC@results$pvalue))
+    if(is.null(y.max)){
+		y.max  <- ceiling(max(pvalues[!is.infinite(pvalues)]))
+	}
+	
     y.breaks <- c(seq(0, y.max, by = 1), round(-log10(DAC@th.pvalue), 2))
 
     title.details <- ifelse(DAC@use.percentages, "based on % of cells", "based on # of cells")
