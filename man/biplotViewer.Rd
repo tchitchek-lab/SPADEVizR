@@ -5,7 +5,8 @@
 \title{Visualization of marker co-expression}
 \usage{
 biplotViewer(Results, x.marker, y.marker, samples = NULL, clusters = NULL,
-  resample.ratio = NULL, sample.merge = FALSE, show.on_device = TRUE)
+  resample.ratio = NULL, sample.merge = FALSE, show.on_device = TRUE,
+  use.percentage = FALSE)
 }
 \arguments{
 \item{Results}{a 'Results' object (with 'flowset' slot not null)}
@@ -23,6 +24,8 @@ biplotViewer(Results, x.marker, y.marker, samples = NULL, clusters = NULL,
 \item{sample.merge}{a logical specifying if the selected samples must be merged in a single biplot}
 
 \item{show.on_device}{a logical specifying if the representation will be displayed on device}
+
+\item{use.percentage}{a logical specifying if the number of cells must be provided as percentages of parents}
 }
 \value{
 a 'ggplot' object

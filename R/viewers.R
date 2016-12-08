@@ -1765,6 +1765,7 @@ MDSViewer <- function(Results,
 #' @param resample.ratio a numeric ratio (between 0 and 1) specifying the down-sampling ratio to show less dots (or NULL)
 #' @param sample.merge a logical specifying if the selected samples must be merged in a single biplot
 #' @param show.on_device a logical specifying if the representation will be displayed on device 
+#' @param use.percentage a logical specifying if the number of cells must be provided as percentages of parents
 #'
 #' @return a 'ggplot' object
 #'
@@ -1779,7 +1780,8 @@ biplotViewer <- function(Results,
                          clusters       = NULL,
                          resample.ratio = NULL,
                          sample.merge   = FALSE,
-                         show.on_device = TRUE) {
+                         show.on_device = TRUE,
+						 use.percentage = FALSE) {
 
     if (is.null(Results)) {
         stop("Error in biplotViewer: 'Results' parameter can not be NULL")
@@ -1850,10 +1852,15 @@ biplotViewer <- function(Results,
 
     }
     
-    if (is.null(samples)) {
-        cluster.abundances <- Results@cluster.abundances
+	cluster.abundances <- Results@cluster.abundances
+	if(use.percentage == TRUE){
+		cluster.abundances <- cluster.abundances/apply(cluster.abundances,1,sum)
+	}
+	
+	if (is.null(samples)) {
+        cluster.abundances <- cluster.abundances
     }else{
-        cluster.abundances <- Results@cluster.abundances[, samples, drop = FALSE]
+        cluster.abundances <- cluster.abundances[, samples, drop = FALSE]
     }
     cells.number.by.sample <- colSums(cluster.abundances)
 
@@ -1861,7 +1868,11 @@ biplotViewer <- function(Results,
 		if (sample.merge) {
 			data <- data.frame(x = x.data, y = y.data)
 		} else {
-			data <- data.frame(x = x.data, y = y.data, facet = paste0(facet, " (" , format(cells.number.by.sample[facet], big.mark = " "), " cells)"))
+			if(use.percentage == TRUE){
+				data <- data.frame(x = x.data, y = y.data, facet = paste0(facet, " (" , format(cells.number.by.sample[facet], digits=2, big.mark = " "), " % of parents)"))
+			}else{
+				data <- data.frame(x = x.data, y = y.data, facet = paste0(facet, " (" , format(cells.number.by.sample[facet], big.mark = " "), " cells)"))
+			}
 		}
 	}
     
