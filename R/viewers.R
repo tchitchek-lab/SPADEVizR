@@ -1857,11 +1857,13 @@ biplotViewer <- function(Results,
     }
     cells.number.by.sample <- colSums(cluster.abundances)
 
-    if (sample.merge) {
-        data <- data.frame(x = x.data, y = y.data)
-    } else {
-        data <- data.frame(x = x.data, y = y.data, facet = paste0(facet, " (" , format(cells.number.by.sample[facet], big.mark = " "), " cells)"))
-    }
+	if(length(x.data)>1 && length(y.data)>1){
+		if (sample.merge) {
+			data <- data.frame(x = x.data, y = y.data)
+		} else {
+			data <- data.frame(x = x.data, y = y.data, facet = paste0(facet, " (" , format(cells.number.by.sample[facet], big.mark = " "), " cells)"))
+		}
+	}
     
     if (!is.null(resample.ratio)) {
         if (resample.ratio > 0 && resample.ratio < 1) {
@@ -1871,24 +1873,39 @@ biplotViewer <- function(Results,
         }
     }
     
-    x.max              <- max(data["x"]) * 1.1
-    y.max              <- max(data["y"]) * 1.1
-    
+	if(length(x.data)>1 && length(y.data)>1){
+		x.max              <- max(data["x"]) * 1.1
+		y.max              <- max(data["y"]) * 1.1
+    }else{
+		x.max              <- 0
+		y.max              <- 0
+	}
+	
     colramp          <- grDevices::colorRampPalette(c("yellow", "red"))
-    data$cols        <- grDevices::densCols(data$x, data$y, colramp = colramp)
+    if(length(x.data)>1 && length(y.data)>1){
+		data$cols        <- grDevices::densCols(data$x, data$y, colramp = colramp)
+	}
     
     cells.number <- sum(cells.number.by.sample)
-    plot <- ggplot2::ggplot(data = data) +
-            ggplot2::ggtitle(paste0(" Biplot Viewer (", format(cells.number, big.mark = " "), " cells)", sep = "")) +
-            ggplot2::geom_point(ggplot2::aes_string(x = "x", y = "y", colour = "cols"), size = 0.25) +
-            ggplot2::stat_density2d(ggplot2::aes_string(x = "x", y = "y"), size = 0.2, colour = "blue", linetype = "dashed") +
-            ggplot2::scale_color_identity() +
-            ggplot2::xlab(x.marker) +
-            ggplot2::ylab(y.marker) +
-            ggplot2::coord_cartesian(xlim = c(-1, x.max), ylim = c(-1, y.max)) +
-            ggplot2::theme_bw() +
-            ggplot2::theme(panel.grid.major = ggplot2::element_line(color = "black", linetype = "dotted"), legend.key = ggplot2::element_blank())
-    if (!sample.merge) {
+	
+	plot <- ggplot2::ggplot(data = data) +
+            ggplot2::ggtitle(paste0(" Biplot Viewer (", format(cells.number, big.mark = " "), " cells)", sep = ""))
+			
+	if(length(x.data)>1 && length(y.data)>1){
+		plot <-   plot+ggplot2::geom_point(ggplot2::aes_string(x = "x", y = "y", colour = "cols"), size = 0.25)
+		plot <-   plot+ggplot2::stat_density2d(ggplot2::aes_string(x = "x", y = "y"), size = 0.2, colour = "blue", linetype = "dashed")
+	}else{
+		plot <-   plot+ggplot2::geom_hline(yintercept = 0, colour=NA)
+		plot <-   plot+ggplot2::geom_vline(xintercept = 0, colour=NA)
+	}
+	plot <- plot+ggplot2::scale_color_identity() +
+		ggplot2::xlab(x.marker) +
+		ggplot2::ylab(y.marker) +
+		ggplot2::coord_cartesian(xlim = c(-1, x.max), ylim = c(-1, y.max)) +
+		ggplot2::theme_bw() +
+		ggplot2::theme(panel.grid.major = ggplot2::element_line(color = "black", linetype = "dotted"), legend.key = ggplot2::element_blank())
+   
+   if (!sample.merge && length(x.data)>1 && length(y.data)>1) {
         plot <- plot + ggplot2::facet_wrap(~facet, scales = "free")
     }
 
