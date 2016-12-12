@@ -61,7 +61,7 @@ computePhenoTable <- function(cluster.phenotypes, bounds, num = 5){
 # @param ylab a character specifying the Y-axis label
 # @param legend.title a character specifying the legend title
 # @param clustering.markers a character vector of clustering markers
-# @param dendrograms a character specifying if "row", "col", "both" or "none" dendrograms must be build
+# @param clustering a character specifying if "row", "col", "both" or "none" dendrograms must be build
 # @param method a character specifying the agglomeration method used to compute the hierarchical dendrograms
 # @param distance a character specifying the measure of distances to be used
 # @param tile.color a character specifying the border color of the tiles (NA to remove tile borders)
@@ -77,13 +77,14 @@ ggheatmap <- function(matrix,
                       ylab               = "markers",
                       legend.title       = "relative expression",
                       clustering.markers = NULL,
-                      dendrograms        = "both",
+                      clustering        = "both",
                       method             = "ward.D",
                       distance           = "euclidean",
                       tile.color         = "black",
+					  rectangles         = NULL,
 					  ...) {
 
-	if (dendrograms == "both" || dendrograms == "row") {
+	if (clustering == "both" || clustering == "row") {
         row.hc     <- stats::hclust(stats::dist(matrix, method = distance, ...), method = method)
         row.dendro <- ggdendro::dendro_data(stats::as.dendrogram(row.hc), type = dendrogram.type)
         row.plot   <- ggdendrogram(row.dendro, row = TRUE)
@@ -94,7 +95,7 @@ ggheatmap <- function(matrix,
         row.plot <- grid::rectGrob(gp = grid::gpar(lwd = 0, col = 0))
     }
         
-    if (dendrograms == "both" || dendrograms == "col") {
+    if (clustering == "both" || clustering == "col") {
         col.hc     <- stats::hclust(stats::dist(t(matrix)), "ward.D")
         col.dendro <- ggdendro::dendro_data(stats::as.dendrogram(col.hc), type = dendrogram.type)
         col.plot   <- ggdendrogram(col.dendro, col = TRUE)
@@ -120,26 +121,29 @@ ggheatmap <- function(matrix,
 
 	melted.data.frame$value <- as.factor(melted.data.frame$value)
     melted.data.frame$value <- factor(melted.data.frame$value,levels=1:num)
-	range                   <- range(as.numeric(melted.data.frame$value))
+	range                   <- range(as.numeric(melted.data.frame$value),na.rm = TRUE)
 	values                  <- colfunc(num)[c(range[1]:range[length(range)])]
 	 
-    centre.plot <- ggplot2::ggplot(melted.data.frame, ggplot2::aes_string(x = "variable", y = "markers")) + 
-                   ggplot2::geom_tile(ggplot2::aes_string(fill = "value"), colour = tile.color) +
-                   ggplot2::scale_fill_manual(values = values, na.value = "grey50", guide = ggplot2::guide_legend(title                = legend.title,
-                                                                                                                        direction      = "horizontal",
-                                                                                                                        ncol           = 5,
-                                                                                                                        byrow          = TRUE,
-                                                                                                                        label.theme    = ggplot2::element_text(size = 10, angle = 0), 
-                                                                                                                        label.position = "bottom",
-                                                                                                                        label.hjust    = 0.5,
-                                                                                                                        title.position = "top")) +
-                   ggplot2::theme(legend.text       = ggplot2::element_text(size = 4),
-                                  panel.background  = ggplot2::element_rect("white"),
-                                  axis.text.x       = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5),
-                                  legend.position   = c(ifelse(num >= 5, 0.6, 1 - (num * 0.1)), 0.5),
-                                  legend.background = ggplot2::element_blank()) +
-                   ggplot2::xlab(xlab) +
-                   ggplot2::ylab(ylab)
+    centre.plot <- ggplot2::ggplot() + 
+                   ggplot2::geom_tile(data=melted.data.frame,ggplot2::aes_string(x = "variable", y = "markers",fill = "value"), colour = tile.color)
+
+   
+   centre.plot <- centre.plot+ggplot2::scale_fill_manual(values = values, na.value = "grey50", guide = ggplot2::guide_legend(title                = legend.title,
+																										direction      = "horizontal",
+																										ncol           = 5,
+																										byrow          = TRUE,
+																										label.theme    = ggplot2::element_text(size = 10, angle = 0), 
+																										label.position = "bottom",
+																										label.hjust    = 0.5,
+																										title.position = "top"))
+   
+  centre.plot <- centre.plot+ ggplot2::theme(legend.text       = ggplot2::element_text(size = 4),
+				  panel.background  = ggplot2::element_rect("white"),
+				  axis.text.x       = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5),
+				  legend.position   = c(ifelse(num >= 5, 0.6, 1 - (num * 0.1)), 0.5),
+				  legend.background = ggplot2::element_blank()) +
+				   ggplot2::xlab(xlab) +
+				   ggplot2::ylab(ylab)
                    
 
     if (!is.null(clustering.markers)) {
@@ -148,6 +152,10 @@ ggheatmap <- function(matrix,
         colored.markers    <- ifelse(clustering.markers, "blue", "black")
         centre.plot        <- centre.plot + ggplot2::theme(axis.text.y = ggplot2::element_text(face = bold.markers, color = colored.markers))
     }
+	
+	if(!is.null(rectangles)){
+		centre.plot <- centre.plot+ggplot2::geom_rect(data=rectangles,ggplot2::aes_string(xmin="xmin",xmax="xmax",ymin="ymin",ymax="ymax"), fill=NA, colour = "purple", size=1) 
+	}
 
     ret <- list(col = col.plot, row = row.plot, centre = centre.plot, row.hc = row.hc, col.hc = col.hc) 
 

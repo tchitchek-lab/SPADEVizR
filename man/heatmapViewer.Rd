@@ -5,7 +5,7 @@
 \title{Visualization of all clusters phenotypes using categorical heatmap}
 \usage{
 heatmapViewer(Results, clusters = NULL, markers = NULL, num = 5,
-  dendrograms = "both", tile.color = "black", show.on_device = TRUE)
+  clustering = "both", tile.color = "black", show.on_device = TRUE)
 }
 \arguments{
 \item{Results}{a 'Results' object}
@@ -16,7 +16,7 @@ heatmapViewer(Results, clusters = NULL, markers = NULL, num = 5,
 
 \item{num}{a numeric value specifying the number of markers expression categories to be used}
 
-\item{dendrograms}{a character specifying which dendrograms must be build ("markers", "clusters", "both" or "none")}
+\item{clustering}{a character specifying which clustering must be build ("markers", "clusters", "both" or "none")}
 
 \item{tile.color}{a character specifying the border color of the tiles (NA to remove tile borders)}
 

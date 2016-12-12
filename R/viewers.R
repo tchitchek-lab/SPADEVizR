@@ -818,7 +818,7 @@ treeViewer <- function(Results,
 #' @param clusters a character vector providing the clusters to be used (all clusters by default)
 #' @param markers a character vector providing the markers to be used (all markers by default)
 #' @param num a numeric value specifying the number of markers expression categories to be used
-#' @param dendrograms a character specifying which dendrograms must be build ("markers", "clusters", "both" or "none")
+#' @param clustering a character specifying which clustering must be build ("markers", "clusters", "both" or "none")
 #' @param tile.color a character specifying the border color of the tiles (NA to remove tile borders)
 #' @param show.on_device a logical specifying if the representation will be displayed on device
 #'
@@ -832,7 +832,7 @@ heatmapViewer <- function(Results,
                           clusters       = NULL,
                           markers        = NULL,
                           num            = 5,
-                          dendrograms    = "both",
+                          clustering     = "both",
 						  tile.color     = "black",
                           show.on_device = TRUE) {
     
@@ -872,8 +872,8 @@ heatmapViewer <- function(Results,
         stop("Error in heatmapViewer: 'num' parameter must be a strictly positive integer")
     }
     
-    if (is.null(dendrograms) || !is.element(dendrograms, c("markers", "clusters", "both", "none"))) {
-        stop("Error in heatmapViewer: 'dendrograms' parameter must be a character among 'markers', 'clusters', 'both' or 'none'")
+    if (is.null(clustering) || !is.element(clustering, c("markers", "clusters", "both", "biclust", "none"))) {
+        stop("Error in heatmapViewer: 'clustering' parameter must be a character among 'markers', 'clusters', 'both', 'biclust', or 'none'")
     }
     
     if (!is.logical(show.on_device)) {
@@ -907,10 +907,83 @@ heatmapViewer <- function(Results,
     pheno.table <- pheno.table[, clusters]
     pheno.table <- pheno.table[markers, ]
 	
-    dendrograms <- ifelse(dendrograms == "markers", "row", dendrograms)
-    dendrograms <- ifelse(dendrograms == "clusters", "col", dendrograms)
-    
-    plot.elements <- ggheatmap(pheno.table, num = num, clustering.markers = Results@clustering.markers, dendrograms = dendrograms, tile.color=tile.color)
+	rectangles <- NULL
+		
+	if(clustering=="biclust"){
+		capture.output(biclust <- biclust::biclust(pheno.table, method=biclust::BCQuest()))
+				
+		if(biclust@Number!=0){
+			rownames(biclust@RowxNumber) <- rownames(pheno.table)
+			colnames(biclust@NumberxCol) <- colnames(pheno.table)
+			biclust@NumberxCol           <- t(biclust@NumberxCol)
+			
+		}
+		
+		if(biclust@Number>=2){
+		
+			RowxNumber <- biclust@RowxNumber
+			NumberxCol <- biclust@NumberxCol
+			
+			for(i in ncol(biclust@RowxNumber):1){
+				RowxNumber <- RowxNumber[order(RowxNumber[,i]),]
+			}
+			
+			for(i in ncol(biclust@NumberxCol):1){
+				NumberxCol <- NumberxCol[order(NumberxCol[,i]),]
+			}	
+			
+			markers  <- rownames(RowxNumber)
+			clusters <- rownames(NumberxCol)
+			
+		}else if(biclust@Number==1){
+			
+			RowxNumber <- biclust@RowxNumber[order(biclust@RowxNumber[,1]),]
+			NumberxCol <- biclust@NumberxCol[order(biclust@NumberxCol[,1]),]
+
+			markers  <- names(RowxNumber)
+			clusters <- names(NumberxCol)
+		}
+		
+		if(biclust@Number>=2){
+		
+			for(i in 1:ncol(RowxNumber)){
+				idx  <- which(RowxNumber[,i])
+				ymin <- min(idx)-1
+				ymax <- max(idx)
+				
+				idx  <- which(NumberxCol[,i])
+				xmin <- min(idx)-1
+				xmax <- max(idx)
+				
+				rectangles <- rbind(rectangles,cbind(xmin=xmin+0.5,xmax=xmax+0.5,ymin=ymin+0.5,ymax=ymax+0.5))
+			}
+			rectangles <- data.frame(rectangles)
+			
+		}
+		
+		if(biclust@Number==1){
+		
+			idx  <- which(RowxNumber)
+			ymin <- min(idx)-1
+			ymax <- max(idx)
+			
+			idx  <- which(NumberxCol)
+			xmin <- min(idx)-1
+			xmax <- max(idx)
+			
+			rectangles <- rbind(rectangles,cbind(xmin=xmin+0.5,xmax=xmax+0.5,ymin=ymin+0.5,ymax=ymax+0.5))
+			rectangles <- data.frame(rectangles)
+			
+		}
+		
+		pheno.table <- pheno.table[markers,]
+		pheno.table <- pheno.table[,clusters]
+	}else{
+		clustering <- ifelse(clustering == "markers", "row", clustering)
+		clustering <- ifelse(clustering == "clusters", "col", clustering)
+	}
+	
+    plot.elements <- ggheatmap(pheno.table, num = num, clustering.markers = Results@clustering.markers, clustering = clustering, tile.color=tile.color, rectangles=rectangles)
     row.hc        <- plot.elements$row.hc
 	col.hc        <- plot.elements$col.hc
 	plot.elements$row.hc <- NULL
