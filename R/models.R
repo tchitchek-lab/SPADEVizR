@@ -563,7 +563,6 @@ generateEVTREE <- function(Results,
 		control <- evtree::evtree.control(minsplit=min(nrow(data)-1,20L))
 	}
 	
-	print(head(data))
 	model   <- evtree::evtree(variable ~ . , data = data, control=control)
 	
 	return(list(model = model, plot.model = model))

@@ -911,7 +911,7 @@ heatmapViewer <- function(Results,
 	rectangles <- NULL
 		
 	if(clustering=="biclust"){
-		capture.output(biclust <- biclust::biclust(pheno.table, method=biclust::BCQuest()))
+		utils::capture.output(biclust <- biclust::biclust(pheno.table, method=biclust::BCQuest()))
 				
 		if(biclust@Number!=0){
 			rownames(biclust@RowxNumber) <- rownames(pheno.table)
