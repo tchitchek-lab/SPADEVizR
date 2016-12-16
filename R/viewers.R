@@ -110,7 +110,7 @@ abundantClustersViewer <- function(AC,
                     ggplot2::xlab("-log10(p-value)") +
                     ggplot2::ylab(ifelse(AC@use.percentages, "mean (% of cells)", "mean (# of cells)")) +                  
                     ggplot2::theme_bw() +
-                    ggplot2::theme(legend.key = ggplot2::element_blank())
+                    ggplot2::theme(legend.key = ggplot2::element_blank(),plot.title=ggplot2::element_text(hjust=0.5))
     
     if (show.on_device) {
         plot(plot)
@@ -273,7 +273,7 @@ volcanoViewer <- function(DAC                = NULL,
                    ggplot2::xlab(paste0(ifelse(fc.log2, "log2(fold.change)", "fold.change"), orientation)) +
                    ggplot2::ylab("-log10(p-value)") +
                    ggplot2::theme_bw() +
-                   ggplot2::theme(legend.key = ggplot2::element_blank())
+                   ggplot2::theme(legend.key = ggplot2::element_blank(),plot.title=ggplot2::element_text(hjust=0.5))
 
     if (show.on_device) {
         plot(plot)
@@ -399,7 +399,7 @@ correlatedClustersViewer <- function(CC,
                     ggplot2::xlab(paste(CC@method, "coefficient of correlation")) +
                     ggplot2::ylab("-log10(p-value)") +
                     ggplot2::theme_bw() +
-                    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5), legend.key = ggplot2::element_blank())
+                    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5), legend.key = ggplot2::element_blank(), plot.title=ggplot2::element_text(hjust=0.5))
 
     if (show.on_device) {
         plot(plot)
@@ -586,7 +586,7 @@ countViewer <- function(Results,
 		order <- order(data$sum.of.samples,decreasing=TRUE)
         data$clusters <- factor(data$clusters,levels=data$clusters[order])
     } else {
-        data$clusters <- as.factor(data$clusters)
+        data$clusters <- factor(data$clusters,levels=clusters)
     }
 
     
@@ -619,7 +619,7 @@ countViewer <- function(Results,
                    ggplot2::xlab("clusters") +
                    ggplot2::ylab("# of cells") +
                    ggplot2::theme_bw() +
-                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5), legend.key = ggplot2::element_blank())
+                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5), legend.key = ggplot2::element_blank(), plot.title=ggplot2::element_text(hjust=0.5))
 
     if (show.on_device) {
         plot(plot)
@@ -788,7 +788,8 @@ treeViewer <- function(Results,
                                   panel.grid.major = ggplot2::element_blank(),
                                   axis.ticks       = ggplot2::element_blank(),
                                   legend.position  = "right",
-                                  legend.key       = ggplot2::element_blank())
+                                  legend.key       = ggplot2::element_blank(),
+								  plot.title=ggplot2::element_text(hjust=0.5))
 
     if (show.on_device) {
         plot(plot)
@@ -1141,7 +1142,8 @@ boxplotViewer <- function(Results,
                    ggplot2::theme_bw() +
                    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 0.5),
                                   legend.text = ggplot2::element_text(size = 6),
-                                  legend.key = ggplot2::element_blank())
+                                  legend.key = ggplot2::element_blank(),
+								  plot.title=ggplot2::element_text(hjust=0.5))
 
     if (show.on_device) {
         grid::grid.draw(plot)
@@ -1264,7 +1266,8 @@ kineticsViewer <- function(Results,
                    ggplot2::theme_bw() +
                    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 0.5),
                                   legend.text = ggplot2::element_text(size = 6),
-                                  legend.key  = ggplot2::element_blank())
+                                  legend.key  = ggplot2::element_blank(),
+								  plot.title  = ggplot2::element_text(hjust=0.5))
 
     if (show.on_device) {
         grid::grid.draw(plot)
@@ -1382,7 +1385,8 @@ streamgraphViewer <- function(Results,
                             panel.background = ggplot2::element_blank(),
                             panel.border     = ggplot2::element_blank(),
                             panel.grid.major = ggplot2::element_blank(),
-                            panel.grid.minor = ggplot2::element_blank())
+                            panel.grid.minor = ggplot2::element_blank(),
+							plot.title       = ggplot2::element_text(hjust=0.5))
 
     if (show.on_device) {
         plot(plot)
@@ -1598,7 +1602,8 @@ phenoViewer <- function(Results,
     }
     plot <- plot + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5, face = bold.markers, color = colored.markers)) +
                    ggplot2::theme(legend.text = ggplot2::element_text(size = 6),
-                                  legend.key  = ggplot2::element_blank()) +
+                                  legend.key  = ggplot2::element_blank(),
+								  plot.title  = ggplot2::element_text(hjust=0.5)) +
                    ggplot2::xlab("markers") +
                    ggplot2::ylab("marker expressions") +
                    ggplot2::guides(col = ggplot2::guide_legend(ncol = 1))
@@ -1777,7 +1782,8 @@ MDSViewer <- function(Results,
                                       panel.grid.major = ggplot2::element_blank(),
                                       axis.ticks       = ggplot2::element_blank(),
                                       legend.position  = "right",
-                                      legend.key       = ggplot2::element_blank())
+                                      legend.key       = ggplot2::element_blank(),
+									  plot.title       = ggplot2::element_text(hjust=0.5))
 
     } else {
         data_i <- cbind(data_i, clusters = data[, "cluster"])
@@ -1808,7 +1814,8 @@ MDSViewer <- function(Results,
                                panel.grid.major = ggplot2::element_blank(),
                                axis.ticks       = ggplot2::element_blank(),
                                legend.position  = "none",
-                               legend.key       = ggplot2::element_blank())
+                               legend.key       = ggplot2::element_blank(),
+							   plot.title       = ggplot2::element_text(hjust=0.5))
     }
 
     if (show.on_device) {
@@ -1989,7 +1996,7 @@ biplotViewer <- function(Results,
 		ggplot2::xlab(x.marker) +
 		ggplot2::ylab(y.marker) +
 		ggplot2::theme_bw() +
-		ggplot2::theme(panel.grid.major = ggplot2::element_line(color = "black", linetype = "dotted"), legend.key = ggplot2::element_blank())
+		ggplot2::theme(panel.grid.major = ggplot2::element_line(color = "black", linetype = "dotted"), legend.key = ggplot2::element_blank(), plot.title  = ggplot2::element_text(hjust=0.5))
    
    if (!sample.merge && length(x.data)>1 && length(y.data)>1) {
         plot <- plot + ggplot2::facet_wrap(~facet, scales = "free")
@@ -2126,7 +2133,8 @@ distogramViewer <- function(Results,
                            legend.justification = c(1, 0),
                            legend.position      = c(0.4, 0.7),
                            legend.direction     = "horizontal",
-                           legend.key           = ggplot2::element_blank()) +
+                           legend.key           = ggplot2::element_blank(),
+						   plot.title           = ggplot2::element_text(hjust=0.5)) +
             ggplot2::guides(fill = ggplot2::guide_colorbar(barwidth = 7,
                                                            barheight      = 1,
                                                            title.position = "top",

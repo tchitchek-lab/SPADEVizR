@@ -132,10 +132,11 @@ generateGLM <- function(Results,
 		data.old     = data
 		
         plot.clusters <- ggplot2::ggplot(data = data) +
+					     ggplot2::ggtitle("Coefficiants of the Generalized Linear Model") +
                          ggplot2::geom_bar(ggplot2::aes_string(x = "clusters", y = "estimate", fill = "pvalue"),stat = "identity", position = "identity") +   ggplot2::scale_fill_gradient(low = "red", high = "white", limit = c(0,th.pvalue), name = "p-value") +
 						 ggplot2::ylab("coefficient") +
                          ggplot2::theme(legend.text = ggplot2::element_text(size = 6),
-                                        axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))
+                                        axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5),plot.title=ggplot2::element_text(hjust=0.5))
 										
 		if(show.error)
 			plot.clusters <- plot.clusters + 
@@ -160,11 +161,12 @@ generateGLM <- function(Results,
         residues <- plyr::ddply(data, "samples", function(df){return(c(min(df$y), max(df$y)))})
 
         plot.samples <- ggplot2::ggplot() +
+						ggplot2::ggtitle("Predictions of the Generalized Linear Model") +
                         ggplot2::geom_errorbar(data = residues, ggplot2::aes_string(x = "samples", ymin = "V1", ymax = "V2"), width = 0, color = "blue") +
                         ggplot2::geom_point(data = data,  ggplot2::aes_string(x = "samples", y = "y", shape = "variable", color= "predict"), size = 3) +
                         ggplot2::scale_color_manual(values = c("TRUE" = "orange", "FALSE" = "#33CC33"), guide=FALSE) +
                         ggplot2::theme(legend.text = ggplot2::element_text(size = 6),
-                                       axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))
+                                       axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5),plot.title=ggplot2::element_text(hjust=0.5))
         
 		
     }
@@ -326,10 +328,12 @@ generateCPHM <- function(Results,
 	    data$ymax      <- data$coef + data$se/2
 
 	    plot.clusters <- ggplot2::ggplot(data = data) +
+						 ggplot2::ggtitle("Coefficiants of the Cox proportional hazards regression model") +
               	         ggplot2::geom_bar(ggplot2::aes_string(x = "clusters", y = "coef", fill = "p"), stat = "identity", position = "identity") +   
              	         ggplot2::scale_fill_gradient(low = "red", high = "white", limit = c(0, max(data$p)), name = "p-value") +
             	         ggplot2::theme(legend.text = ggplot2::element_text(size = 6),
-            	                        axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5))
+            	                        axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5),
+										plot.title=ggplot2::element_text(hjust=0.5))
 		
 		if(show.error)
 			plot.clusters <- plot.clusters + 
@@ -345,6 +349,7 @@ generateCPHM <- function(Results,
 		data$predict <- -(data$predict-max(abs(data$predict)))
 		
 		plot.samples <- ggplot2::ggplot() +
+						ggplot2::ggtitle("Predictions of the Cox proportional hazards regression model") +
             	        ggplot2::geom_point(data = data,  ggplot2::aes_string(x = "variable", y = "predict", color = "color"), size = 3) +
             		    ggplot2::geom_smooth(data = data[data$color != "orange",],  ggplot2::aes_string(x = "variable", y = "predict"), method = "lm", se = FALSE, color = "grey40") +
             		    ggplot2::scale_colour_identity() +
@@ -353,7 +358,8 @@ generateCPHM <- function(Results,
             			ggplot2::theme(legend.text = ggplot2::element_text(size = 6),
             	                       axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5),
             						   aspect.ratio = 1,
-            						   legend.position = "none")
+            						   legend.position = "none",
+									   plot.title=ggplot2::element_text(hjust=0.5))
 	    
 	} else{
 	    predict                       <- NULL
@@ -482,6 +488,7 @@ generateRFM <- function(Results,
 		data[is.na(data$variable), "variable"] <- 0
 		
 		plot.samples <- ggplot2::ggplot() +
+						ggplot2::ggtitle("Predictions of the Random Forest Model") +
             	        ggplot2::geom_point(data = data,  ggplot2::aes_string(x = "variable", y = "predict", color = "color"), size = 3) +
             		    ggplot2::geom_smooth(data = data[data$color != "orange",],  ggplot2::aes_string(x = "variable", y = "predict"), method = "lm", se = FALSE, color = "grey40") +
             		    ggplot2::scale_colour_identity() +
@@ -490,7 +497,8 @@ generateRFM <- function(Results,
             			ggplot2::theme(legend.text = ggplot2::element_text(size = 6),
             	                       axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5),
             						   aspect.ratio = 1,
-            						   legend.position = "none")
+            						   legend.position = "none",
+									   plot.title=ggplot2::element_text(hjust=0.5))
 	
 	
 		#gg_error <- plot(ggRandomForests::gg_error(forest))
