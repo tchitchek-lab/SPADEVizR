@@ -2152,3 +2152,160 @@ distogramViewer <- function(Results,
     invisible(plot)
 
 }
+
+
+
+histoViewer <- function (Results, x.marker, samples = NULL, clusters = NULL, 
+                         resample.ratio = NULL, sample.merge = FALSE, show.on_device = TRUE, 
+                         use.percentage = FALSE) 
+{ y.marker <- x.marker
+  if (is.null(Results)) {
+    stop("Error in histoViewer : 'Results' parameter can not be NULL")
+  }
+  else if (class(Results)[1] != "Results") {
+    stop("Error in histoViewer : 'Results' parameter required a 'Results' object")
+  }
+  if (length(Results@marker.names) == 0) {
+    stop("Error in histoViewer : 'Results' object must contain phenotypes")
+  }
+  flowset <- Results@flowset
+  if (is.null(flowset)) {
+    stop("Error in histoViewer : 'flowset' slot of the 'Results' object is not loaded, if the slot 'fcs.files' is not null, use the function load.flowSet before using the 'histoViewer ' function")
+  }
+  if (!is.null(x.marker) && !is.element(x.marker, Results@marker.names)) {
+    stop(paste0("Error in histoViewer : 'x.marker' parameter: ", 
+                x.marker, ", is unknown"))
+  }
+  if (!is.null(y.marker) && !is.element(y.marker, Results@marker.names)) {
+    stop(paste0("Error in histoViewer : 'y.marker' parameter: ", 
+                y.marker, ", is unknown"))
+  }
+  if (is.null(samples)) {
+    samples <- Results@sample.names
+  }
+  else if (!all(samples %in% Results@sample.names)) {
+    stop("Error in histoViewer : 'samples' parameter must contains only samples names\n Unknown sample names: ", 
+         paste(setdiff(unique(samples), Results@sample.names), 
+               collapse = " "))
+  }
+  else {
+    samples <- unique(samples)
+  }
+  if (is.null(clusters)) {
+    clusters <- Results@cluster.names
+  }
+  else if (all(clusters %in% Results@cluster.names)) {
+    if (typeof(clusters) != "character") {
+      stop("Error in histoViewer : 'clusters' parameter must be a character vector")
+    }
+    clusters <- unique(clusters)
+  }
+  else {
+    stop("Error in histoViewer :\nUnknown clusters : ", paste(setdiff(unique(clusters), 
+                                                                      Results@cluster.names), collapse = " "))
+  }
+  if (!is.logical(sample.merge)) {
+    stop("Error in histoViewer : 'sample.merge' parameter must be a logical")
+  }
+  if (!is.logical(show.on_device)) {
+    stop("Error in histoViewer : 'show.on_device' parameter must be a logical")
+  }
+  x.data <- c()
+  y.data <- c()
+  facet <- c()
+  flowset.samples <- flowCore::sampleNames(flowset)
+  plots <- list()
+  for (sample in samples) {
+    flowframe <- flowset[[which(sample == flowset.samples), 
+                          ]]
+    exprs <- flowframe@exprs
+    if (!is.null(clusters)) {
+      exprs <- subset(exprs, exprs[, "cluster"] %in% clusters)
+    }
+    x.data <- c(x.data, exprs[, x.marker])
+    y.data <- c(y.data, exprs[, y.marker])
+    if (!sample.merge) {
+      facet <- c(facet, rep(sample, length(exprs[, x.marker])))
+    }
+  }
+  cluster.abundances <- Results@cluster.abundances[clusters,]
+  if (use.percentage == TRUE) {
+    cluster.abundances <- cluster.abundances/apply(cluster.abundances, 
+                                                   1, sum)
+  }
+  if (is.null(samples)) {
+    cluster.abundances <- cluster.abundances
+  }
+  else {
+    cluster.abundances <- cluster.abundances[, samples, drop = FALSE]
+  }
+  cells.number.by.sample <- colSums(cluster.abundances)
+  if (length(x.data) > 1 && length(y.data) > 1) {
+    if (sample.merge) {
+      data <- data.frame(x = x.data, y = y.data)
+    }
+    else {
+      if (use.percentage == TRUE) {
+        data <- data.frame(x = x.data, y = y.data, facet = paste0(facet, 
+                                                                  " (", format(cells.number.by.sample[facet], 
+                                                                               digits = 2, big.mark = " "), " % of parents)"))
+      }
+      else {
+        data <- data.frame(x = x.data, y = y.data, facet = paste0(facet, 
+                                                                  " (", format(cells.number.by.sample[facet], 
+                                                                               big.mark = " "), " cells)"))
+      }
+    }
+  }
+  if (!is.null(resample.ratio)) {
+    if (resample.ratio > 0 && resample.ratio < 1) {
+      data <- data[sample(nrow(data), round((nrow(data) * 
+                                               resample.ratio))), ]
+    }
+    else {
+      stop("resample.ratio must be > 0 and < 1 or null")
+    }
+  }
+  if (length(x.data) > 1 && length(y.data) > 1) {
+    x.max <- 5
+    y.max <- max(data["y"]) * 1.2
+  }
+  else {
+    x.max <- 0
+    y.max <- 0
+  }
+  colramp <- grDevices::colorRampPalette(c("yellow", "red"))
+  if (length(x.data) > 1 && length(y.data) > 1) {
+    data$cols <- grDevices::densCols(data$x, data$y, colramp = colramp)
+  }
+  cells.number <- sum(cells.number.by.sample)
+  
+  data <- data[c("x")]
+  
+  plot <- ggplot2::ggplot() + ggplot2::ggtitle(paste0("Histogram Viewer (", 
+                                                                 format(cells.number, big.mark = " "), " cells)", sep = ""))
+  if (length(x.data) > 1 && length(y.data) > 1) {
+    plot <- plot + ggplot2::geom_density(data=data,aes_string(x="x"),fill = "blue") + coord_cartesian(xlim = c(0, 6),ylim = c(0, 1)) 
+              
+  }
+  else {
+    stop("clusters to plot must not be empty")
+  }
+  plot <- plot + 
+    ggplot2::scale_color_identity() + 
+    ggplot2::xlab(x.marker) + 
+    ggplot2::ylab("density") + 
+    ggplot2::theme_bw() + 
+    ggplot2::theme(panel.grid.major = ggplot2::element_line(color = "black", 
+                                                            linetype = "dotted"), legend.key = ggplot2::element_blank(), 
+                   plot.title = ggplot2::element_text(hjust = 0.5))
+  if (!sample.merge && length(x.data) > 1 && length(y.data) > 
+      1) {
+    plot <- plot + ggplot2::facet_wrap(~facet, scales = "free")
+  }
+  if (show.on_device) {
+    plot(plot)
+  }
+  invisible(plot)
+}
+
