@@ -2154,10 +2154,10 @@ distogramViewer <- function(Results,
 }
 
 
-
+#' @export
 histoViewer <- function (Results, x.marker, samples = NULL, clusters = NULL, 
                          resample.ratio = NULL, sample.merge = FALSE, show.on_device = TRUE, 
-                         use.percentage = FALSE) 
+                         use.percentage = FALSE,xlimits = c(0,6),ylimits=c(0,1))
 { y.marker <- x.marker
   if (is.null(Results)) {
     stop("Error in histoViewer : 'Results' parameter can not be NULL")
@@ -2285,7 +2285,7 @@ histoViewer <- function (Results, x.marker, samples = NULL, clusters = NULL,
   plot <- ggplot2::ggplot() + ggplot2::ggtitle(paste0("Histogram Viewer (", 
                                                                  format(cells.number, big.mark = " "), " cells)", sep = ""))
   if (length(x.data) > 1 && length(y.data) > 1) {
-    plot <- plot + ggplot2::geom_density(data=data,aes_string(x="x"),fill = "blue") + coord_cartesian(xlim = c(0, 6),ylim = c(0, 1)) 
+    plot <- plot + ggplot2::geom_density(data=data,aes_string(x="x"),fill = "blue") + coord_cartesian(xlim = xlimits,ylim = ylimits) 
               
   }
   else {
@@ -2308,4 +2308,5 @@ histoViewer <- function (Results, x.marker, samples = NULL, clusters = NULL,
   }
   invisible(plot)
 }
+
 
