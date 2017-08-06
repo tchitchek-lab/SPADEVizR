@@ -3,11 +3,11 @@
 \docType{methods}
 \name{print}
 \alias{print}
-\alias{print,AC-method}
-\alias{print,AP-method}
-\alias{print,CC-method}
-\alias{print,DAC-method}
 \alias{print,Results-method}
+\alias{print,AC-method}
+\alias{print,DAC-method}
+\alias{print,CC-method}
+\alias{print,AP-method}
 \title{Textual previews for all SPADEVizR objects}
 \usage{
 \S4method{print}{Results}(x)
@@ -29,4 +29,3 @@ none
 \description{
 Prints a preview for a SPADEVizR object.
 }
-

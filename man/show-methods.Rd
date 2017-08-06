@@ -3,11 +3,11 @@
 \docType{methods}
 \name{show}
 \alias{show}
-\alias{show,AC-method}
-\alias{show,AP-method}
-\alias{show,CC-method}
-\alias{show,DAC-method}
 \alias{show,Results-method}
+\alias{show,AC-method}
+\alias{show,DAC-method}
+\alias{show,CC-method}
+\alias{show,AP-method}
 \title{Textual previews for SPADEVizR objects}
 \usage{
 \S4method{show}{Results}(object)
@@ -29,4 +29,3 @@ none
 \description{
 Show a preview for a SPADEVizR object.
 }
-

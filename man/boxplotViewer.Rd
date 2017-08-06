@@ -41,4 +41,3 @@ The cell cluster abundances could be displayed as percentages or absolute number
 Biological conditions are specified in the Results object at the importation or using the 'assignContext()' function.
 Cells clusters are colored based on theirs associated biological samples.
 }
-

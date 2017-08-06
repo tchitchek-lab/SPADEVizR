@@ -23,4 +23,3 @@ Generates a colored circle packing representation showing for each cluster: its 
 The sizes of the dots are proportionals to the total number of associated cells to each cluster.
 Circle packing classes are sorted by the number of clusters in each class.
 }
-

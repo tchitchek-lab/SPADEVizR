@@ -30,4 +30,3 @@ This function is used to identify Correlated Clusters, that is to say clusters h
 Correlated Clusters are identified using Pearson or Spearman coefficients of correlation.
 P-values can be corrected for multiple comparisons.
 }
-

@@ -5,7 +5,7 @@
 \title{Visualization of cluster enrichment profiles kinetics}
 \usage{
 kineticsViewer(Results, samples = NULL, clusters = NULL,
-  use.percentages = TRUE, show.on_device = TRUE)
+  use.percentages = TRUE, show.on_device = TRUE, scale_y = NULL)
 }
 \arguments{
 \item{Results}{a 'Results' object}
@@ -17,6 +17,8 @@ kineticsViewer(Results, samples = NULL, clusters = NULL,
 \item{use.percentages}{a logical specifying if the visualization should be performed on percentage}
 
 \item{show.on_device}{a logical specifying if the representation will be displayed on device}
+
+\item{scale_y}{a numeric value specifying the maximal value in y axsis}
 }
 \value{
 a 'ggplot' object
@@ -29,4 +31,3 @@ The cell cluster abundances could be displayed as percentages or absolute number
 \details{
 Timepoints and indivuals information must be assigned to the samples in order to use this viewer (provided by the slot `assignments` in the `Results` object).
 }
-

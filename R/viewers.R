@@ -1169,111 +1169,116 @@ boxplotViewer <- function(Results,
 #' @param clusters a character or a character vector containing the cluster to be shown or if multiple clusters which will be merged
 #' @param use.percentages a logical specifying if the visualization should be performed on percentage
 #' @param show.on_device a logical specifying if the representation will be displayed on device 
+#' @param scale_y a numeric value specifying the maximal value in y axsis
 #'
 #' @return a 'ggplot' object
 #'
 #' @export
 #' 
 #' @import grid reshape2 ggplot2
-kineticsViewer <- function(Results,
-                           samples         = NULL,
-                           clusters        = NULL,
-                           use.percentages = TRUE,
-                           show.on_device  = TRUE) {
+kineticsViewer <- function (Results, samples = NULL, clusters = NULL, use.percentages = TRUE, 
+                            show.on_device = TRUE, scale_y=NULL) {
+	if (is.null(Results)) {
+		stop("Error in kineticsViewer: 'Results' parameter can not be NULL")
+	}else if (class(Results)[1] != "Results") {
+		stop("Error in kineticsViewer: 'Results' parameter must be a 'Results' object")
+	}
+	
+	if (is.null(samples)) {
+		samples <- Results@sample.names
+		cluster.abundances <- Results@cluster.abundances
+	}else if (!all(samples %in% Results@sample.names)) {
+		stop("Error in kineticsViewer: 'samples' parameter must contains only samples names\n Unknown sample names: ", 
+		paste(setdiff(unique(samples), Results@sample.names), collapse = " "))
+	}
+	data <- Results@cluster.abundances[, samples, drop = FALSE]
+	cluster.abundances <- data
+	
+	if (!is.logical(use.percentages)) {
+		stop("Error in kineticsViewer: The 'use.percentages' parameter must be a logical")
+	}
+	
+	if (use.percentages) {
+		data.percent <- prop.table(as.matrix(data), 2) * 100
+		data <- data.frame(data.percent, check.names = FALSE)
+		legendy <- "% of cells relative to parent"
+	}else{
+		legendy <- "# of cells"
+	}
+	
+	if (is.null(clusters)) {
+		stop("Error in kineticsViewer: 'clusters' parameter is required")
+	}else if (all(clusters %in% Results@cluster.names)) {
+		if (typeof(clusters) != "character") {
+			stop("Error in kineticsViewer: 'clusters' parameter must be a character vector")
+		}
+		clusters <- unique(clusters)
+		cluster.abundances <- cluster.abundances[clusters, ]
+		data <- data[clusters, ]
+		data <- apply(data, 2, sum)
+	}else {
+		stop("Error in kineticsViewer:\nUnknown clusters : ", 
+		paste(setdiff(unique(clusters), Results@cluster.names), collapse = " "))
+	}
+	
+	if (!is.logical(show.on_device)) {
+		stop("Error in kineticsViewer: 'show.on_device' parameter must be a logical")
+	}
+	
+	assignments <- Results@assignments
+	if (!is.null(assignments)) {
+		order <- unique(assignments$tp)
+		assignments <- assignments[samples, , drop = FALSE]
+		order <- intersect(order, unique(assignments$tp))
+		names.palette <- unique(assignments$ind)
+		palette <- ggcolors(length(names.palette))
+		names(palette) <- names.palette
+	}else if (all(c("tp", "ind") %in% colnames(assignments))) {
+		stop("Error in kineticsViewer: 'assignments' slot must contain the column \"tp\" and \"ind\" in the provided 'Results' object")
+	}else {
+	stop("Error in kineticsViewer: 'assignments' slot in the provided 'Results' object is required")
+		}
+	
+	data <- data.frame(samples = names(data), value = data, ind = assignments[names(data), 
+													"ind"])
+	data$tp <- assignments[data$samples, "tp"]
+	data$tp <- factor(data$tp, levels = order)
+	max.value <- max(data$value, na.rm = TRUE)
+	max.value <- max.value + max.value * 0.1 + 1
+	cells.number <- sum(colSums(cluster.abundances))
+	plot <- ggplot2::ggplot(data = data, ggplot2::aes_string(x = "as.factor(tp)", 
+		y = "value", group = "ind", color = "ind")) + ggplot2::ggtitle(paste("Kinetics Viewer - cluster: ", 
+																										paste0(clusters, collapse = ", "), " (", format(cells.number, 
+																																						big.mark = " "), " cells) ", sep = "")) + ggplot2::geom_line() + 
+	ggplot2::scale_color_manual(name = "individuals", values = palette) + 
+	ggplot2::geom_point(na.rm = TRUE) + ggplot2::scale_x_discrete(expand = c(0,0.05))
+	if (use.percentages) {
+		if (is.null(scale_y)){
+			plot <- plot + ggplot2::scale_y_continuous(limits = c(0, 
+				max.value), breaks = round(seq(0, max.value)), minor_breaks = NULL)
+		} else {
+		plot <- plot + ggplot2::scale_y_continuous(limits = c(0, 
+				scale_y), breaks = round(seq(0, scale_y)), minor_breaks = NULL)
+		}
+	}else {
+		if (is.null(scale_y)){
+			plot <- plot + ggplot2::scale_y_continuous(limits = c(0, 
+				max.value))
+		} else {
+			plot <- plot + ggplot2::scale_y_continuous(limits = c(0, 
+				scale_y))
+		}
+	}
+	plot <- plot + ggplot2::ylab(legendy) + ggplot2::xlab("timepoints") + 
+		ggplot2::theme_bw() + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, 
+		hjust = 0, vjust = 0.5), legend.text = ggplot2::element_text(size = 6), 
+		legend.key = ggplot2::element_blank(), plot.title = ggplot2::element_text(hjust = 0.5))
 
-    if (is.null(Results)) {
-        stop("Error in kineticsViewer: 'Results' parameter can not be NULL")
-    } else if (class(Results)[1] != "Results") {
-        stop("Error in kineticsViewer: 'Results' parameter must be a 'Results' object")
-    }
-    
-    if (is.null(samples)) {
-        samples     <- Results@sample.names
-        cluster.abundances <- Results@cluster.abundances
-    } else if (!all(samples %in% Results@sample.names)) {
-        stop("Error in kineticsViewer: 'samples' parameter must contains only samples names\n Unknown sample names: ",
-             paste(setdiff(unique(samples), Results@sample.names), collapse = " "))
-    }
-    
-    data        <- Results@cluster.abundances[, samples, drop = FALSE]
-    cluster.abundances <- data
-
-    if (!is.logical(use.percentages)) { stop("Error in kineticsViewer: The 'use.percentages' parameter must be a logical") }
-
-    if (use.percentages) {
-        data.percent <- prop.table(as.matrix(data), 2) * 100
-        data         <- data.frame(data.percent, check.names = FALSE)
-        legendy      <- "% of cells relative to parent"
-    } else {
-        legendy      <- "# of cells"
-    }
-    
-    if (is.null(clusters)) {
-        stop("Error in kineticsViewer: 'clusters' parameter is required")
-    } else if (all(clusters %in% Results@cluster.names)) {
-        if (typeof(clusters) != "character") {
-            stop("Error in kineticsViewer: 'clusters' parameter must be a character vector")
-        }
-        clusters    <- unique(clusters)
-        cluster.abundances <- cluster.abundances[clusters, ]
-        data        <- data[clusters, ]
-        data        <- apply(data, 2, sum)
-    } else {
-        stop("Error in kineticsViewer:\nUnknown clusters : ", paste(setdiff(unique(clusters), Results@cluster.names), collapse = " "))
-    }
-
-    if (!is.logical(show.on_device)) { stop("Error in kineticsViewer: 'show.on_device' parameter must be a logical") }
-
-    assignments <- Results@assignments
-    if (!is.null(assignments)) {
-        order       <- unique(assignments$tp)
-        assignments <- assignments[samples, , drop = FALSE]
-        order       <- intersect(order, unique(assignments$tp))
-        
-        names.palette  <- unique(assignments$ind)
-        palette        <- ggcolors(length(names.palette))
-        names(palette) <- names.palette
-        
-    } else if (all(c("tp", "ind") %in% colnames(assignments))) {
-        stop("Error in kineticsViewer: 'assignments' slot must contain the column \"tp\" and \"ind\" in the provided 'Results' object")
-    } else {
-        stop("Error in kineticsViewer: 'assignments' slot in the provided 'Results' object is required")
-    }
-
-    data            <- data.frame(samples = names(data), value = data, ind = assignments[names(data), "ind"])
-    data$tp <- assignments[data$samples, "tp"]
-    data$tp <- factor(data$tp, levels = order)
-
-    max.value <- max(data$value, na.rm = TRUE)
-    max.value <- max.value + max.value * 0.1 + 1
-
-    cells.number <- sum(colSums(cluster.abundances))
-
-    plot <- ggplot2::ggplot(data = data, ggplot2::aes_string(x = "as.factor(tp)", y = "value", group = "ind", color = "ind")) +
-            ggplot2::ggtitle(paste("Kinetics Viewer - cluster: ", paste0(clusters, collapse = ", "), " (", format(cells.number, big.mark = " "), " cells) ", sep = "")) +
-            ggplot2::geom_line() +
-            ggplot2::scale_color_manual(name = "individuals", values = palette) +
-            ggplot2::geom_point(na.rm = TRUE) +
-            ggplot2::scale_x_discrete(expand = c(0, 0.05))
-   if (use.percentages) {
-       plot <- plot + ggplot2::scale_y_continuous(limits = c(0, max.value), breaks = round(seq(0, max.value)), minor_breaks = NULL)
-   } else {
-       plot <- plot + ggplot2::scale_y_continuous(limits = c(0, max.value))
-   }
-
-    plot <- plot + ggplot2::ylab(legendy) +
-                   ggplot2::xlab("timepoints") +
-                   ggplot2::theme_bw() +
-                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 0.5),
-                                  legend.text = ggplot2::element_text(size = 6),
-                                  legend.key  = ggplot2::element_blank(),
-								  plot.title  = ggplot2::element_text(hjust=0.5))
-
-    if (show.on_device) {
-        grid::grid.draw(plot)
-    }
-
-    invisible(plot)
+	if (show.on_device) {
+		grid::grid.draw(plot)
+	}
+	
+	invisible(plot)
 }
 
 
@@ -2152,161 +2157,4 @@ distogramViewer <- function(Results,
     invisible(plot)
 
 }
-
-
-#' @export
-histoViewer <- function (Results, x.marker, samples = NULL, clusters = NULL, 
-                         resample.ratio = NULL, sample.merge = FALSE, show.on_device = TRUE, 
-                         use.percentage = FALSE,xlimits = c(0,6),ylimits=c(0,1))
-{ y.marker <- x.marker
-  if (is.null(Results)) {
-    stop("Error in histoViewer : 'Results' parameter can not be NULL")
-  }
-  else if (class(Results)[1] != "Results") {
-    stop("Error in histoViewer : 'Results' parameter required a 'Results' object")
-  }
-  if (length(Results@marker.names) == 0) {
-    stop("Error in histoViewer : 'Results' object must contain phenotypes")
-  }
-  flowset <- Results@flowset
-  if (is.null(flowset)) {
-    stop("Error in histoViewer : 'flowset' slot of the 'Results' object is not loaded, if the slot 'fcs.files' is not null, use the function load.flowSet before using the 'histoViewer ' function")
-  }
-  if (!is.null(x.marker) && !is.element(x.marker, Results@marker.names)) {
-    stop(paste0("Error in histoViewer : 'x.marker' parameter: ", 
-                x.marker, ", is unknown"))
-  }
-  if (!is.null(y.marker) && !is.element(y.marker, Results@marker.names)) {
-    stop(paste0("Error in histoViewer : 'y.marker' parameter: ", 
-                y.marker, ", is unknown"))
-  }
-  if (is.null(samples)) {
-    samples <- Results@sample.names
-  }
-  else if (!all(samples %in% Results@sample.names)) {
-    stop("Error in histoViewer : 'samples' parameter must contains only samples names\n Unknown sample names: ", 
-         paste(setdiff(unique(samples), Results@sample.names), 
-               collapse = " "))
-  }
-  else {
-    samples <- unique(samples)
-  }
-  if (is.null(clusters)) {
-    clusters <- Results@cluster.names
-  }
-  else if (all(clusters %in% Results@cluster.names)) {
-    if (typeof(clusters) != "character") {
-      stop("Error in histoViewer : 'clusters' parameter must be a character vector")
-    }
-    clusters <- unique(clusters)
-  }
-  else {
-    stop("Error in histoViewer :\nUnknown clusters : ", paste(setdiff(unique(clusters), 
-                                                                      Results@cluster.names), collapse = " "))
-  }
-  if (!is.logical(sample.merge)) {
-    stop("Error in histoViewer : 'sample.merge' parameter must be a logical")
-  }
-  if (!is.logical(show.on_device)) {
-    stop("Error in histoViewer : 'show.on_device' parameter must be a logical")
-  }
-  x.data <- c()
-  y.data <- c()
-  facet <- c()
-  flowset.samples <- flowCore::sampleNames(flowset)
-  plots <- list()
-  for (sample in samples) {
-    flowframe <- flowset[[which(sample == flowset.samples), 
-                          ]]
-    exprs <- flowframe@exprs
-    if (!is.null(clusters)) {
-      exprs <- subset(exprs, exprs[, "cluster"] %in% clusters)
-    }
-    x.data <- c(x.data, exprs[, x.marker])
-    y.data <- c(y.data, exprs[, y.marker])
-    if (!sample.merge) {
-      facet <- c(facet, rep(sample, length(exprs[, x.marker])))
-    }
-  }
-  cluster.abundances <- Results@cluster.abundances[clusters,]
-  if (use.percentage == TRUE) {
-    cluster.abundances <- cluster.abundances/apply(cluster.abundances, 
-                                                   1, sum)
-  }
-  if (is.null(samples)) {
-    cluster.abundances <- cluster.abundances
-  }
-  else {
-    cluster.abundances <- cluster.abundances[, samples, drop = FALSE]
-  }
-  cells.number.by.sample <- colSums(cluster.abundances)
-  if (length(x.data) > 1 && length(y.data) > 1) {
-    if (sample.merge) {
-      data <- data.frame(x = x.data, y = y.data)
-    }
-    else {
-      if (use.percentage == TRUE) {
-        data <- data.frame(x = x.data, y = y.data, facet = paste0(facet, 
-                                                                  " (", format(cells.number.by.sample[facet], 
-                                                                               digits = 2, big.mark = " "), " % of parents)"))
-      }
-      else {
-        data <- data.frame(x = x.data, y = y.data, facet = paste0(facet, 
-                                                                  " (", format(cells.number.by.sample[facet], 
-                                                                               big.mark = " "), " cells)"))
-      }
-    }
-  }
-  if (!is.null(resample.ratio)) {
-    if (resample.ratio > 0 && resample.ratio < 1) {
-      data <- data[sample(nrow(data), round((nrow(data) * 
-                                               resample.ratio))), ]
-    }
-    else {
-      stop("resample.ratio must be > 0 and < 1 or null")
-    }
-  }
-  if (length(x.data) > 1 && length(y.data) > 1) {
-    x.max <- 5
-    y.max <- max(data["y"]) * 1.2
-  }
-  else {
-    x.max <- 0
-    y.max <- 0
-  }
-  colramp <- grDevices::colorRampPalette(c("yellow", "red"))
-  if (length(x.data) > 1 && length(y.data) > 1) {
-    data$cols <- grDevices::densCols(data$x, data$y, colramp = colramp)
-  }
-  cells.number <- sum(cells.number.by.sample)
-  
-  data <- data[c("x")]
-  
-  plot <- ggplot2::ggplot() + ggplot2::ggtitle(paste0("Histogram Viewer (", 
-                                                                 format(cells.number, big.mark = " "), " cells)", sep = ""))
-  if (length(x.data) > 1 && length(y.data) > 1) {
-    plot <- plot + ggplot2::geom_density(data=data,aes_string(x="x"),fill = "blue") + coord_cartesian(xlim = xlimits,ylim = ylimits) 
-              
-  }
-  else {
-    stop("clusters to plot must not be empty")
-  }
-  plot <- plot + 
-    ggplot2::scale_color_identity() + 
-    ggplot2::xlab(x.marker) + 
-    ggplot2::ylab("density") + 
-    ggplot2::theme_bw() + 
-    ggplot2::theme(panel.grid.major = ggplot2::element_line(color = "black", 
-                                                            linetype = "dotted"), legend.key = ggplot2::element_blank(), 
-                   plot.title = ggplot2::element_text(hjust = 0.5))
-  if (!sample.merge && length(x.data) > 1 && length(y.data) > 
-      1) {
-    plot <- plot + ggplot2::facet_wrap(~facet, scales = "free")
-  }
-  if (show.on_device) {
-    plot(plot)
-  }
-  invisible(plot)
-}
-
 

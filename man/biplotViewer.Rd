@@ -39,4 +39,3 @@ Cells coming from specific clusters or samples can be selected using the `cluste
 Moreover, samples can be displayed independently (default behaviour) or merged.
 In order to seed-up the computations, the number of cells to display can be down-sampled using the `resample.ratio` parameter.
 }
-

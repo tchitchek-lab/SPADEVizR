@@ -2,8 +2,8 @@
 % Please edit documentation in R/classes.R
 \docType{class}
 \name{AC-class}
-\alias{AC}
 \alias{AC-class}
+\alias{AC}
 \title{Abundant Clusters (AC) class definition}
 \description{
 The 'AC' object is a S4 object containing the information related to the abundant clusters in a given biological condition. 

@@ -2,8 +2,8 @@
 % Please edit documentation in R/classes.R
 \docType{class}
 \name{CC-class}
-\alias{CC}
 \alias{CC-class}
+\alias{CC}
 \title{Correlated Clusters (CC) class definition}
 \description{
 The 'CC' object is a S4 object containing coefficient of correlation associated between each cluster to a phenotypic or functional variable.

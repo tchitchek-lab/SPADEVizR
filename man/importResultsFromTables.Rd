@@ -53,4 +53,3 @@ The 'cluster.phenotypes' dataframe must be formatted as following:
    ...      \tab ...      \tab ...      \tab ...     \tab ...     \tab ...
 }
 }
-

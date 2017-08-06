@@ -3,11 +3,11 @@
 \docType{methods}
 \name{export}
 \alias{export}
-\alias{export,AC-method}
-\alias{export,AP-method}
-\alias{export,CC-method}
-\alias{export,DAC-method}
 \alias{export,Results-method}
+\alias{export,AC-method}
+\alias{export,DAC-method}
+\alias{export,CC-method}
+\alias{export,AP-method}
 \title{Exportation of SPADEVizR objects}
 \usage{
 export(object, filename = "export.txt")
@@ -33,4 +33,3 @@ none
 \description{
 Exports a SPADEVizR object into a tab separated file.
 }
-

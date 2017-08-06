@@ -2,8 +2,8 @@
 % Please edit documentation in R/classes.R
 \docType{class}
 \name{Results-class}
-\alias{Results}
 \alias{Results-class}
+\alias{Results}
 \title{Results class definition}
 \description{
 The Results object is a S4 object containing cell clustering results. 

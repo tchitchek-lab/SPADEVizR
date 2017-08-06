@@ -30,4 +30,3 @@ This function is used to identify the Abundant Clusters (AC), that is to say clu
 Abundant Clusters are identified using a one-sample test (parametrized or non-parametrized).
 P-values can be corrected for multiple comparisons.
 }
-

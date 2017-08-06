@@ -38,4 +38,3 @@ This function apply an hyperbolic sine transformation to imported FCS data (unle
 This function returns a 'Results' object including 'flowset', 'fcs.files', 'graph' and 'graph.layout' slots. 
 The computation of marker range quantiles can be approximated using 'quantile.approximation' parameter which is more efficient in term of loading time and memory usage.
 }
-

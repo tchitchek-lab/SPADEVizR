@@ -39,4 +39,3 @@ The representation space can be specified using the `space` parameter  ("samples
 In the case of "samples" space, biological conditions information can be assigned to the samples (provided by the slot `assignments` in the `Results` object).
 This parameter must be a dataframe with sample names in row names and 2 other columns specifying the biological conditions and individuals.
 }
-

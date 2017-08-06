@@ -19,4 +19,3 @@ The new 'Results' object
 \description{
 This function unloads the 'flowSet' object in a 'Results' object.
 }
-

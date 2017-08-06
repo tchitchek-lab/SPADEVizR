@@ -49,4 +49,3 @@ The 'show.mean' parameter allows to visualize three kinds of information:
 \item "both" value will show marker median expressions for each selected samples together with the mean of median maker expressions for all selected samples.
 }
 }
-

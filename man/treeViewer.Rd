@@ -34,4 +34,3 @@ As with the original SPADE tree representations, nodes can be colored based on t
 The size of tree nodes is proportional to the number of cells in each cluster. 
 If the 'stat.object' parameter is provided node outlines are colored according to clusters significance.
 }
-

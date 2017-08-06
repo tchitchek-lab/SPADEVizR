@@ -31,4 +31,3 @@ Moreover, samples to be represented and their orders can be specified using the 
 \details{
 The order of samples in the 'samples' vector correspond to the order where the sample will be displayed.
 }
-

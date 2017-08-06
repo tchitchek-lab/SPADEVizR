@@ -32,4 +32,3 @@ Computes the fraction of clusters having a number of associated cells less than 
 \details{
 This function can also generate a PDF file summarizing the results.
 }
-

@@ -34,4 +34,3 @@ The size of the dots is proportional to the total number of associated cells in 
 By default, only significant abundant clusters are labeled. 
 Labels for all clusters can be displayed by setting the 'show.all_labels' parameter to TRUE.
 }
-

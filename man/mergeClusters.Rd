@@ -23,4 +23,3 @@ This function is used to merge one or more clusters in a Results object.
 The function merges the abundances and the phenotypes of clusters into a new one.
 Clusters to merge are not removed from the Results object after the merging.
 }
-

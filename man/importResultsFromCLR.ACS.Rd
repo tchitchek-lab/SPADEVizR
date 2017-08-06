@@ -41,4 +41,3 @@ The name of each file will be used as the name of the sample. All FCS files corr
 
 For each cell, the selected cluster will be one having the greater probability higher than the 'prob.th' parameter.
 }
-

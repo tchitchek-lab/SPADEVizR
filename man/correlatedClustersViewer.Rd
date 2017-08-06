@@ -36,4 +36,3 @@ The size of dots is proportional to the total number of associated cells in the 
 By default, only significant correlated clusters are labeled.
 Labels for all clusters can be displayed by setting the 'all.label' parameter to TRUE.
 }
-

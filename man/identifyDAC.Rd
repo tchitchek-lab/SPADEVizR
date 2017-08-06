@@ -35,4 +35,3 @@ This function is used to identify differentially abundant clusters, that is to s
 Differentially Abundant Clusters are identified using a two-sample test (parametrized or non-parametrized).
 P-values can be corrected for multiple comparisons.
 }
-

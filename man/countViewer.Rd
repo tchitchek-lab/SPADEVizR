@@ -37,4 +37,3 @@ The size of the dots is proportional to the total number of associated cells.
 \details{
 By default, all clusters will be displayed but the representation can be restricted to a set of selected samples (using the `samples` parameter) or to a set of selected clusters (using the `clusters` parameter).
 }
-

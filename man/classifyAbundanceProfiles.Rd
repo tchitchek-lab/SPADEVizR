@@ -44,4 +44,3 @@ This correlation threshold (a numeric double between 0 and 1 included, default i
 After building the graph, the method looking for the largest cliques which are considered as classes of nodes. Cliques correspond to subgraph in which every two distinct vertices are adjacent.
 }
 }
-

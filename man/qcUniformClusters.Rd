@@ -64,4 +64,3 @@ The 'uniform.test' parameter can take 3 values:
 "spread": check if the spread of the marker expression is below an IQR threshold (interquantile range)
 "both": check "unimodality" and "spread"
 }
-

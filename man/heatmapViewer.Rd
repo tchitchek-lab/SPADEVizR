@@ -39,4 +39,3 @@ It is to note that the Heatmap Viewer is the default viewer for `Results` object
 
 The structures of the marker and cluster hierarchical clustering dendrograms are also returned by this fucntion.
 }
-

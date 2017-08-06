@@ -199,7 +199,7 @@ ggdendrogram <- function(dist, row=!col, col=!row) {
                         panel.grid.minor = ggplot2::element_blank(),
                         plot.background  = ggplot2::element_blank(),
                         plot.margin      = grid::unit(c(0,0,0,0), "cm"),
-                        panel.margin     = grid::unit(c(0,0,0,0), "cm"))
+                        panel.spacing    = grid::unit(c(0,0,0,0), "cm"))
     
     if (row) {
         p <- p + ggplot2::scale_x_continuous(expand = c(0, 0.55)) +
@@ -280,7 +280,7 @@ ggheatmap.combine <- function(list, col.width=0.15, row.width=0.15, ...) {
                                                          panel.grid.minor = ggplot2::element_blank(),
                                                          plot.background  = ggplot2::element_blank(),
                                                          plot.margin      = grid::unit(c(0, 0, 0, 0), "cm"),
-                                                         panel.margin     = grid::unit(c(0, 0, 0, 0), "cm"))
+                                                         panel.spacing    = grid::unit(c(0, 0, 0, 0), "cm"))
 
     ret <- gridExtra::arrangeGrob(list$col, #1 on the layout
                                   legend, #2 on the layout
@@ -351,7 +351,7 @@ buildCircles <- function(circles,
                            panel.grid.minor = ggplot2::element_blank(),
                            plot.background  = ggplot2::element_blank(),
                            plot.margin      = grid::unit(c(0, 0, 0, 0), "cm"),
-                           panel.margin     = grid::unit(c(0, 0, 0, 0), "cm"))
+                           panel.spacing    = grid::unit(c(0, 0, 0, 0), "cm"))
 
     return(plot)
 
@@ -403,7 +403,7 @@ buildCirclesLegend <- function(circles = data.frame(x = c(-29500, -19000, -8000,
                            panel.grid.minor = ggplot2::element_blank(),
                            plot.background  = ggplot2::element_blank(),
                            plot.margin      = grid::unit(c(0, 0, 0, 0), "cm"),
-                           panel.margin     = grid::unit(c(0, 0, 0, 0), "cm"))
+                           panel.spacing    = grid::unit(c(0, 0, 0, 0), "cm"))
 
     return(plot)
                        
@@ -457,3 +457,4 @@ computemode <- function(x) {
     den <- stats::density(x, kernel = c("gaussian"))
     return(list(x = den$x[den$y == max(den$y)], y = max(den$y)))
 }  
+

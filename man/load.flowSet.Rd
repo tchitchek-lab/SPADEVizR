@@ -27,4 +27,3 @@ This function loads the FCS files to the 'flowset' slot of the 'Results' object.
 \details{
 If a 'Results' object is provided, others parameters ('fcs.files', 'exclude.markers' and 'use.raw.medians') will be ignored (they will be retrieved from the 'Results' object).
 }
-

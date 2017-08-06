@@ -39,4 +39,3 @@ This function returns a 'Results' object including 'flowset', 'fcs.files' slots 
 The computation of marker range quantiles can be approximated using 'quantile.approximation' parameter which is more efficient in term of loading time and memory usage.
 The name of each file will be used as the name of the sample. All FCS files corresponding to all the samples must be contained in a single folder. Importantly, FCS files must contain a channel called "cluster" allowing to identify which cluster is associated to each cell.
 }
-

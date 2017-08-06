@@ -36,4 +36,3 @@ The named vector containg the value associated to each sample are provided to th
 The function involve the randomForestSRC to compute a random forest model using all clusters as variable of the model. 
 Several visualisation based on the "ggfortify" package are returned allowing to identify the most important variables, their minimum depth, the OOB Error Rate, as well as the variables predictions.
 }
-

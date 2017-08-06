@@ -30,4 +30,3 @@ Markers used as clustering markers are shown in blue.
 The Pearson correlation is computed based on the marker expressions.
 The visualization can be restricted to specific clusters, samples and markers by using respectively the `clusters`, `samples` and `markers` parameters.
 }
-

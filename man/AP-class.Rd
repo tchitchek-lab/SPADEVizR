@@ -2,8 +2,8 @@
 % Please edit documentation in R/classes.R
 \docType{class}
 \name{AP-class}
-\alias{AP}
 \alias{AP-class}
+\alias{AP}
 \title{Abundance Profiles (AP) class definition}
 \description{
 The 'AP' object is a S4 object containing the information related to the cluster classification based on theirs abundance profiles.

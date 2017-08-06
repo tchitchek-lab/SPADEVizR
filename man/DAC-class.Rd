@@ -2,8 +2,8 @@
 % Please edit documentation in R/classes.R
 \docType{class}
 \name{DAC-class}
-\alias{DAC}
 \alias{DAC-class}
+\alias{DAC}
 \title{Differentially Abundant Clusters (DAC) class definition}
 \description{
 The 'DAC' object is a S4 object containing the information related to the differentially abundant clusters between two given biological conditions. 

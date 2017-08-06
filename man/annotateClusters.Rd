@@ -26,4 +26,3 @@ The annotations of cell clusters must be specifyed using a character dataframe i
 The annotation data.frame must have the annotations in rows and the markers in colomuns.
 Matching values must be specified as a character list of acceptable values.
 }
-

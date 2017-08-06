@@ -24,4 +24,3 @@ This function allows to assigns three kinds of contextual information to samples
 \details{
 The order of rownames (sample names) in this assignments dataframe will be the display order of the elements.
 }
-

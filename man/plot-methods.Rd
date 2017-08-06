@@ -3,11 +3,11 @@
 \docType{methods}
 \name{plot}
 \alias{plot}
-\alias{plot,AC,missing-method}
-\alias{plot,AP,missing-method}
-\alias{plot,CC,missing-method}
-\alias{plot,DAC,missing-method}
 \alias{plot,Results,missing-method}
+\alias{plot,AC,missing-method}
+\alias{plot,DAC,missing-method}
+\alias{plot,CC,missing-method}
+\alias{plot,AP,missing-method}
 \title{Visualization for all SPADEVizR objects}
 \usage{
 plot(x, y = NULL, ...)
@@ -42,4 +42,3 @@ Generates a graphical representation for all SPADEVizR objects ('Results', 'AC',
 'CC' objects are represented using the 'correlatedClustersViewer()' function.
 'AP' objects are represented using the 'circlesPackingViewer()' function.
 }
-
