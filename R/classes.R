@@ -71,8 +71,8 @@ Results <- setClass("Results",
         if ((length(object@marker.names) != 0) && ncol(object@bounds) != length(object@marker.names)) {
             message(paste0("Error in Results object: bounds number of columns (",ncol(object@bounds),") is inconsistent with marker.names length (",
             length(object@marker.names), ")"))
-            print(colnames(object@bounds))
-            print(object@marker.names)
+			message("It is likely that automatic gating results were generated using FCS containing different cell markers.")
+			message("Please use FCS files containing identical set of cell markers.")
             return(FALSE)
         }
         if (object@th.min_cells < 0) {

@@ -620,7 +620,9 @@ importResultsFromSPADE <- function(path,
     message("\treading SPADE results...")
     
     files <- dir(paste(path, "/tables/bySample/", sep = ""), full.names = TRUE)
-    
+    if(length(files)==0)
+		stop("Error when importing cell cluster abundances. Please check that subfolder \"./tables/bySample/\" is well existing")
+ 
     cluster.phenotypes <- data.frame(stringsAsFactors = FALSE)
     cluster.abundances <- data.frame()
     sample.names       <- c()
