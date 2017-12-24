@@ -945,4 +945,4 @@ load.flowSet <- function(Results = NULL,
     
     return(list(flowset = flowset, dictionary = dictionary))
     
-} 
+}
