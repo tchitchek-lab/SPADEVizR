@@ -1562,20 +1562,20 @@ phenoViewer <- function(Results,
     plot <- ggplot2::ggplot(data = data) +
             ggplot2::ggtitle(bquote(atop(.(title), atop(italic(.(subtitle)), ""))))
 
-    if (nrow(data) == 0) {
+	if (nrow(data) == 0) {
         data <- data.frame(marker = Results@marker.names)
         plot <- plot + ggplot2::geom_blank(data = data, ggplot2::aes_string(x = "marker"))
     } else {
 
-        max.value <- -1
+		max.value <- -1
         min.value <- -1
         
         max.value <- max(c(data$value, data$upper.bound), na.rm = TRUE)
         min.value <- min(c(data$value, data$lower.bound), na.rm = TRUE)
-
-        max.value <- max.value + 0.1 * max.value
-        min.value <- min.value - 0.1 * min.value
-        
+		
+		max.value <-  max.value * (1 + sign(max.value) * 0.1)
+		min.value <-  min.value * (1 - sign(min.value) * 0.1)
+		
         if (show.mean == "both" || show.mean == "none") {
             color <- ifelse(is.null(assignments), "samples", "bc")
             plot  <- plot + ggplot2::geom_line(ggplot2::aes_string(x = "marker", y = "value", group = "samples", color = color),
