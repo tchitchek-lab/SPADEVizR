@@ -1574,7 +1574,7 @@ phenoViewer <- function(Results,
         min.value <- min(c(data$value, data$lower.bound), na.rm = TRUE)
 
         max.value <- max.value + 0.1 * max.value
-        min.value <- min.value + 0.1 * min.value
+        min.value <- min.value - 0.1 * min.value
         
         if (show.mean == "both" || show.mean == "none") {
             color <- ifelse(is.null(assignments), "samples", "bc")
