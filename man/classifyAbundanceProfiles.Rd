@@ -5,7 +5,7 @@
 \title{Classification of clustering results based on the abundance profiles}
 \usage{
 classifyAbundanceProfiles(Results, method = "hierarchical_h",
-  method.parameter = NULL)
+  method.parameter = NULL, use.percentages = FALSE)
 }
 \arguments{
 \item{Results}{a 'Results' object}

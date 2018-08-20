@@ -403,7 +403,8 @@ identifyCC <- function(Results,
 #' @export
 classifyAbundanceProfiles <- function(Results,
                                       method           = "hierarchical_h",
-                                      method.parameter = NULL){
+                                      method.parameter = NULL,
+									  use.percentages  = FALSE){
 
     default.eigencell.correlation.th    <- 0.8
     default.clique.correlation.th       <- 0.7
@@ -423,6 +424,13 @@ classifyAbundanceProfiles <- function(Results,
     }
 
     data <- Results@cluster.abundances
+	
+	if (use.percentages) {
+        data   <- prop.table(as.matrix(data), 2)
+        data   <- data * 100
+    }else{
+        data   <- as.matrix(data)
+    }
 
     switch(method,
             "hierarchical_h" = {
