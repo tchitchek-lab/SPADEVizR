@@ -397,6 +397,7 @@ identifyCC <- function(Results,
 #' @param Results a 'Results' object
 #' @param method a character specifying the clustering method among: "hierarchical_h", "hierarchical_k","k-means","eigencell","clique"
 #' @param method.parameter a numeric specifying the numeric value required by the selected method 
+#' @param use.percentages a logical specifying if cell cluster abudances must be expressed as percentages
 #' 
 #' @return a S4 object of class 'AP'
 #'
