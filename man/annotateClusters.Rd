@@ -4,7 +4,8 @@
 \alias{annotateClusters}
 \title{Annotating cell clusters}
 \usage{
-annotateClusters(Results, annotations, num = 5, display.annotations = TRUE)
+annotateClusters(Results, annotations, num = 5,
+  display.annotations = TRUE)
 }
 \arguments{
 \item{Results}{a Results object}

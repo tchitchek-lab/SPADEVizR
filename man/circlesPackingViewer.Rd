@@ -4,7 +4,8 @@
 \alias{circlesPackingViewer}
 \title{Visualization of abundance profiles classification}
 \usage{
-circlesPackingViewer(AP, show.cluster_sizes = TRUE, show.on_device = TRUE)
+circlesPackingViewer(AP, show.cluster_sizes = TRUE,
+  show.on_device = TRUE)
 }
 \arguments{
 \item{AP}{an object of class 'AP' (object returned by the 'classifyAbundanceProfiles()' function)}

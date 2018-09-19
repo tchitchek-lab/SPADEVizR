@@ -4,8 +4,9 @@
 \alias{identifyCC}
 \title{Identification of the correlation of SPADE cluster with a phenotype}
 \usage{
-identifyCC(Results, variable, use.percentages = TRUE, method = "pearson",
-  method.adjust = NULL, th.correlation = 0.75, th.pvalue = 0.05)
+identifyCC(Results, variable, use.percentages = TRUE,
+  method = "pearson", method.adjust = NULL, th.correlation = 0.75,
+  th.pvalue = 0.05)
 }
 \arguments{
 \item{Results}{a 'Results' object}

@@ -5,7 +5,8 @@
 \title{Computing of the fraction of clusters with low number of associated cells}
 \usage{
 qcSmallClusters(Results, clusters = NULL, th.size = 50,
-  PDFfile = "qcSmallClusters.pdf", width = ncol(Results@cluster.abundances),
+  PDFfile = "qcSmallClusters.pdf",
+  width = ncol(Results@cluster.abundances),
   height = nrow(Results@cluster.abundances)/4, tile.color = "black")
 }
 \arguments{

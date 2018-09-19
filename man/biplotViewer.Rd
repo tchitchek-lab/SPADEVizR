@@ -4,9 +4,9 @@
 \alias{biplotViewer}
 \title{Visualization of marker co-expression}
 \usage{
-biplotViewer(Results, x.marker, y.marker, samples = NULL, clusters = NULL,
-  resample.ratio = NULL, sample.merge = FALSE, show.on_device = TRUE,
-  use.percentage = FALSE)
+biplotViewer(Results, x.marker, y.marker, samples = NULL,
+  clusters = NULL, resample.ratio = NULL, sample.merge = FALSE,
+  show.on_device = TRUE, use.percentage = FALSE)
 }
 \arguments{
 \item{Results}{a 'Results' object (with 'flowset' slot not null)}

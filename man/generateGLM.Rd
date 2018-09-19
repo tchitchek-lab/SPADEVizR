@@ -4,8 +4,9 @@
 \alias{generateGLM}
 \title{Generation a generalized linear models of cluster abundances}
 \usage{
-generateGLM(Results, variable, use.percentages = FALSE, clusters = NULL,
-  th.pvalue = 1, show.error = FALSE, verbose = FALSE, ...)
+generateGLM(Results, variable, use.percentages = FALSE,
+  clusters = NULL, th.pvalue = 1, show.error = FALSE,
+  verbose = FALSE, ...)
 }
 \arguments{
 \item{Results}{a 'Results' object}

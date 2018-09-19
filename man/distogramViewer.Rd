@@ -4,8 +4,8 @@
 \alias{distogramViewer}
 \title{Visualization of marker co-expressions}
 \usage{
-distogramViewer(Results, samples = NULL, clusters = NULL, markers = NULL,
-  show.on_device = TRUE)
+distogramViewer(Results, samples = NULL, clusters = NULL,
+  markers = NULL, show.on_device = TRUE)
 }
 \arguments{
 \item{Results}{a 'Results' object}

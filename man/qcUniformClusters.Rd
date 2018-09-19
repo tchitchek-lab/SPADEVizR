@@ -4,14 +4,15 @@
 \alias{qcUniformClusters}
 \title{Computing of the fraction of cluster with uniform phenotypes}
 \usage{
-qcUniformClusters(Results, clusters = NULL, only.clustering_markers = FALSE,
-  uniform.test = "both", th.pvalue = 0.05, th.IQR = 2,
+qcUniformClusters(Results, clusters = NULL,
+  only.clustering_markers = FALSE, uniform.test = "both",
+  th.pvalue = 0.05, th.IQR = 2,
   density.PDFfile = "qcUniformClusters_density.pdf",
   density.PDFfile.dim = c(17, 10),
   heatmap.PDFfile = "qcUniformClusters_heatmap.pdf",
   heatmap.PDFfile.dim = c(length(Results@marker.names),
-  length(Results@cluster.names)/4), tile.color = "black", verbose = TRUE,
-  ...)
+  length(Results@cluster.names)/4), tile.color = "black",
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{Results}{a Results object (with 'flowset' slot not null)}

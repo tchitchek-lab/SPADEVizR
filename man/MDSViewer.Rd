@@ -4,8 +4,8 @@
 \alias{MDSViewer}
 \title{Visualization of SPADE cluster or sample similarities using MDS}
 \usage{
-MDSViewer(Results, space = "clusters", samples = NULL, clusters = NULL,
-  use.percentages = TRUE, dist.method = "euclidean",
+MDSViewer(Results, space = "clusters", samples = NULL,
+  clusters = NULL, use.percentages = TRUE, dist.method = "euclidean",
   show.on_device = TRUE)
 }
 \arguments{
