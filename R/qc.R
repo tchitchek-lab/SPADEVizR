@@ -253,7 +253,10 @@ qcUniformClusters <- function(Results,
                                         median   = NA,
                                         pinnacle = NA)
                     
-                }
+                }else {
+					uniform <- TRUE
+				} 
+				
                 if (uniform.test == "spread" || uniform.test == "both") {
 
                     quantile  <- quantile(marker.expression)
