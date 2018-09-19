@@ -34,5 +34,5 @@ LazyData: true
 Suggests:
     knitr
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 biocViews: FlowCytometry, Visualization, StatisticalMethod, Clustering, MultidimensionalScaling, Regression
