@@ -6,7 +6,7 @@
 \usage{
 importResultsFromSPADE(path, exclude.markers = c("cell_length",
   "FileNum", "density", "time"), probs = c(0.05, 0.95),
-  use.raw.medians = FALSE, quantile.approximation = FALSE,
+  trans = "arcsinh", quantile.approximation = FALSE,
   th.min_cells = 0, load.phenotype = TRUE, assignments = NULL)
 }
 \arguments{
@@ -16,7 +16,7 @@ importResultsFromSPADE(path, exclude.markers = c("cell_length",
 
 \item{probs}{a vector of probabilities with 2 values in [0,1] to compute marker range quantiles. First is the lower bound and second is the upper bound.}
 
-\item{use.raw.medians}{a logical specifying if arcsinh transformed or raw medians will be used in the cluster expression matrix (FALSE by default)}
+\item{trans}{a character specifying what transformation ("arcsinh", "logicle", or "none") will be applied on the cluster expression matrix ("arcsinh" by default)}
 
 \item{quantile.approximation}{a logical specifying if marker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)}
 
@@ -32,7 +32,7 @@ a S4 object of class 'Results'
 \description{
 The 'importResultsFromSPADE()' function imports SPADE cell clustering results from a specified path.
 This function imports the cluster phenotype matrix and count matrix as well as the SPADE tree.
-This function apply an hyperbolic sine transformation to imported FCS data (unless 'use.raw.medians' = TRUE) and compute the marker range quantiles.
+This function apply an hyperbolic sine transformation to imported FCS data (unless 'trans' = log or none) and compute the marker range quantiles.
 }
 \details{
 This function returns a 'Results' object including 'flowset', 'fcs.files', 'graph' and 'graph.layout' slots. 

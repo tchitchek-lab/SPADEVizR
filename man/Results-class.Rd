@@ -42,7 +42,7 @@ The 'print()' and 'show()' can be used to display a summary of this object.
 
 \item{\code{bounds}}{a numeric data.frame containing the marker expressions boundaries for each marker}
 
-\item{\code{use.raw.medians}}{a logical specifying if the marker expressions correspond to raw or transformed data}
+\item{\code{trans}}{a character specifying what transformation ("arcsinh", "logicle", or "none") will be applied on the cluster expression matrix ("arcsinh" by default)}
 
 \item{\code{flowset}}{a flowSet object containing the imported SPADE FCS files}
 

@@ -5,7 +5,7 @@
 \title{Importation of clustering results from a folder containing ACS files}
 \usage{
 importResultsFromCLR.ACS(path, prob.th = 0.8, th.min_cells = 0,
-  probs = c(0.05, 0.95), use.raw.medians = TRUE,
+  probs = c(0.05, 0.95), trans = "arcsinh",
   quantile.approximation = FALSE, exclude.markers = NULL,
   assignments = NULL)
 }
@@ -18,7 +18,7 @@ importResultsFromCLR.ACS(path, prob.th = 0.8, th.min_cells = 0,
 
 \item{probs}{a vector of probabilities with 2 values in [0,1] to compute marker range quantiles. First is the lower bound and second is the upper bound.}
 
-\item{use.raw.medians}{a logical specifying if arcsinh transformed or raw medians will be used in the cluster expression matrix (FALSE by default)}
+\item{trans}{a character specifying what transformation ("arcsinh", "logicle", or "none") will be applied on the cluster expression matrix ("arcsinh" by default)}
 
 \item{quantile.approximation}{a logical specifying if marker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)}
 

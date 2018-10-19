@@ -26,7 +26,7 @@
 #' @slot marker.names a character vector containing the marker names
 #' @slot clustering.markers a character vector specifying the markers that have been used by the clustering algorithms
 #' @slot bounds a numeric data.frame containing the marker expressions boundaries for each marker
-#' @slot use.raw.medians a logical specifying if the marker expressions correspond to raw or transformed data
+#' @slot trans a character specifying what transformation ("arcsinh", "logicle", or "none") will be applied on the cluster expression matrix ("arcsinh" by default)
 #' @slot flowset a flowSet object containing the imported SPADE FCS files
 #' @slot fcs.files a character vector containing the location of the imported FCS files
 #' @slot graph a igraph object containing the SPADE tree structure
@@ -48,7 +48,7 @@ Results <- setClass("Results",
         marker.names       = "character",
         clustering.markers = "character",
         bounds             = "data.frame",
-        use.raw.medians    = "logical",
+        trans    	       = "character",
         flowset            = "ANY",
         fcs.files          = "character",
         graph              = "ANY",
@@ -139,6 +139,7 @@ Results <- setClass("Results",
         return(TRUE)
     }
 )
+
 
 #' @title Abundant Clusters (AC) class definition
 #' 

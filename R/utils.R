@@ -456,5 +456,4 @@ ggcolors <- function(n = 6){
 computemode <- function(x) {
     den <- stats::density(x, kernel = c("gaussian"))
     return(list(x = den$x[den$y == max(den$y)], y = max(den$y)))
-}  
-
+}

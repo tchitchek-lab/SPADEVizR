@@ -4,7 +4,7 @@
 \alias{load.flowSet}
 \title{Loading of FCS files object into a 'Results' object}
 \usage{
-load.flowSet(Results = NULL, fcs.files, exclude.markers, use.raw.medians,
+load.flowSet(Results = NULL, fcs.files, exclude.markers, trans,
   pattern = ".fcs.density.fcs.cluster.fcs")
 }
 \arguments{
@@ -14,7 +14,7 @@ load.flowSet(Results = NULL, fcs.files, exclude.markers, use.raw.medians,
 
 \item{exclude.markers}{a character vector of markers to exclude (case insensitive)}
 
-\item{use.raw.medians}{a logical specifying if the arcsinh transformation must be performed or not}
+\item{trans}{a character specifying what transformation ("arcsinh", "logicle", or "none") will be applied on the cluster expression matrix ("arcsinh" by default)}
 
 \item{pattern}{a character specifying the pattern of the FCS file}
 }
@@ -25,5 +25,5 @@ a S4 'flowSet' object
 This function loads the FCS files to the 'flowset' slot of the 'Results' object.
 }
 \details{
-If a 'Results' object is provided, others parameters ('fcs.files', 'exclude.markers' and 'use.raw.medians') will be ignored (they will be retrieved from the 'Results' object).
+If a 'Results' object is provided, others parameters ('fcs.files', 'exclude.markers' and 'trans') will be ignored (they will be retrieved from the 'Results' object).
 }

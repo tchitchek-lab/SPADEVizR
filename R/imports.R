@@ -135,7 +135,7 @@ importResultsFromTables <- function(cluster.abundances,
 #' @description 
 #' The 'importResultsFromFCS()' function imports cell clustering results from FCS files contained in a specified folder.
 #' This function imports the cluster phenotype matrix and count matrix.
-#' This function apply an hyperbolic sine transformation to imported FCS data (unless 'use.raw.medians' = TRUE) and compute the marker range quantiles.
+#' This function apply an hyperbolic sine transformation to imported FCS data (unless 'trans' = 'logicle' or 'none') and compute the marker range quantiles.
 #' 
 #' @details 
 #' This function returns a 'Results' object including 'flowset', 'fcs.files' slots but not 'graph' and 'graph.layout' slots. 
@@ -146,7 +146,7 @@ importResultsFromTables <- function(cluster.abundances,
 #' @param exclude.markers a character vector of markers to exclude (case insensitive)
 #' @param clustering.markers a character vector specifying markers that have been used during the clustering procedure (if NULL, all markers will be considered as clustering markers)
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute marker range quantiles. First is the lower bound and second is the upper bound.
-#' @param use.raw.medians a logical specifying if arcsinh transformed or raw medians will be used in the cluster expression matrix (FALSE by default)
+#' @param trans a character specifying what transformation ("arcsinh", "logicle", or "none") will be applied on the cluster expression matrix ("arcsinh" by default)
 #' @param quantile.approximation a logical specifying if marker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)
 #' @param th.min_cells a numeric specifying the minimum number of cell in a cluster of a sample to take its phenotype in account
 #' @param assignments a data.frame containing all samples names (in rownames) and columns providing contextual associations like "bc" (biological conditions), "tp" (biological conditions) and "ind" (individuals)
@@ -161,7 +161,7 @@ importResultsFromFCS <- function(path,
                                  exclude.markers        = c("cell_length", "FileNum", "density", "time"),
                                  clustering.markers     = NULL,
                                  probs                  = c(0.05, 0.95),
-                                 use.raw.medians        = FALSE,
+                                 trans                  = "arcsinh",
                                  quantile.approximation = FALSE,
                                  th.min_cells           = 0,
                                  assignments            = NULL){
@@ -183,13 +183,13 @@ importResultsFromFCS <- function(path,
         stop("Error in importFromFCS: The 'probs' parameter must contain values included in the domain: [0;1]")
     }
     
-    if (!is.logical(use.raw.medians)) { stop("Error in importFromFCS: The 'use.raw.medians' parameter must be a logical") }
+    if (!is.character(trans)) { stop("Error in importFromFCS: The 'trans' parameter must be a character") }
     if (!is.logical(quantile.approximation)) { stop("Error in importFromFCS: The 'quantile.approximation' parameter must be a logical") }
     
     if (th.min_cells < 0) { stop("Error in importFromFCS: The 'th.min_cells' parameter must be a stricly positive integer")  }
     
     fcs.files  <- dir(path, full.names = TRUE, pattern = ".fcs$")
-    list       <- load.flowSet(fcs.files = fcs.files, exclude.markers = exclude.markers, use.raw.medians = use.raw.medians, pattern = ".fcs")
+    list       <- load.flowSet(fcs.files = fcs.files, exclude.markers = exclude.markers, trans = trans, pattern = ".fcs")
     flowset    <- list$flowset
     dictionary <- list$dictionary
     
@@ -247,7 +247,7 @@ importResultsFromFCS <- function(path,
     
     res <- methods::new("Results",
                         cluster.phenotypes = cluster.phenotypes,
-                        use.raw.medians    = use.raw.medians,
+                        trans              = trans,
                         cluster.abundances = cluster.abundances,
                         cluster.names      = rownames(cluster.abundances),
                         sample.names       = flowCore::sampleNames(flowset),
@@ -291,7 +291,7 @@ importResultsFromFCS <- function(path,
 #' @param prob.th a numeric specifying the probability threshold to use for considering considering the cluster of each each cells
 #' @param exclude.markers a character vector of markers to exclude (case insensitive)
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute marker range quantiles. First is the lower bound and second is the upper bound.
-#' @param use.raw.medians a logical specifying if arcsinh transformed or raw medians will be used in the cluster expression matrix (FALSE by default)
+#' @param trans a character specifying what transformation ("arcsinh", "logicle", or "none") will be applied on the cluster expression matrix ("arcsinh" by default)
 #' @param quantile.approximation a logical specifying if marker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)
 #' @param th.min_cells a numeric specifying the minimum number of cell in a cluster of a sample to take its phenotype in account
 #' @param assignments a data.frame containing all samples names (in rownames) and columns providing contextual associations like "bc" (biological conditions), "tp" (biological conditions) and "ind" (individuals)
@@ -303,7 +303,7 @@ importResultsFromCLR.ACS <- function(path,
                                      prob.th                = 0.80,
                                      th.min_cells           = 0,
     								 probs                  = c(0.05, 0.95),
-                                     use.raw.medians        = TRUE,
+                                     trans                  = "arcsinh",
                                      quantile.approximation = FALSE,
     								 exclude.markers        = NULL,
                                      assignments            = NULL){
@@ -384,7 +384,7 @@ importResultsFromCLR.ACS <- function(path,
 	
 	cluster.abundances <- as.data.frame(do.call(cbind, cluster.abundances))
 
-	list       <- load.flowSet(fcs.files = fcs.files, exclude.markers = exclude.markers, use.raw.medians = use.raw.medians, pattern = ".fcs")
+	list       <- load.flowSet(fcs.files = fcs.files, exclude.markers = exclude.markers, trans = trans, pattern = ".fcs")
 	flowset    <- list$flowset
     dictionary <- list$dictionary
 
@@ -421,7 +421,7 @@ importResultsFromCLR.ACS <- function(path,
 	
 	res <- methods::new("Results",
                         cluster.phenotypes = cluster.phenotypes,
-                        use.raw.medians    = NA,
+                        trans              = trans,
                         cluster.abundances = cluster.abundances,
                         cluster.names      = rownames(cluster.abundances),
                         sample.names       = colnames(cluster.abundances),
@@ -515,7 +515,7 @@ importResultsFromCLR.CSV <- function(path,
 
     res <- methods::new("Results",
                         cluster.phenotypes = cluster.phenotypes,
-                        use.raw.medians    = NA,
+                        trans              = NA,
                         cluster.abundances = cluster.abundances,
                         cluster.names      = rownames(cluster.abundances),
                         sample.names       = colnames(cluster.abundances),
@@ -546,7 +546,7 @@ importResultsFromCLR.CSV <- function(path,
 #' @description 
 #' The 'importResultsFromSPADE()' function imports SPADE cell clustering results from a specified path.
 #' This function imports the cluster phenotype matrix and count matrix as well as the SPADE tree.
-#' This function apply an hyperbolic sine transformation to imported FCS data (unless 'use.raw.medians' = TRUE) and compute the marker range quantiles.
+#' This function apply an hyperbolic sine transformation to imported FCS data (unless 'trans' = log or none) and compute the marker range quantiles.
 #' 
 #' @details
 #' This function returns a 'Results' object including 'flowset', 'fcs.files', 'graph' and 'graph.layout' slots. 
@@ -555,7 +555,7 @@ importResultsFromCLR.CSV <- function(path,
 #' @param path a character specify the path of SPADE results folder
 #' @param exclude.markers a character vector of markers to exclude (case insensitive)
 #' @param probs a vector of probabilities with 2 values in [0,1] to compute marker range quantiles. First is the lower bound and second is the upper bound.
-#' @param use.raw.medians a logical specifying if arcsinh transformed or raw medians will be used in the cluster expression matrix (FALSE by default)
+#' @param trans a character specifying what transformation ("arcsinh", "logicle", or "none") will be applied on the cluster expression matrix ("arcsinh" by default)
 #' @param quantile.approximation a logical specifying if marker range quantiles are computed using all cells (FALSE), or is the means of the quantile of each samples (TRUE)
 #' @param th.min_cells a numeric specifying the minimum number of cell in a cluster of a sample to take its phenotype in account
 #' @param load.phenotype a logical specifying if the phenotype matrix and fcs file will be loaded
@@ -566,151 +566,137 @@ importResultsFromCLR.CSV <- function(path,
 #' @export 
 #' 
 #' @import igraph
-importResultsFromSPADE <- function(path,
-                                   exclude.markers        = c("cell_length", "FileNum", "density", "time"),
-                                   probs                  = c(0.05, 0.95),
-                                   use.raw.medians        = FALSE,
-                                   quantile.approximation = FALSE,
-                                   th.min_cells           = 0,
-                                   load.phenotype         = TRUE,
-                                   assignments            = NULL){
-    
+importResultsFromSPADE <- function (path, exclude.markers = c("cell_length", "FileNum", 
+    "density", "time"), probs = c(0.05, 0.95), trans = "arcsinh", 
+    quantile.approximation = FALSE, th.min_cells = 0, load.phenotype = TRUE, 
+    assignments = NULL)
+ {
     message("[START] - importing SPADE clustering results")
     path <- normalizePath(path, "/", mustWork = TRUE)
-    
     message(paste0(basename(path), "\n"))
-    
     if (typeof(exclude.markers) != "character") {
         stop("Error in importResultsFromSPADE: The 'exclude.markers' parameter must be a character vector")
     }
-    
     if (length(probs) != 2) {
         stop("Error in importResultsFromSPADE: The 'probs' parameter must only 2 numeric values")
-    } else if (probs[1] > probs[2]) {
+    }
+    else if (probs[1] > probs[2]) {
         stop("Error in importResultsFromSPADE: The 'probs' parameter must contain a first value greather than the second value")
-    } else if (probs < 0 || probs > 1) {
+    }
+    else if (probs < 0 || probs > 1) {
         stop("Error in importResultsFromSPADE: The 'probs' parameter must contain values included in the domain: [0;1]")
     }
-    
-    if (!is.logical(use.raw.medians)) { stop("Error in importResultsFromSPADE: The 'use.raw.medians' parameter must be a logical") }
-    if (!is.logical(quantile.approximation)) { stop("Error in importResultsFromSPADE: The 'quantile.approximation' parameter must be a logical") }
-    
-    if (th.min_cells < 0) { stop("Error in importResultsFromSPADE: The 'th.min_cells' parameter must be a stricly positive integer")  }
-    
+    if (!is.na(match(trans,c("arcinh","logicle","none")))) {
+        stop("Error in importResultsFromSPADE: The 'trans' parameter must be arcinh, log or none")
+    }
+    if (!is.logical(quantile.approximation)) {
+        stop("Error in importResultsFromSPADE: The 'quantile.approximation' parameter must be a logical")
+    }
+    if (th.min_cells < 0) {
+        stop("Error in importResultsFromSPADE: The 'th.min_cells' parameter must be a stricly positive integer")
+    }
     if (load.phenotype) {
-    
-        fcs.files  <- dir(path, full.names = TRUE, pattern = ".fcs.density.fcs.cluster.fcs$")
-        list       <- load.flowSet(fcs.files = fcs.files, exclude.markers = exclude.markers, use.raw.medians = use.raw.medians)
-        flowset    <- list$flowset
+        fcs.files <- dir(path, full.names = TRUE, pattern = ".fcs.density.fcs.cluster.fcs$")
+        list <- load.flowSet(fcs.files = fcs.files, exclude.markers = exclude.markers, 
+            trans = trans)
+        flowset <- list$flowset
         dictionary <- list$dictionary
-        
         message("\tcompute quantiles bounds...")
-        
         if (quantile.approximation) {
-            quantiles <- computeQuantile.approximation(flowset, probs)
-        } else {
+            quantiles <- computeQuantile.approximation(flowset, 
+                probs)
+        }
+        else {
             quantiles <- computeQuantile(flowset, probs)
         }
         gc()
-    } else {
+    }
+    else {
         fcs.files <- character(0)
-        flowset   <- NULL
+        flowset <- NULL
         quantiles <- data.frame()
     }
     message("\treading SPADE results...")
-    
-    files <- dir(paste(path, "/tables/bySample/", sep = ""), full.names = TRUE)
-    if(length(files)==0)
-		stop("Error when importing cell cluster abundances. Please check that subfolder \"./tables/bySample/\" is well existing")
- 
+    files <- dir(paste(path, "/tables/bySample/", sep = ""), 
+        full.names = TRUE)
+    if (length(files) == 0) 
+        stop("Error when importing cell cluster abundances. Please check that subfolder \"./tables/bySample/\" is well existing")
     cluster.phenotypes <- data.frame(stringsAsFactors = FALSE)
     cluster.abundances <- data.frame()
-    sample.names       <- c()
+    sample.names <- c()
     for (file in files) {
-        
-        name                 <- gsub(".fcs.density.fcs.cluster.fcs.anno.Rsave_table.csv$", "", basename(file))
-        sample.names         <- c(sample.names, name)
-        SPADE.matrix         <- utils::read.table(file, sep = ",", header = TRUE, stringsAsFactors = FALSE, check.names = FALSE)
+        name <- gsub(".fcs.density.fcs.cluster.fcs.anno.Rsave_table.csv$", 
+            "", basename(file))
+        sample.names <- c(sample.names, name)
+        SPADE.matrix <- utils::read.table(file, sep = ",", header = TRUE, 
+            stringsAsFactors = FALSE, check.names = FALSE)
         SPADE.matrix[, "ID"] <- as.character(SPADE.matrix[, "ID"])
-        
         cluster.abundances.sample <- SPADE.matrix[, "count"]
-        
         if (nrow(cluster.abundances)) {
             cluster.abundances <- cbind(cluster.abundances, cluster.abundances.sample)
-            samples.headers    <- append(samples.headers, name)
-        } else {
-            cluster.abundances     <- data.frame(row.names = SPADE.matrix[, "ID"], cluster.abundances.sample)
+            samples.headers <- append(samples.headers, name)
+        }
+        else {
+            cluster.abundances <- data.frame(row.names = SPADE.matrix[, 
+                "ID"], cluster.abundances.sample)
             samples.headers <- name
         }
         if (load.phenotype) {
-            cluster.phenotypes.sample <- SPADE.matrix[, grep("count|percenttotal", colnames(SPADE.matrix), invert = TRUE)]
-            
-            cluster.phenotypes.sample[cluster.abundances.sample < th.min_cells, 2:ncol(cluster.phenotypes.sample)] <- rep(NA, ncol(cluster.phenotypes.sample) - 1)
-            
-            cluster.phenotypes.sample <- cbind(name = rep(name, nrow(cluster.phenotypes.sample)), cluster.phenotypes.sample)
+            cluster.phenotypes.sample <- SPADE.matrix[, grep("count|percenttotal", 
+                colnames(SPADE.matrix), invert = TRUE)]
+            cluster.phenotypes.sample[cluster.abundances.sample < 
+                th.min_cells, 2:ncol(cluster.phenotypes.sample)] <- rep(NA, 
+                ncol(cluster.phenotypes.sample) - 1)
+            cluster.phenotypes.sample <- cbind(name = rep(name, 
+                nrow(cluster.phenotypes.sample)), cluster.phenotypes.sample)
             cluster.phenotypes <- rbind(cluster.phenotypes, cluster.phenotypes.sample)
         }
     }
-    
     colnames(cluster.abundances) <- samples.headers
-    
     if (load.phenotype) {
-        cluster.phenotypes.header    <- colnames(cluster.phenotypes)
-        
+        cluster.phenotypes.header <- colnames(cluster.phenotypes)
         cluster.phenotypes.header[1] <- "sample"
         cluster.phenotypes.header[2] <- "cluster"
         colnames(cluster.phenotypes) <- cluster.phenotypes.header
-        
-        cluster.phenotypes        <- filter.medians(cluster.phenotypes, use.raw.medians)
-        
+        cluster.phenotypes <- filter.medians(cluster.phenotypes, 
+            trans)
         cluster.phenotypes.header <- colnames(cluster.phenotypes)
-        clustering.markers.index  <- grep("_clust", cluster.phenotypes.header)
+        clustering.markers.index <- grep("_clust", cluster.phenotypes.header)
         cluster.phenotypes.header <- gsub("_clust", "", cluster.phenotypes.header)
-        
-        colnames(cluster.phenotypes) <- rename.markers(cluster.phenotypes.header, dictionary = dictionary)
-        clustering.markers           <- colnames(cluster.phenotypes)[clustering.markers.index]
-        
+        colnames(cluster.phenotypes) <- rename.markers(cluster.phenotypes.header, 
+            dictionary = dictionary)
+        clustering.markers <- colnames(cluster.phenotypes)[clustering.markers.index]
         if (!is.null(exclude.markers)) {
-            cluster.phenotypes <- exclude.markers(cluster.phenotypes, exclude.markers)
-            clustering.markers <- setdiff(clustering.markers, exclude.markers)
+            cluster.phenotypes <- exclude.markers(cluster.phenotypes, 
+                exclude.markers)
+            clustering.markers <- setdiff(clustering.markers, 
+                exclude.markers)
         }
-        
-    	graph        <- igraph::read.graph(paste(path, "/mst.gml", sep = ""), format = "gml")
-        graph.layout <- as.matrix(utils::read.table(paste0(path, "/layout.table"), sep = " ", quote = "", stringsAsFactors = FALSE))
-        
-        markers.names <- colnames(cluster.phenotypes[, -c(1, 2)])
-    } else {
-        clustering.markers <- character(0)
-        markers.names      <- character(0)
-        graph.layout       <- NULL
-        graph              <- NULL
+        graph <- igraph::read.graph(paste(path, "/mst.gml", sep = ""), 
+            format = "gml")
+        graph.layout <- as.matrix(utils::read.table(paste0(path, 
+            "/layout.table"), sep = " ", quote = "", stringsAsFactors = FALSE))
+        markers.names <- colnames(cluster.phenotypes[, -c(1, 
+            2)])
     }
-    
-    res <- methods::new("Results",
-                        cluster.phenotypes = cluster.phenotypes,
-                        use.raw.medians    = use.raw.medians,
-                        cluster.abundances = cluster.abundances,
-                        cluster.names      = rownames(cluster.abundances),
-                        sample.names       = sample.names,
-                        marker.names       = markers.names,
-                        clustering.markers = clustering.markers,
-                        cluster.number     = nrow(cluster.abundances),
-                        flowset            = flowset,
-                        fcs.files          = fcs.files,
-                        bounds             = quantiles,
-                        th.min_cells       = th.min_cells,
-                        graph.layout       = graph.layout,
-                        graph              = graph)
-    
+    else {
+        clustering.markers <- character(0)
+        markers.names <- character(0)
+        graph.layout <- NULL
+        graph <- NULL
+    }
+    res <- methods::new("Results", cluster.phenotypes = cluster.phenotypes, 
+        trans = trans, cluster.abundances = cluster.abundances, 
+        cluster.names = rownames(cluster.abundances), sample.names = sample.names, 
+        marker.names = markers.names, clustering.markers = clustering.markers, 
+        cluster.number = nrow(cluster.abundances), flowset = flowset, 
+        fcs.files = fcs.files, bounds = quantiles, th.min_cells = th.min_cells, 
+        graph.layout = graph.layout, graph = graph)
     if (!is.null(assignments)) {
         res <- assignContext(res, assignments)
     }
-    
-    print(res)
     message("[END] - importing SPADE clustering results")
-    
     return(res)
-    
 }
 
 # @title Internal - Renaming of cell markers
@@ -789,24 +775,21 @@ exclude.markers <- function(data, exclude, colnames.FCS = NULL){
 # This function is used internally to remove raw or transform medians from a SPADE result matrix. CVS medians are always removed.
 # 
 # @param data a SPADE matrix
-# @param use.raw.medians a logical specifying if "transformed" or "raw" medians will be use (FALSE by default)
-# 
+# @param trans a character specifying what transformation ("arcsinh", "logicle", or "none") will be applied on the cluster expression matrix ("arcsinh" by default)# 
 # @return a numeric matrix without the cell markers to exclude
-filter.medians <- function(data,use.raw.medians = FALSE){
-    
-    if (use.raw.medians) {
+filter.medians <- function (data, trans = "arcsinh") {
+    if (trans=="none") {
         exclude <- "^medians|^cvs"
-    }else{
+    }
+    else {
         exclude <- "^raw_medians|^cvs"
     }
-    
-    data           <- data[,grep(exclude, colnames(data), invert = TRUE, ignore.case = TRUE)]
-    colnames(data) <- gsub("^medians|^cvs|^raw_medians", "", colnames(data))
-    
+    data <- data[, grep(exclude, colnames(data), invert = TRUE, 
+        ignore.case = TRUE)]
+    colnames(data) <- gsub("^medians|^cvs|^raw_medians", "", 
+        colnames(data))
     return(data)
-    
 }
-
 
 # @title Internal - Computation of quantile with FCS flowset marker by marker 
 #
@@ -885,12 +868,12 @@ computeQuantile.approximation <- function(flowset,probs = c(0.05,0.95)){
 #' This function loads the FCS files to the 'flowset' slot of the 'Results' object.
 #' 
 #' @details
-#' If a 'Results' object is provided, others parameters ('fcs.files', 'exclude.markers' and 'use.raw.medians') will be ignored (they will be retrieved from the 'Results' object). 
+#' If a 'Results' object is provided, others parameters ('fcs.files', 'exclude.markers' and 'trans') will be ignored (they will be retrieved from the 'Results' object). 
 #' 
 #' @param Results a Results object (with 'fcs.files' slot not null) (optional)
 #' @param fcs.files a character vector containing the absolute path of the original FCS files
 #' @param exclude.markers a character vector of markers to exclude (case insensitive)
-#' @param use.raw.medians a logical specifying if the arcsinh transformation must be performed or not
+#' @param trans a character specifying what transformation ("arcsinh", "logicle", or "none") will be applied on the cluster expression matrix ("arcsinh" by default)
 #' @param pattern a character specifying the pattern of the FCS file 
 #' 
 #' @return a S4 'flowSet' object
@@ -898,51 +881,52 @@ computeQuantile.approximation <- function(flowset,probs = c(0.05,0.95)){
 #' @export 
 #' 
 #' @importFrom flowCore read.flowSet arcsinhTransform transformList transform
-load.flowSet <- function(Results = NULL,
-                         fcs.files,
-                         exclude.markers,
-                         use.raw.medians,
-                         pattern = ".fcs.density.fcs.cluster.fcs") {
-    
+load.flowSet <- function (Results = NULL, fcs.files, exclude.markers, trans, 
+    pattern = ".fcs.density.fcs.cluster.fcs") 
+{
     message("FCS files loading:")
-    
     if (!is.null(Results)) {
         if (!is.null(Results@fcs.files)) {
-            fcs.files  <- Results@fcs.files
-        } else {
+            fcs.files <- Results@fcs.files
+        }
+        else {
             stop("Error in load.flowSet: The 'Results' parameter required a 'Results' object with a not null 'fcs.files' slot")
         }
     }
-    
     flowset <- flowCore::read.flowSet(fcs.files, emptyValue = TRUE)
-    
-    samples.names                  <- gsub(pattern, "", basename(fcs.files))
+    samples.names <- gsub(pattern, "", basename(fcs.files))
     flowCore::sampleNames(flowset) <- samples.names
-    
-    dictionary       <- flowset[[1]]@parameters@data[, c(1, 2)]
-    dictionary[, 1]  <- make.names(dictionary[, 1])
-    
-    dictionary[is.na(dictionary[, 2]),2] <- dictionary[is.na(dictionary[, 2]),1] 
-	flowset@colnames <- rename.markers(flowset@colnames, dictionary = dictionary)
-
+    dictionary <- flowset[[1]]@parameters@data[, c(1, 2)]
+    dictionary[, 1] <- make.names(dictionary[, 1])
+    dictionary[is.na(dictionary[, 2]), 2] <- dictionary[is.na(dictionary[, 
+        2]), 1]
+    flowset@colnames <- rename.markers(flowset@colnames, dictionary = dictionary)
     if (!is.null(Results)) {
-        exclude.markers  <- setdiff(flowset@colnames, c(Results@marker.names, "cluster"))
+        exclude.markers <- setdiff(flowset@colnames, c(Results@marker.names, 
+            "cluster"))
     }
-    
-	if (!is.null(exclude.markers)) {
-        flowset <- exclude.markers(flowset, exclude.markers, colnames.FCS = flowset@colnames)
+    if (!is.null(exclude.markers)) {
+        flowset <- exclude.markers(flowset, exclude.markers, 
+            colnames.FCS = flowset@colnames)
     }
-    
-	if ((is.null(Results) && !use.raw.medians) || ((!is.null(Results)) && !Results@use.raw.medians)) {
+    if ((is.null(Results) && trans=="arcsinh") || ((!is.null(Results)) && 
+        !Results@trans=="arcsinh")) {
         message("\tarchsin transform...")
-        
-        transform.arcsinh <- flowCore::arcsinhTransform(a = 0, b = 0.2)
-        
+        transform.arcsinh <- flowCore::arcsinhTransform(a = 0, 
+            b = 0.2)
         marker.toTransform <- setdiff(flowset@colnames, "cluster")
-		transformations    <- flowCore::transformList(marker.toTransform, transform.arcsinh)
-		flowset            <- flowCore::transform(flowset, transformations)
+        transformations <- flowCore::transformList(marker.toTransform, 
+            transform.arcsinh)
+        flowset <- flowCore::transform(flowset, transformations)
     }
-    
+   if ((is.null(Results) && trans=="logicle") || ((!is.null(Results)) && 
+        !Results@trans=="logicle")) {
+        message("\tlog transform...")
+        transform.logicle <- flowCore::logicleTransform()
+        marker.toTransform <- setdiff(flowset@colnames, "cluster")
+        transformations <- flowCore::transformList(marker.toTransform, 
+            transform.logicle)
+        flowset <- flowCore::transform(flowset, transformations)
+    }
     return(list(flowset = flowset, dictionary = dictionary))
-    
 }
