@@ -569,8 +569,8 @@ importResultsFromCLR.CSV <- function(path,
 importResultsFromSPADE <- function (path, exclude.markers = c("cell_length", "FileNum", 
     "density", "time"), probs = c(0.05, 0.95), trans = "arcsinh", 
     quantile.approximation = FALSE, th.min_cells = 0, load.phenotype = TRUE, 
-    assignments = NULL)
- {
+    assignments = NULL) 
+{
     message("[START] - importing SPADE clustering results")
     path <- normalizePath(path, "/", mustWork = TRUE)
     message(paste0(basename(path), "\n"))
@@ -586,8 +586,8 @@ importResultsFromSPADE <- function (path, exclude.markers = c("cell_length", "Fi
     else if (probs < 0 || probs > 1) {
         stop("Error in importResultsFromSPADE: The 'probs' parameter must contain values included in the domain: [0;1]")
     }
-    if (!is.na(match(trans,c("arcinh","logicle","none")))) {
-        stop("Error in importResultsFromSPADE: The 'trans' parameter must be arcinh, log or none")
+    if (is.na(match(trans, c("arcsinh", "logicle", "none")))) {
+        stop("Error in importResultsFromSPADE: The 'trans' parameter must be arcsinh, log or none")
     }
     if (!is.logical(quantile.approximation)) {
         stop("Error in importResultsFromSPADE: The 'quantile.approximation' parameter must be a logical")
