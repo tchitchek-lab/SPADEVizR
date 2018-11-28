@@ -616,41 +616,38 @@ computeEigenCellClusters <- function(data,
 # @return a dataframe containing for each cluster, its name and class
 # 
 #' @import igraph
-computeClique <- function(data,
-                          clique.correlation.th = 0.7){
-    
+computeClique <- function (data, clique.correlation.th = 0.7) 
+{
     res <- data.frame()
     for (i in seq_len(nrow(data) - 1)) {
         for (j in (i + 1):nrow(data)) {
-            cor <- stats::cor(as.numeric(data[i, ]), as.numeric(data[j, ]), method = "pearson")
+            cor <- stats::cor(as.numeric(data[i, ]), as.numeric(data[j, 
+                ]), method = "pearson")
             if (cor > clique.correlation.th) {
-                res <- rbind(res, cbind(j, i, cor))
+                res <- rbind(res, cbind(rownames(data)[j], rownames(data)[i], cor))
             }
         }
     }
-    
     if (nrow(res) > 0) {
         colnames(res) <- c("cluster", "cluster", "cor")
         res <- data.frame(res)
         graph <- igraph::graph.data.frame(res, directed = FALSE)
         lists <- igraph::largest.cliques(graph)
-
         res <- data.frame()
-
         for (i in seq_len(length(lists))) {
-            cluster <- as.character(rownames(data[names(lists[[i]]),]))
+			print(i)
+            cluster <- as.character(rownames(data[names(lists[[i]]), 
+                ]))
+			print(cluster)
             res <- rbind(res, cbind(cluster, i))
         }
-
         colnames(res) <- c("cluster", "class")
         unclassified <- setdiff(rownames(data), res$cluster)
-    } else {
+    }
+    else {
         unclassified <- rownames(data)
     }
-    
-    res <- rbind(res, data.frame(cluster = unclassified, class = rep(NA, length(unclassified))))
-    
+    res <- rbind(res, data.frame(cluster = unclassified, class = rep(NA, 
+        length(unclassified))))
     return(res)
-    
 }
-
