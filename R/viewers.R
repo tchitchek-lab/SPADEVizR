@@ -1116,14 +1116,14 @@ boxplotViewer <- function(Results,
     data      <- data.frame(samples = names(data), value = data, cond = assignments[names(data), "bc"])
     data$cond <- factor(data$cond, levels = order)
 
-    max.value <- max(data$value, na.rm = TRUE)
+	max.value <- max(data$value, na.rm = TRUE)
     max.value <- max.value + 0.1 * max.value + 1
 
     cells.number <- sum(colSums(cluster.abundances))
 
     plot <- ggplot2::ggplot(data = data, ggplot2::aes_string(x = "cond", y = "value")) +
             ggplot2::ggtitle(paste("Boxplot Viewer - cluster: ", paste0(clusters, collapse = ", "), " (", format(cells.number, big.mark = " "), " cells) ", sep = "")) +
-            ggplot2::geom_boxplot() +
+            ggplot2::geom_boxplot(outlier.shape = NA) +
             ggplot2::geom_jitter(ggplot2::aes_string(color = "samples"), width = 0.2, show.legend = show.legend) +
             ggplot2::scale_color_manual(values = palette)
             
@@ -1132,18 +1132,18 @@ boxplotViewer <- function(Results,
     }
 
     if (use.percentages) {
-        plot <- plot + ggplot2::scale_y_continuous(limits = c(0, max.value), breaks = round(seq(0, max.value)), minor_breaks = NULL)
+        plot <- plot + ggplot2::scale_y_continuous(limits = c(-0.1, max.value), breaks = round(seq(0, max.value)), minor_breaks = NULL)
     } else {
-        plot <- plot + ggplot2::scale_y_continuous(limits = c(0, max.value))
+        plot <- plot + ggplot2::scale_y_continuous(limits = c(-0.1, max.value))
     }
 
     plot <- plot + ggplot2::ylab(legendy) +
                    ggplot2::xlab("biological conditions") +
                    ggplot2::theme_bw() +
-                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 0.5),
+                   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5),
                                   legend.text = ggplot2::element_text(size = 6),
                                   legend.key = ggplot2::element_blank(),
-								  plot.title=ggplot2::element_text(hjust=0.5))
+								  plot.title = ggplot2::element_text(hjust=0.5))
 
     if (show.on_device) {
         grid::grid.draw(plot)
