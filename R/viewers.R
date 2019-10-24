@@ -1972,9 +1972,13 @@ biplotViewer <- function(Results,
 	if(length(x.data)>1 && length(y.data)>1){
 		x.max              <- max(data["x"]) * 1.2
 		y.max              <- max(data["y"]) * 1.2
+		x.min              <- min(-2,min(data["x"])) 
+		y.min              <- min(-2,min(data["y"])) 
     }else{
 		x.max              <- 0
 		y.max              <- 0
+		x.min              <- 0
+		y.min              <- 0
 	}
 	
     colramp          <- grDevices::colorRampPalette(c("yellow", "red"))
@@ -1989,10 +1993,10 @@ biplotViewer <- function(Results,
 			
 	if(length(x.data)>1 && length(y.data)>1){
 		plot <- plot+ggplot2::geom_point(ggplot2::aes_string(x = "x", y = "y", colour = "cols"), size = 0.25)
-		plot <- plot+ggplot2::xlim(-1, x.max)
-		plot <- plot+ggplot2::ylim(-1, y.max) 
+		plot <- plot+ggplot2::xlim(x.min, x.max)
+		plot <- plot+ggplot2::ylim(y.min, y.max) 
 		plot <- plot+ggplot2::stat_density2d(ggplot2::aes_string(x = "x", y = "y"), size = 0.2, colour = "blue", linetype = "dashed")
-		plot <- plot+ggplot2::coord_cartesian(xlim = c(-1, x.max), ylim = c(-1, y.max))
+		plot <- plot+ggplot2::coord_cartesian(xlim = c(x.min, x.max), ylim = c(y.min, y.max))
 	}else{
 		plot <- plot+ggplot2::geom_hline(yintercept = 0, colour=NA)
 		plot <- plot+ggplot2::geom_vline(xintercept = 0, colour=NA)
