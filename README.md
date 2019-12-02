@@ -139,9 +139,14 @@ install.packages('plyr')
 install.packages("randomForestSRC")
 install.packages('reshape2')
 
-source("http://bioconductor.org/biocLite.R")
-biocLite(suppressUpdates = TRUE)
-biocLite("flowCore", suppressUpdates = TRUE)
+install.packages("BiocManager")
+BiocManager::install(version = "3.10")
+BiocManager::install("flowCore")
+
+#source("http://bioconductor.org/biocLite.R") #for older R versions
+#biocLite(suppressUpdates = TRUE) #for older R versions
+#biocLite("flowCore", suppressUpdates = TRUE) #for older R versions
+
 ```
 
 SPADEVizR is available on [GitHub](https://github.com), at https://github.com/tchitchek-lab/SPADEVizR. 
