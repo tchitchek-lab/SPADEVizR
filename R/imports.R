@@ -204,7 +204,7 @@ importResultsFromFCS <- function(path,
     message("\textract results from FCS files...")
     
     samples  <- flowCore::sampleNames(flowset)
-    markers  <- setdiff(colnames(flowset), "cluster")
+    markers  <- setdiff(flowCore::colnames(flowset), "cluster")
     clusters <- c()
     
     for (sample in samples) { 
@@ -806,7 +806,7 @@ filter.medians <- function (data, trans = "arcsinh") {
 computeQuantile <- function(flowset, probs = c(0.05,0.95)){
 
     bounds  <- data.frame()
-    markers <- colnames(flowset)
+    markers <- flowCore::colnames(flowset)
     markers <- setdiff(markers, "cluster")
     
     for (marker in markers) {
@@ -847,7 +847,7 @@ computeQuantile <- function(flowset, probs = c(0.05,0.95)){
 #' @importFrom flowCore fsApply
 computeQuantile.approximation <- function(flowset,probs = c(0.05,0.95)){
     
-    bounds.by.sample <- flowCore::fsApply(flowset[, colnames(flowset) != "cluster"], flowCore::each_col, stats::quantile, probs = probs)
+    bounds.by.sample <- flowCore::fsApply(flowset[, flowCore::colnames(flowset) != "cluster"], flowCore::each_col, stats::quantile, probs = probs)
     
     lower.bounds <- bounds.by.sample[seq(from = 1, to = nrow(bounds.by.sample), by = 2), ]
     upper.bounds <- bounds.by.sample[seq(from = 2, to = nrow(bounds.by.sample), by = 2), ]
@@ -900,21 +900,21 @@ load.flowSet <- function (Results = NULL, fcs.files, exclude.markers, trans,
     dictionary[, 1] <- make.names(dictionary[, 1])
     dictionary[is.na(dictionary[, 2]), 2] <- dictionary[is.na(dictionary[, 
         2]), 1]
-    colnames(flowset) <- rename.markers(colnames(flowset), dictionary = dictionary)
+    flowCore::colnames(flowset) <- rename.markers(flowCore::colnames(flowset), dictionary = dictionary)
     if (!is.null(Results)) {
-        exclude.markers <- setdiff(colnames(flowset), c(Results@marker.names, 
+        exclude.markers <- setdiff(flowCore::colnames(flowset), c(Results@marker.names, 
             "cluster"))
     }
     if (!is.null(exclude.markers)) {
         flowset <- exclude.markers(flowset, exclude.markers, 
-            colnames.FCS = colnames(flowset))
+            colnames.FCS = flowCore::colnames(flowset))
     }
     if ((is.null(Results) && trans=="arcsinh") || ((!is.null(Results)) && 
         !Results@trans=="arcsinh")) {
         message("\tarchsin transform...")
         transform.arcsinh <- flowCore::arcsinhTransform(a = 0, 
             b = 0.2)
-        marker.toTransform <- setdiff(colnames(flowset), "cluster")
+        marker.toTransform <- setdiff(flowCore::colnames(flowset), "cluster")
         transformations <- flowCore::transformList(marker.toTransform, 
             transform.arcsinh)
         flowset <- flowCore::transform(flowset, transformations)
@@ -923,7 +923,7 @@ load.flowSet <- function (Results = NULL, fcs.files, exclude.markers, trans,
         !Results@trans=="logicle")) {
         message("\tlog transform...")
         transform.logicle <- flowCore::logicleTransform()
-        marker.toTransform <- setdiff(colnames(flowset), "cluster")
+        marker.toTransform <- setdiff(flowCore::colnames(flowset), "cluster")
         transformations <- flowCore::transformList(marker.toTransform, 
             transform.logicle)
         flowset <- flowCore::transform(flowset, transformations)
