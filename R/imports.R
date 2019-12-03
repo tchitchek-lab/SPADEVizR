@@ -204,7 +204,7 @@ importResultsFromFCS <- function(path,
     message("\textract results from FCS files...")
     
     samples  <- flowCore::sampleNames(flowset)
-    markers  <- setdiff(flowset@colnames, "cluster")
+    markers  <- setdiff(colnames(flowset), "cluster")
     clusters <- c()
     
     for (sample in samples) { 
@@ -806,7 +806,7 @@ filter.medians <- function (data, trans = "arcsinh") {
 computeQuantile <- function(flowset, probs = c(0.05,0.95)){
 
     bounds  <- data.frame()
-    markers <- flowset@colnames
+    markers <- colnames(flowset)
     markers <- setdiff(markers, "cluster")
     
     for (marker in markers) {
@@ -847,7 +847,7 @@ computeQuantile <- function(flowset, probs = c(0.05,0.95)){
 #' @importFrom flowCore fsApply
 computeQuantile.approximation <- function(flowset,probs = c(0.05,0.95)){
     
-    bounds.by.sample <- flowCore::fsApply(flowset[, flowset@colnames != "cluster"], flowCore::each_col, stats::quantile, probs = probs)
+    bounds.by.sample <- flowCore::fsApply(flowset[, colnames(flowset) != "cluster"], flowCore::each_col, stats::quantile, probs = probs)
     
     lower.bounds <- bounds.by.sample[seq(from = 1, to = nrow(bounds.by.sample), by = 2), ]
     upper.bounds <- bounds.by.sample[seq(from = 2, to = nrow(bounds.by.sample), by = 2), ]

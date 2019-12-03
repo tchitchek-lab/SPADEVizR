@@ -208,8 +208,8 @@ qcUniformClusters <- function(Results,
         
     accuracy.matrix <- matrix(nrow = length(clusters), ncol = length(markers), dimnames = list(clusters, markers))
     
-    min <- floor(min(flowCore::fsApply(flowset[, flowset@colnames != "cluster"], flowCore::each_col, base::min, na.rm = TRUE), na.rm = TRUE))
-    max <- ceiling(max(flowCore::fsApply(flowset[, flowset@colnames != "cluster"], flowCore::each_col, base::max, na.rm = TRUE), na.rm = TRUE))
+    min <- floor(min(flowCore::fsApply(flowset[, colnames(flowset) != "cluster"], flowCore::each_col, base::min, na.rm = TRUE), na.rm = TRUE))
+    max <- ceiling(max(flowCore::fsApply(flowset[, colnames(flowset) != "cluster"], flowCore::each_col, base::max, na.rm = TRUE), na.rm = TRUE))
 
     ordered.markers    <- c(gtools::mixedsort(clustering.markers),gtools::mixedsort(setdiff(markers, clustering.markers)))
     
