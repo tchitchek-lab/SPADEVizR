@@ -900,21 +900,21 @@ load.flowSet <- function (Results = NULL, fcs.files, exclude.markers, trans,
     dictionary[, 1] <- make.names(dictionary[, 1])
     dictionary[is.na(dictionary[, 2]), 2] <- dictionary[is.na(dictionary[, 
         2]), 1]
-    flowset@colnames <- rename.markers(flowset@colnames, dictionary = dictionary)
+    colnames(flowset) <- rename.markers(colnames(flowset), dictionary = dictionary)
     if (!is.null(Results)) {
-        exclude.markers <- setdiff(flowset@colnames, c(Results@marker.names, 
+        exclude.markers <- setdiff(colnames(flowset), c(Results@marker.names, 
             "cluster"))
     }
     if (!is.null(exclude.markers)) {
         flowset <- exclude.markers(flowset, exclude.markers, 
-            colnames.FCS = flowset@colnames)
+            colnames.FCS = colnames(flowset))
     }
     if ((is.null(Results) && trans=="arcsinh") || ((!is.null(Results)) && 
         !Results@trans=="arcsinh")) {
         message("\tarchsin transform...")
         transform.arcsinh <- flowCore::arcsinhTransform(a = 0, 
             b = 0.2)
-        marker.toTransform <- setdiff(flowset@colnames, "cluster")
+        marker.toTransform <- setdiff(colnames(flowset), "cluster")
         transformations <- flowCore::transformList(marker.toTransform, 
             transform.arcsinh)
         flowset <- flowCore::transform(flowset, transformations)
@@ -923,7 +923,7 @@ load.flowSet <- function (Results = NULL, fcs.files, exclude.markers, trans,
         !Results@trans=="logicle")) {
         message("\tlog transform...")
         transform.logicle <- flowCore::logicleTransform()
-        marker.toTransform <- setdiff(flowset@colnames, "cluster")
+        marker.toTransform <- setdiff(colnames(flowset), "cluster")
         transformations <- flowCore::transformList(marker.toTransform, 
             transform.logicle)
         flowset <- flowCore::transform(flowset, transformations)
