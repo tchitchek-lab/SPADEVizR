@@ -146,7 +146,6 @@ BiocManager::install("flowCore")
 #source("http://bioconductor.org/biocLite.R") #for older R versions
 #biocLite(suppressUpdates = TRUE) #for older R versions
 #biocLite("flowCore", suppressUpdates = TRUE) #for older R versions
-
 ```
 
 SPADEVizR is available on [GitHub](https://github.com), at https://github.com/tchitchek-lab/SPADEVizR. 
