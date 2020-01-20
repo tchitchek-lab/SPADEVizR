@@ -1764,8 +1764,7 @@ MDSViewer <- function(Results,
                                                  ggplot2::aes_string(x = "x", y = "y", group = "bc", fill = "bc"),
                                                  colour = "black",
                                                  alpha  = 0.3) +
-                ggplot2::geom_point(data = data_i, ggplot2::aes_string(x = "x", y = "y", colour = "bc", shape = "ind"), size = 4) +
-                ggplot2::scale_shape(name = "individuals") +
+                ggplot2::geom_point(data = data_i, ggplot2::aes_string(x = "x", y = "y", colour = "bc"), size = 3) +
                 ggplot2::scale_colour_hue(name = "biological conditions") +
                 ggplot2::scale_fill_hue(name = "biological conditions")
                            
