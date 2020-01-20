@@ -618,14 +618,14 @@ importResultsFromSPADE <- function (path, exclude.markers = c("cell_length", "Fi
     }
     message("\treading SPADE results...")
     files <- dir(paste(path, "/tables/bySample/", sep = ""), 
-        full.names = TRUE)
+        full.names = TRUE, pattern="*.csv")
     if (length(files) == 0) 
         stop("Error when importing cell cluster abundances. Please check that subfolder \"./tables/bySample/\" is well existing")
     cluster.phenotypes <- data.frame(stringsAsFactors = FALSE)
     cluster.abundances <- data.frame()
     sample.names <- c()
     for (file in files) {
-        name <- gsub(".fcs.density.fcs.cluster.fcs.anno.Rsave_table.csv$", 
+		name <- gsub(".fcs.density.fcs.cluster.fcs.anno.Rsave_table.csv$", 
             "", basename(file))
         sample.names <- c(sample.names, name)
         SPADE.matrix <- utils::read.table(file, sep = ",", header = TRUE, 
