@@ -140,7 +140,7 @@ install.packages("randomForestSRC")
 install.packages('reshape2')
 
 install.packages("BiocManager")
-BiocManager::install(version = "3.10")
+BiocManager::install()
 BiocManager::install("flowCore")
 
 #source("http://bioconductor.org/biocLite.R") #for older R versions
