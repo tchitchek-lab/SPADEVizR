@@ -583,7 +583,7 @@ importResultsFromSPADE <- function (path, exclude.markers = c("cell_length", "Fi
     else if (probs[1] > probs[2]) {
         stop("Error in importResultsFromSPADE: The 'probs' parameter must contain a first value greather than the second value")
     }
-    else if (probs < 0 || probs > 1) {
+    else if (probs[0] < 0 || probs[1] < 0 || probs[0] > 1 || probs[1] > 1) {
         stop("Error in importResultsFromSPADE: The 'probs' parameter must contain values included in the domain: [0;1]")
     }
     if (is.na(match(trans, c("arcsinh", "logicle", "none")))) {
